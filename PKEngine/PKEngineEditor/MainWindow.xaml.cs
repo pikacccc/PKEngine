@@ -1,4 +1,5 @@
-﻿using System.Text;
+﻿using PKEngineEditor.GameProject;
+using System.Text;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
@@ -19,6 +20,21 @@ namespace PKEngineEditor
         public MainWindow()
         {
             InitializeComponent();
+            Loaded += OnMainWindowLoaded;
+        }
+
+        private void OnMainWindowLoaded(object sender, RoutedEventArgs e)
+        {
+            Loaded -= OnMainWindowLoaded;
+            var project = new ProjectBrowserDialog();
+            if (project.ShowDialog() == false)
+            {
+                Application.Current.Shutdown();
+            }
+            else
+            {
+                
+            }
         }
     }
 }

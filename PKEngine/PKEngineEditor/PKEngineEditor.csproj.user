@@ -7,6 +7,26 @@
     </ApplicationDefinition>
   </ItemGroup>
   <ItemGroup>
+    <Compile Update="GameProject\NewProject.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="GameProject\OpenProject.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="GameProject\ProjectBrowserDialog.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Page Update="GameProject\NewProject.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="GameProject\OpenProject.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="GameProject\ProjectBrowserDialog.xaml">
+      <SubType>Designer</SubType>
+    </Page>
     <Page Update="MainWindow.xaml">
       <SubType>Designer</SubType>
     </Page>
