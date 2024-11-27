@@ -20,7 +20,7 @@ namespace PKEngineEditor.GameProject
         public byte[]? Icon { get; set; }
         public byte[]? ScreenShot { get; set; }
         public string? IconFilePath { get; set; }
-        public string? ScreenShotFilePath { get; set;}
+        public string? ScreenShotFilePath { get; set; }
         public string? ProjectPath { get; set; }
     }
 
@@ -71,6 +71,34 @@ namespace PKEngineEditor.GameProject
             }
         }
 
+        private bool _isValid;
+        public bool IsValid
+        {
+            get => _isValid;
+            set
+            {
+                if (_isValid != value)
+                {
+                    _isValid = value;
+                    OnPropertyChanged(nameof(IsValid));
+                }
+            }
+        }
+
+        private string _errorMsg;
+        public string ErrorMsg
+        {
+            get => _errorMsg;
+            set
+            {
+                if (_errorMsg != value)
+                {
+                    _errorMsg = value;
+                    OnPropertyChanged(nameof(ErrorMsg));
+                }
+            }
+        }
+
         public NewProjectViewModel()
         {
             try
@@ -91,6 +119,19 @@ namespace PKEngineEditor.GameProject
             {
                 Debug.WriteLine(ex.Message);
             }
+        }
+
+        private bool ValidateProjectPath()
+        {
+            var path = ProjectPath;
+            if (!Path.EndsInDirectorySeparator(path)) path += @"\";
+            path += $@"{ProjectName}\";
+            IsValid = false;
+            if (string.IsNullOrWhiteSpace(ProjectName.Trim()))
+            {
+                ErrorMsg = "Type in a project name.";
+            }
+            return true;
         }
     }
 }
