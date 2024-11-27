@@ -5,20 +5,19 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:PKEngineEditor.GameProject"
         mc:Ignorable="d" ResizeMode="NoResize" WindowStartupLocation="CenterScreen"
-        Title="ProjectBrowserDialog" Height="450" Width="800">
+        Title="ProjectBrowserDialog" Height="600" Width="800">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="auto"/>
             <RowDefinition />
         </Grid.RowDefinitions>
         <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="20" Grid.Row="0">
-            <ToggleButton Content="Open Project" x:Name="openProjectBtn" FontSize="32" Click="OnToggleBtn_Click"></ToggleButton>
+            <ToggleButton Content="Open Project" x:Name="openProjectBtn" FontSize="32" Click="OnToggleBtn_Click" IsChecked="True"></ToggleButton>
             <ToggleButton Content="Create Project" x:Name="createProjectBtn" FontSize="32" Margin="30,0,0,0" Click="OnToggleBtn_Click"></ToggleButton>
         </StackPanel>
         <StackPanel Orientation="Horizontal" Grid.Row="1" x:Name="browserContent">
             <local:OpenProject></local:OpenProject>
             <local:NewProject></local:NewProject>
-  
         </StackPanel>
     </Grid>
 </Window>
