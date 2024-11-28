@@ -18,10 +18,4 @@
     <Page Remove="bin\**" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="ProjectTemplates\FirstProject\" />
-    <Folder Include="ProjectTemplates\ThirdPersonProject\" />
-    <Folder Include="ProjectTemplates\TopDownProject\" />
-  </ItemGroup>
-
 </Project>

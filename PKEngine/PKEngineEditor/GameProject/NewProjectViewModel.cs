@@ -2,8 +2,10 @@
 using PKEngineEditor.Utilities;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
+using System.DirectoryServices;
 using System.IO;
 using System.Runtime.Serialization;
+using System.Text;
 
 namespace PKEngineEditor.GameProject
 {
@@ -21,10 +23,10 @@ namespace PKEngineEditor.GameProject
         public byte[]? ScreenShot { get; set; }
         public string? IconFilePath { get; set; }
         public string? ScreenShotFilePath { get; set; }
-        public string? ProjectPath { get; set; }
+        public string? ProjectFilePath { get; set; }
     }
 
-    class NewProjectViewModel : ViewModelBase
+    public class NewProjectViewModel : ViewModelBase
     {
         private readonly string _templatePath = @"..\..\PKEngineEditor\ProjectTemplates";
 
@@ -37,6 +39,7 @@ namespace PKEngineEditor.GameProject
                 if (value != _projectName)
                 {
                     _projectName = value;
+                    ValidateProjectPath();
                     OnPropertyChanged(nameof(ProjectName));
                 }
             }
@@ -51,6 +54,7 @@ namespace PKEngineEditor.GameProject
                 if (value != _projectPath)
                 {
                     _projectPath = value;
+                    ValidateProjectPath();
                     OnPropertyChanged(nameof(ProjectPath));
                 }
             }
@@ -111,9 +115,11 @@ namespace PKEngineEditor.GameProject
                     temp.Icon = File.ReadAllBytes(temp.IconFilePath);
                     temp.ScreenShotFilePath = Path.GetFullPath(Path.Combine(Path.GetDirectoryName(templateFile), "ScreenShot.png"));
                     temp.ScreenShot = File.ReadAllBytes(temp.ScreenShotFilePath);
-                    temp.ProjectPath = Path.GetFullPath(Path.Combine(Path.GetDirectoryName(templateFile), temp.ProjectFile));
+                    temp.ProjectFilePath = Path.GetFullPath(Path.Combine(Path.GetDirectoryName(templateFile), temp.ProjectFile));
                     _projectTemplates.Add(temp);
                 }
+
+                ValidateProjectPath();
             }
             catch (Exception ex)
             {
@@ -126,12 +132,73 @@ namespace PKEngineEditor.GameProject
             var path = ProjectPath;
             if (!Path.EndsInDirectorySeparator(path)) path += @"\";
             path += $@"{ProjectName}\";
-            IsValid = false;
             if (string.IsNullOrWhiteSpace(ProjectName.Trim()))
             {
                 ErrorMsg = "Type in a project name.";
+                IsValid = false;
             }
-            return true;
+            else if (ProjectName.IndexOfAny(Path.GetInvalidFileNameChars()) != -1)
+            {
+                ErrorMsg = "Invalid character(s) used in project name.";
+                IsValid = false;
+            }
+            else if (string.IsNullOrWhiteSpace(ProjectPath.Trim()))
+            {
+                ErrorMsg = "Select a valid project folder.";
+                IsValid = false;
+            }
+            else if (ProjectPath.IndexOfAny(Path.GetInvalidPathChars()) != -1)
+            {
+                ErrorMsg = "Invalid character(s) used in project path.";
+                IsValid = false;
+            }
+            else if (Directory.Exists(path) && Directory.EnumerateFileSystemEntries(path).Any())
+            {
+                ErrorMsg = "Selected project folder already exists and is not empty.";
+                IsValid = false;
+            }
+            else
+            {
+                ErrorMsg = string.Empty;
+                IsValid = true;
+            }
+            return IsValid;
+        }
+
+        public string CreateProject(ProjectTemplate template)
+        {
+            ValidateProjectPath();
+            if (!IsValid) return string.Empty;
+
+            if (!Path.EndsInDirectorySeparator(ProjectPath)) ProjectPath += @"\";
+            var path = $@"{ProjectPath}{ProjectName}\";
+
+            try
+            {
+                if (!Directory.Exists(path)) Directory.CreateDirectory(path);
+                foreach (var folder in template.Folders)
+                {
+                    var directoryName = Path.GetDirectoryName(path);
+                    var tempPath = Path.Combine(directoryName, folder);
+                    var fullPath = Path.GetFullPath(tempPath);
+                    Directory.CreateDirectory(fullPath);
+                }
+                var dirInfo = new DirectoryInfo(path + @".Pk\");
+                dirInfo.Attributes |= FileAttributes.Hidden;
+                File.Copy(template.IconFilePath, Path.GetFullPath(Path.Combine(dirInfo.FullName, "Icon.png")));
+                File.Copy(template.ScreenShotFilePath, Path.GetFullPath(Path.Combine(dirInfo.FullName, "ScreenShot.png")));
+
+                var projectXml = File.ReadAllText(template.ProjectFilePath);
+                projectXml = string.Format(projectXml, ProjectName, ProjectPath);
+                var projectFilePath = Path.GetFullPath(Path.Combine(path,$"{ProjectName}{Project.Extension}"));
+                File.WriteAllText(projectFilePath, projectXml);
+                return path;
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine(ex.Message);
+                return string.Empty;
+            }
         }
     }
 }

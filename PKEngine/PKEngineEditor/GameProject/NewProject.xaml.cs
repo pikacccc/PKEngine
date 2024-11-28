@@ -1,4 +1,5 @@
-﻿using System.Windows.Controls;
+﻿using System.Windows;
+using System.Windows.Controls;
 
 namespace PKEngineEditor.GameProject
 {
@@ -10,6 +11,20 @@ namespace PKEngineEditor.GameProject
         public NewProject()
         {
             InitializeComponent();
+        }
+
+        private void OnCreateProjectBtn_Click(object sender, System.Windows.RoutedEventArgs e)
+        {
+            var data = DataContext as NewProjectViewModel;
+            var projectPath = data.CreateProject(templateListBox.SelectedItem as ProjectTemplate);
+            var win = Window.GetWindow(this);
+            var dialogResult = false;
+            if(!string.IsNullOrEmpty(projectPath))
+            {
+                dialogResult = true;
+            }
+            win.DialogResult = dialogResult;
+            win.Close();
         }
     }
 }

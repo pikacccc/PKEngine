@@ -1,8 +1,10 @@
 ﻿using System.ComponentModel;
+using System.Runtime.Serialization;
 
 namespace PKEngineEditor.Common
 {
-    class ViewModelBase : INotifyPropertyChanged
+    [DataContract(IsReference = true)]
+    public class ViewModelBase : INotifyPropertyChanged
     {
         public event PropertyChangedEventHandler? PropertyChanged;
 
