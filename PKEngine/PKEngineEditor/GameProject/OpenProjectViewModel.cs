@@ -16,9 +16,13 @@ namespace PKEngineEditor.GameProject
         [DataMember]
         public string? ProjectPath { get; set; }
 
+        [DataMember]
         public DateTime Date { get; set; }
 
         public string FullPath => $@"{ProjectPath}{ProjectName}{Project.Extension}";
+
+        public byte[]? Icon { get; set; }
+        public byte[]? ScreenShot { get; set; }
     }
 
     [DataContract]
@@ -39,7 +43,20 @@ namespace PKEngineEditor.GameProject
 
         private static void ReadProjectData()
         {
-
+            if (File.Exists(_projectDataPath))
+            {
+                var projects = Serializer.FromFile<ProjectDataList>(_projectDataPath).Projects.OrderByDescending(s => s.Date);
+                _projects.Clear();
+                foreach(var project in projects)
+                {
+                    if (File.Exists(project.FullPath))
+                    {
+                        project.Icon = File.ReadAllBytes($@"{project.ProjectPath}\.Pk\Icon.png");
+                        project.ScreenShot = File.ReadAllBytes($@"{project.ProjectPath}\.Pk\ScreenShot.png");
+                        _projects.Add(project);
+                    }
+                }
+            } 
         }
 
         private static void WriteProjectData()
@@ -63,17 +80,17 @@ namespace PKEngineEditor.GameProject
                 _projects.Add(project);
             }
             WriteProjectData();
-            return null;
+            return Project.Load(project.FullPath);
         }
 
         static OpenProjectViewModel()
         {
             try
             {
-                if (!Directory.Exists(_projectDataPath)) Directory.CreateDirectory(_projectDataPath);
+                if (!Directory.Exists(_applicationDataPath)) Directory.CreateDirectory(_applicationDataPath);
                 _projectDataPath = $@"{_applicationDataPath}ProjectDara.xml";
-                Projects = new ReadOnlyObservableCollection<ProjectData>(_projects);
                 ReadProjectData();
+                Projects = new ReadOnlyObservableCollection<ProjectData>(_projects);
             }
             catch (Exception ex)
             {

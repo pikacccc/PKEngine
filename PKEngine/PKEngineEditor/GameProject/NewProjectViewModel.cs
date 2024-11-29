@@ -189,7 +189,7 @@ namespace PKEngineEditor.GameProject
                 File.Copy(template.ScreenShotFilePath, Path.GetFullPath(Path.Combine(dirInfo.FullName, "ScreenShot.png")));
 
                 var projectXml = File.ReadAllText(template.ProjectFilePath);
-                projectXml = string.Format(projectXml, ProjectName, ProjectPath);
+                projectXml = string.Format(projectXml, ProjectName, path);
                 var projectFilePath = Path.GetFullPath(Path.Combine(path,$"{ProjectName}{Project.Extension}"));
                 File.WriteAllText(projectFilePath, projectXml);
                 return path;

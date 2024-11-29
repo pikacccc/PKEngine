@@ -1,4 +1,5 @@
 ﻿using PKEngineEditor.GameProject;
+using System.ComponentModel;
 using System.Text;
 using System.Windows;
 using System.Windows.Controls;
@@ -21,19 +22,32 @@ namespace PKEngineEditor
         {
             InitializeComponent();
             Loaded += OnMainWindowLoaded;
+            Closing += OnMainWindowClosing;
+        }
+
+        private void OnMainWindowClosing(object sender, CancelEventArgs e)
+        {
+            Closing -= OnMainWindowClosing;
+            Project.CurProject?.Unload();
         }
 
         private void OnMainWindowLoaded(object sender, RoutedEventArgs e)
         {
             Loaded -= OnMainWindowLoaded;
-            var project = new ProjectBrowserDialog();
-            if (project.ShowDialog() == false)
+            OpenProjectBrowsereDialog();
+        }
+
+        private void OpenProjectBrowsereDialog()
+        {
+            var browser = new ProjectBrowserDialog();
+            if (browser.ShowDialog() == false || browser.DataContext == null)
             {
                 Application.Current.Shutdown();
             }
             else
             {
-                
+                Project.CurProject?.Unload();
+                DataContext = browser.DataContext;
             }
         }
     }

@@ -17,14 +17,16 @@ namespace PKEngineEditor.GameProject
         {
             var data = DataContext as NewProjectViewModel;
             var projectPath = data.CreateProject(templateListBox.SelectedItem as ProjectTemplate);
-            var win = Window.GetWindow(this);
+            var wind = Window.GetWindow(this);
             var dialogResult = false;
-            if(!string.IsNullOrEmpty(projectPath))
+            if (!string.IsNullOrEmpty(projectPath))
             {
                 dialogResult = true;
+                var project = OpenProjectViewModel.Open(new ProjectData { ProjectName = data.ProjectName, ProjectPath = projectPath });
+                wind.DataContext = project;
             }
-            win.DialogResult = dialogResult;
-            win.Close();
+            wind.DialogResult = dialogResult;
+            wind.Close();
         }
     }
 }

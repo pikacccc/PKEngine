@@ -1,11 +1,10 @@
 ﻿using PKEngineEditor.Common;
-using System;
-using System.Collections.Generic;
+using PKEngineEditor.Utilities;
 using System.Collections.ObjectModel;
-using System.Linq;
+using System.Diagnostics;
+using System.IO;
 using System.Runtime.Serialization;
-using System.Text;
-using System.Threading.Tasks;
+using System.Windows;
 
 namespace PKEngineEditor.GameProject
 {
@@ -15,7 +14,7 @@ namespace PKEngineEditor.GameProject
         public static string Extension { get; } = ".pk";
 
         [DataMember]
-        public string Name {  get;private set; }
+        public string Name { get; private set; } = "New Project";
 
         [DataMember]
         public string Path { get; private set; }
@@ -24,18 +23,47 @@ namespace PKEngineEditor.GameProject
 
         [DataMember(Name ="Scenes")]
         private ObservableCollection<Scene> _scene = new ObservableCollection<Scene>();
+        public ReadOnlyObservableCollection<Scene> ReadOnlyScene{ get; private set; }
 
-        private ReadOnlyObservableCollection<Scene> _readOnlyScene;
-        public ReadOnlyObservableCollection<Scene> ReadOnlyScene
+        private Scene _activeScene;
+        public Scene ActiveScene
         {
-            get
+            get =>_activeScene;
+            set
             {
-                if (_readOnlyScene == null)
+                if(_activeScene != value)
                 {
-                    _readOnlyScene = new ReadOnlyObservableCollection<Scene>(_scene);
+                    _activeScene = value;
+                    OnPropertyChanged(nameof(ActiveScene));
                 }
-                return _readOnlyScene;
             }
+
+        }
+
+        public static Project CurProject => Application.Current.MainWindow.DataContext as Project;
+
+        public static Project Load(string file)
+        {
+            Debug.Assert(File.Exists(file));
+            return Serializer.FromFile<Project>(file);
+        }
+
+        public static void Save(Project project)
+        {
+            Serializer.ToFile(project, project.FullPath);
+        }
+
+        public void Unload() { }
+
+        [OnDeserialized]
+        public void OnDeserialized(StreamingContext context)
+        {
+            if (_scene != null)
+            {
+                ReadOnlyScene = new ReadOnlyObservableCollection<Scene>(_scene);
+                OnPropertyChanged(nameof(ReadOnlyScene));
+            }
+            ActiveScene = ReadOnlyScene.FirstOrDefault(s => s.IsActive);
         }
 
         public Project(string name, string path)
@@ -43,7 +71,7 @@ namespace PKEngineEditor.GameProject
             Name = name;
             Path = path;
 
-            _scene.Add(new Scene(this, "Default Scene"));
+            OnDeserialized(new StreamingContext());
         }
     }
 }
