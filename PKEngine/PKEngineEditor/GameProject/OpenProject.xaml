@@ -5,14 +5,38 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:PKEngineEditor.GameProject"
              mc:Ignorable="d" Width="800"
+             d:DataContext="{d:DesignInstance Type=local:OpenProjectViewModel}"
              d:DesignHeight="450" d:DesignWidth="800">
-    <StackPanel Background="MintCream">
+    
+    <UserControl.DataContext>
+        <local:OpenProjectViewModel></local:OpenProjectViewModel>
+    </UserControl.DataContext>
+
+    <StackPanel Background="White">
         <StackPanel Height="250" Orientation="Horizontal" HorizontalAlignment="Center">
-            <ListBox Width="195" Height="250"></ListBox>
-            <Border Height="250" Width="400" Margin="5,0,0,0"></Border>
+            <ListBox Width="195" Height="250" ItemsSource="{Binding Projects}" x:Name="projectListBox" SelectedIndex="0">
+                <ListBox.ItemContainerStyle>
+                    <Style TargetType="ListBoxItem">
+                        <EventSetter Event="MouseDoubleClick" Handler="ListBoxItem_MouseDoubleClick"></EventSetter>
+                    </Style>
+                </ListBox.ItemContainerStyle>
+                <ListBox.ItemTemplate>
+                    <DataTemplate>
+                        <StackPanel Orientation="Horizontal">
+                            <Image Source="{Binding Icon}"></Image>
+                            <TextBlock Text="{Binding ProjectName}"></TextBlock>
+                        </StackPanel>
+                    </DataTemplate>
+                </ListBox.ItemTemplate>
+            </ListBox>
+            <Border Height="250" Width="400" Margin="5,0,0,0">
+                <Border.Background>
+                    <ImageBrush ImageSource="{Binding ElementName=projectListBox, Path=SelectedItem.ScreenShot}"></ImageBrush>
+                </Border.Background>
+            </Border>
         </StackPanel>
         <StackPanel Margin="0,30,0,0" Orientation="Horizontal" HorizontalAlignment="Center">
-            <Button Content="Open" Width="96" IsDefault="True"></Button>
+            <Button Content="Open" Width="96" IsDefault="True" Click="OnOpen_Btn_Click" ></Button>
             <Button Content="Exit" Width="96" IsCancel="True" Margin="30,0,0,0"></Button>
         </StackPanel>
     </StackPanel>

@@ -10,7 +10,7 @@
     <UserControl.DataContext>
         <local:NewProjectViewModel></local:NewProjectViewModel>
     </UserControl.DataContext>
-    <StackPanel Background="MintCream">
+    <StackPanel Background="White">
 
         <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
             <ListBox Width="195" Height="250" ItemsSource="{Binding ReadOnlyProjectTemplates}" x:Name="templateListBox" SelectedIndex="0">
