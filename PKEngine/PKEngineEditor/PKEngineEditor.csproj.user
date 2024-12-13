@@ -7,6 +7,12 @@
     </ApplicationDefinition>
   </ItemGroup>
   <ItemGroup>
+    <Compile Update="Editors\WorldEditor\ProjectLayoutView.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="Editors\WorldEditor\WorldEditorView.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Update="GameProject\NewProject.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -18,6 +24,12 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
+    <Page Update="Editors\WorldEditor\ProjectLayoutView.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Editors\WorldEditor\WorldEditorView.xaml">
+      <SubType>Designer</SubType>
+    </Page>
     <Page Update="GameProject\NewProject.xaml">
       <SubType>Designer</SubType>
     </Page>

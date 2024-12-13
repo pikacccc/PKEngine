@@ -73,5 +73,10 @@ namespace PKEngineEditor.GameProject
 
             OnDeserialized(new StreamingContext());
         }
+
+        public Project()
+        {
+
+        }
     }
 }
