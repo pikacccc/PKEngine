@@ -23,6 +23,13 @@ namespace PKEngineEditor.GameProject
         public OpenProject()
         {
             InitializeComponent();
+
+
+            Loaded += (s, e) =>
+            {
+                var item = projectListBox.ItemContainerGenerator.ContainerFromIndex(projectListBox.SelectedIndex) as ListBoxItem;
+                item?.Focus();
+            };
         }
 
         private void OnOpen_Btn_Click(object sender, RoutedEventArgs e)

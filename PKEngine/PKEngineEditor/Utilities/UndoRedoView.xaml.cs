@@ -1,5 +1,4 @@
-﻿using PKEngineEditor.GameProject;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -14,14 +13,14 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace PKEngineEditor.Editors
+namespace PKEngineEditor.Utilities
 {
     /// <summary>
-    /// ProjectLayoutView.xaml 的交互逻辑
+    /// UndoRedoView.xaml 的交互逻辑
     /// </summary>
-    public partial class ProjectLayoutView : UserControl
+    public partial class UndoRedoView : UserControl
     {
-        public ProjectLayoutView()
+        public UndoRedoView()
         {
             InitializeComponent();
         }

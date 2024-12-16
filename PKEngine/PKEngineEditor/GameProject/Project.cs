@@ -5,6 +5,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Runtime.Serialization;
 using System.Windows;
+using System.Windows.Input;
 
 namespace PKEngineEditor.GameProject
 {
@@ -21,17 +22,17 @@ namespace PKEngineEditor.GameProject
 
         public string FullPath => $@"{Path}{Name}{Extension}";
 
-        [DataMember(Name ="Scenes")]
-        private ObservableCollection<Scene> _scene = new ObservableCollection<Scene>();
-        public ReadOnlyObservableCollection<Scene> ReadOnlyScene{ get; private set; }
+        [DataMember(Name = "Scenes")]
+        private ObservableCollection<Scene> _scenes = new ObservableCollection<Scene>();
+        public ReadOnlyObservableCollection<Scene> ReadOnlyScenes { get; private set; }
 
         private Scene _activeScene;
         public Scene ActiveScene
         {
-            get =>_activeScene;
+            get => _activeScene;
             set
             {
-                if(_activeScene != value)
+                if (_activeScene != value)
                 {
                     _activeScene = value;
                     OnPropertyChanged(nameof(ActiveScene));
@@ -41,6 +42,26 @@ namespace PKEngineEditor.GameProject
         }
 
         public static Project CurProject => Application.Current.MainWindow.DataContext as Project;
+
+        public static UndoRedoManager UndoRedoMgr { get; } = new UndoRedoManager();
+
+        public ICommand Undo { get; private set; }
+        public ICommand Redo { get; private set; }
+
+        public ICommand AddScene { get; private set; }
+        public ICommand RemoveScene { get; private set; }
+
+        private void AddSceneInternal(string sceneName)
+        {
+            Debug.Assert(!string.IsNullOrEmpty(sceneName.Trim()));
+            _scenes.Add(new Scene(this, sceneName));
+        }
+
+        private void RemoveSceneInternal(Scene scene)
+        {
+            Debug.Assert(_scenes.Contains(scene));
+            _scenes.Remove(scene);
+        }
 
         public static Project Load(string file)
         {
@@ -58,12 +79,39 @@ namespace PKEngineEditor.GameProject
         [OnDeserialized]
         public void OnDeserialized(StreamingContext context)
         {
-            if (_scene != null)
+            if (_scenes != null)
             {
-                ReadOnlyScene = new ReadOnlyObservableCollection<Scene>(_scene);
-                OnPropertyChanged(nameof(ReadOnlyScene));
+                ReadOnlyScenes = new ReadOnlyObservableCollection<Scene>(_scenes);
+                OnPropertyChanged(nameof(ReadOnlyScenes));
             }
-            ActiveScene = ReadOnlyScene.FirstOrDefault(s => s.IsActive);
+            ActiveScene = ReadOnlyScenes.FirstOrDefault(s => s.IsActive);
+
+            AddScene = new RelayCommand<object>(x =>
+            {
+                AddSceneInternal($"New Scene {_scenes.Count}");
+                var newscene = _scenes.Last();
+                var sceneIndex = _scenes.Count - 1;
+
+                UndoRedoMgr.Add(new UndoRedoAction(
+                    () => { RemoveSceneInternal(newscene); },
+                    () => { _scenes.Insert(sceneIndex, newscene); },
+                    $"Add {newscene.Name}"));
+            });
+
+            RemoveScene = new RelayCommand<Scene>(x =>
+            {
+                var sceneIndex = _scenes.IndexOf(x);
+                RemoveSceneInternal(x);
+
+                UndoRedoMgr.Add(new UndoRedoAction(
+                    () => { _scenes.Insert(sceneIndex, x); },
+                    () => { RemoveSceneInternal(x); },
+                    $"Remove {x.Name}"));
+            }, x => !x.IsActive);
+
+            Undo = new RelayCommand<object>((x) => UndoRedoMgr.Undo());
+
+            Redo = new RelayCommand<object>((x) => UndoRedoMgr.Redo());
         }
 
         public Project(string name, string path)

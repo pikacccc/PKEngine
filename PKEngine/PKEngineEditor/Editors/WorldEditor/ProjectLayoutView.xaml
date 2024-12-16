@@ -13,9 +13,9 @@
             <RowDefinition Height="32"/>
             <RowDefinition/>
         </Grid.RowDefinitions>
-        <Button Content="Add Scene" Width="96" VerticalAlignment="Center" HorizontalAlignment="Left" Focusable="False" Grid.Row="0" Margin="20,0,0,0"/>
+        <Button Content="Add Scene" Width="96" VerticalAlignment="Center" HorizontalAlignment="Left" Focusable="False" Grid.Row="0" Margin="20,0,0,0" Command="{Binding AddScene}"/>
         <ScrollViewer Grid.Row="1" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
-            <ItemsControl ItemsSource="{Binding ReadOnlyScene}">
+            <ItemsControl ItemsSource="{Binding ReadOnlyScenes}">
                 <ItemsControl.ItemsPanel>
                     <ItemsPanelTemplate>
                         <StackPanel/>
@@ -23,7 +23,17 @@
                 </ItemsControl.ItemsPanel>
                 <ItemsControl.ItemTemplate>
                     <DataTemplate>
-                        <Expander IsExpanded="{Binding IsActive}"/>
+                        <Expander IsExpanded="{Binding IsActive,Mode=OneWay}">
+                            <Expander.Header>
+                                <Grid>
+                                    <TextBlock Text="{Binding Name}"/>
+                                    <Button Content="Remove" 
+                                            Command="{Binding DataContext.RemoveScene, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                            CommandParameter="{Binding}" Margin="100,0" Focusable="False"/>
+                                </Grid>
+                            </Expander.Header>
+                            <Border Background="Blue" Height="80"/>
+                        </Expander>
                     </DataTemplate>
                 </ItemsControl.ItemTemplate>
             </ItemsControl>
