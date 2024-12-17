@@ -1,18 +1,7 @@
-﻿using PKEngineEditor.GameProject;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using PKEngineEditor.Components;
+using PKEngineEditor.GameProject;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 
 namespace PKEngineEditor.Editors
 {
@@ -24,6 +13,26 @@ namespace PKEngineEditor.Editors
         public ProjectLayoutView()
         {
             InitializeComponent();
+        }
+
+        private void OnAddGameEntity_Btn_Click(object sender, RoutedEventArgs e)
+        {
+            var btn = sender as Button;
+            var vm = btn.DataContext as Scene;
+            vm.AddGameEntityCommand.Execute(new GameEntity(vm) { Name = "GameEntity" });
+        }
+
+        private void OnGameEntities_ListBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            var selectItems = (sender as ListBox).SelectedItems;
+            if (selectItems.Count != 0)
+            {
+                var entity = selectItems[0];
+                GameEntityView.Instance.DataContext = entity;
+            }
+            else {
+                GameEntityView.Instance.DataContext = null;
+            }
         }
     }
 }
