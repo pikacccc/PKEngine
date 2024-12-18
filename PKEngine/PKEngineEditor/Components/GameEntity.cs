@@ -48,6 +48,8 @@ namespace PKEngineEditor.Components
 
             ParentScene = scene;
             _components.Add(new Transform(this));
+
+            OnDeserialized(new StreamingContext());
         }
     }
 }
