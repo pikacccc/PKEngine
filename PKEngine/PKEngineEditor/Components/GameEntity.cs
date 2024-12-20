@@ -10,6 +10,21 @@ namespace PKEngineEditor.Components
     [KnownType(typeof(Transform))]
     public class GameEntity : ViewModelBase
     {
+        private bool _isEnabled = true;
+        [DataMember]
+        public bool IsEnabled
+        {
+            get => _isEnabled;
+            set
+            {
+                if(_isEnabled!=value)
+                {
+                    _isEnabled = value;
+                    OnPropertyChanged(nameof(IsEnabled));
+                }
+            }
+        }
+
         private string _name;
         [DataMember]
         public string Name
