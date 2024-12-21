@@ -22,6 +22,18 @@ namespace PKEngineEditor.GameProject
         public ProjectBrowserDialog()
         {
             InitializeComponent();
+            Loaded += OnProjectBrowserDialogLoaded;
+        }
+
+        private void OnProjectBrowserDialogLoaded(object sender, RoutedEventArgs e)
+        {
+            Loaded -= OnProjectBrowserDialogLoaded;
+            if (!OpenProjectViewModel.Projects.Any())
+            {
+                openProjectBtn.IsEnabled = false;
+                openProjectBtn.Visibility = Visibility.Hidden;
+                OnToggleBtn_Click(createProjectBtn,new RoutedEventArgs());
+            }
         }
 
         private void OnToggleBtn_Click(object sender, RoutedEventArgs e)

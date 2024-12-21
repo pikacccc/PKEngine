@@ -1,8 +1,10 @@
 ﻿using PKEngineEditor.Common;
 using PKEngineEditor.GameProject;
+using PKEngineEditor.Utilities;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Runtime.Serialization;
+using System.Windows.Input;
 
 namespace PKEngineEditor.Components
 {
@@ -17,7 +19,7 @@ namespace PKEngineEditor.Components
             get => _isEnabled;
             set
             {
-                if(_isEnabled!=value)
+                if (_isEnabled != value)
                 {
                     _isEnabled = value;
                     OnPropertyChanged(nameof(IsEnabled));
@@ -47,6 +49,10 @@ namespace PKEngineEditor.Components
         private readonly ObservableCollection<Component> _components = new ObservableCollection<Component>();
         public ReadOnlyObservableCollection<Component> Components { get; private set; }
 
+
+        public ICommand RenameCommand { get; private set; }
+        public ICommand EnableCommand { get; private set; }
+
         [OnDeserialized]
         void OnDeserialized(StreamingContext context)
         {
@@ -55,6 +61,14 @@ namespace PKEngineEditor.Components
                 Components = new ReadOnlyObservableCollection<Component>(_components);
                 OnPropertyChanged(nameof(Components));
             }
+
+            RenameCommand = new RelayCommand<string>(x =>
+            {
+                var oldName = Name;
+                Name = x;
+
+                Project.UndoRedoMgr.Add(new UndoRedoAction(nameof(Name), this, oldName, x, $"Rename entity '{oldName}' to '{x}'"));
+            }, x => x != _name);
         }
 
         public GameEntity(Scene scene)
