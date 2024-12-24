@@ -51,7 +51,7 @@ namespace PKEngineEditor.Components
 
 
         public ICommand RenameCommand { get; private set; }
-        public ICommand EnableCommand { get; private set; }
+        public ICommand IsEnableCommand { get; private set; }
 
         [OnDeserialized]
         void OnDeserialized(StreamingContext context)
@@ -69,6 +69,14 @@ namespace PKEngineEditor.Components
 
                 Project.UndoRedoMgr.Add(new UndoRedoAction(nameof(Name), this, oldName, x, $"Rename entity '{oldName}' to '{x}'"));
             }, x => x != _name);
+
+            IsEnableCommand = new RelayCommand<bool>(x =>
+            {
+                var preEnable = IsEnabled;
+                IsEnabled = x;
+
+                Project.UndoRedoMgr.Add(new UndoRedoAction(nameof(IsEnabled), this, preEnable, x, x ? $"Enable {Name}" : $"Disable {Name}"));
+            });
         }
 
         public GameEntity(Scene scene)

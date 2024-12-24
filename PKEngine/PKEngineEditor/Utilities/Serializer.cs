@@ -22,6 +22,8 @@ namespace PKEngineEditor.Utilities
             catch (Exception ex)
             {
                 Debug.WriteLine(ex);
+                Logger.Log(MessageType.Error, $"Failed to serialize {instance} to {path}");
+                throw;
             }
         }
 
@@ -37,7 +39,8 @@ namespace PKEngineEditor.Utilities
             catch (Exception ex)
             {
                 Debug.WriteLine(ex.Message);
-                return default(T);
+                Logger.Log(MessageType.Error, $"Failed to deserialize {path}");
+                throw;
             }
         }
     }

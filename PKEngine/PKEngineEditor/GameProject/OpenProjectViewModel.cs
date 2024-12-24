@@ -47,7 +47,7 @@ namespace PKEngineEditor.GameProject
             {
                 var projects = Serializer.FromFile<ProjectDataList>(_projectDataPath).Projects.OrderByDescending(s => s.Date);
                 _projects.Clear();
-                foreach(var project in projects)
+                foreach (var project in projects)
                 {
                     if (File.Exists(project.FullPath))
                     {
@@ -56,7 +56,7 @@ namespace PKEngineEditor.GameProject
                         _projects.Add(project);
                     }
                 }
-            } 
+            }
         }
 
         private static void WriteProjectData()
@@ -95,6 +95,8 @@ namespace PKEngineEditor.GameProject
             catch (Exception ex)
             {
                 Debug.WriteLine(ex.Message);
+                Logger.Log(MessageType.Error, $"Failed to read project data");
+                throw;
             }
         }
     }

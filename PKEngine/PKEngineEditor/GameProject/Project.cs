@@ -74,9 +74,13 @@ namespace PKEngineEditor.GameProject
         public static void Save(Project project)
         {
             Serializer.ToFile(project, project.FullPath);
+            Logger.Log(MessageType.Info, $"Project saved to {project.FullPath}");
         }
 
-        public void Unload() { }
+        public void Unload()
+        {
+            UndoRedoMgr.Reset();
+        }
 
         [OnDeserialized]
         public void OnDeserialized(StreamingContext context)
