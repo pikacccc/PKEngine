@@ -32,7 +32,7 @@ namespace PKEngineEditor.GameProject
         public List<ProjectData>? Projects { get; set; }
     }
 
-    public class OpenProjectViewModel
+    class OpenProjectViewModel
     {
         private static readonly string _applicationDataPath = $@"{Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData)}\PKEngineEditor\";
         private static readonly string _projectDataPath;

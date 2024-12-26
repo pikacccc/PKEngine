@@ -14,7 +14,7 @@ using System.Windows.Input;
 namespace PKEngineEditor.GameProject
 {
     [DataContract]
-    public class Scene : ViewModelBase
+    class Scene : ViewModelBase
     {
         private string _name;
         [DataMember]
