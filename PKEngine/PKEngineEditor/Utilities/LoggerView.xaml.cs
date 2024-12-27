@@ -36,5 +36,14 @@ namespace PKEngineEditor.Utilities
         {
             Logger.Clear();
         }
+
+        private void OnMessageFilter_Btn_Click(object sender, RoutedEventArgs e)
+        {
+            var filter = 0x0;
+            if (toggleInfo.IsChecked == true) filter |= (int)MessageType.Info;
+            if (toggleWarn.IsChecked == true) filter |= (int)MessageType.Warning;
+            if (toggleError.IsChecked == true) filter |= (int)MessageType.Error;
+            Logger.SetMessageFilter(filter);
+        }
     }
 }
