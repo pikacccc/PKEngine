@@ -20,8 +20,8 @@ namespace pk::transform {
 		{
 			assert(positions.size() == entity_index);
 			rotations.emplace_back(math::v4(info.rotation));
-			positions.emplace_back(math::v4(info.position));
-			scales.emplace_back(math::v4(info.scale));
+			positions.emplace_back(math::v3(info.position));
+			scales.emplace_back(math::v3(info.scale));
 		}
 
 		return component(transform_id{ (id::id_type)positions.size() - 1 });
