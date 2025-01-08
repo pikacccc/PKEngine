@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "PKEngineEditor": {
+      "commandName": "Project",
+      "nativeDebugging": false
+    }
+  }
+}
