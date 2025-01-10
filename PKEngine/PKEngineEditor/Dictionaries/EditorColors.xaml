@@ -24,7 +24,7 @@
     <SolidColorBrush Color="{StaticResource Editor.FontColor}" x:Key="Editor.FontBrush"/>
     <SolidColorBrush Color="{StaticResource Editor.RedColor}" x:Key="Editor.RedBrush"/>
     <SolidColorBrush Color="{StaticResource Editor.GreenColor}" x:Key="Editor.GreenBrush"/>
-    <SolidColorBrush Color="{StaticResource Editor.BlueColor}" x:Key="BlueBrush"/>
+    <SolidColorBrush Color="{StaticResource Editor.BlueColor}" x:Key="Editor.BlueBrush"/>
     <SolidColorBrush Color="{StaticResource Editor.OrangeColor}" x:Key="Editor.OrangeBrush"/>
     <SolidColorBrush Color="{StaticResource Editor.Selected.BackgroundColor}" x:Key="Editor.Selected.BackgroundBrush"/>
 </ResourceDictionary>

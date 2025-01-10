@@ -6,7 +6,8 @@
         xmlns:local="clr-namespace:PKEngineEditor"
         xmlns:editor="clr-namespace:PKEngineEditor.Editors"
         mc:Ignorable="d" WindowStartupLocation="CenterScreen"
-        Title="PK Editor" Height="540" Width="960">
+        Title="PK Editor" Height="540" Width="960"
+        Style="{StaticResource PkWindowStyle}">
     <Grid>
         <editor:WorldEditorView />
     </Grid>
