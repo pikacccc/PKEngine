@@ -9,6 +9,29 @@
         <EventSetter Event="KeyDown" Handler="OnTextBox_KeyDown"/>
     </Style>
 
+    <Style x:Key="SimpleButton" TargetType="{x:Type Button}">
+        <Setter Property="Background" Value="{DynamicResource Editor.Window.GrayBrush3}"/>
+        <Setter Property="BorderBrush" Value="{DynamicResource Editor.Window.GrayBrush5}"/>
+        <Setter Property="Foreground" Value="{DynamicResource Editor.FontBrush}"/>
+        <Setter Property="BorderThickness" Value="0"/>
+        <Setter Property="HorizontalContentAlignment" Value="Center"/>
+        <Setter Property="VerticalContentAlignment" Value="Center"/>
+        <Setter Property="VerticalAlignment" Value="Center"/>
+        <Setter Property="Padding" Value="0"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type Button}">
+                    <Border x:Name="border" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}"
+                            Background="{TemplateBinding Background}" SnapsToDevicePixels="True">
+                        <ContentPresenter x:Name="contentPresenter" Focusable="False" HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                          Margin="{TemplateBinding Padding}" RecognizesAccessKey="True" SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}"
+                                          VerticalAlignment="{TemplateBinding VerticalContentAlignment}"/>
+                    </Border>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
     <Style x:Key="PkWindowStyle" TargetType="{x:Type Window}">
         <Setter Property="BorderBrush" Value="{DynamicResource Editor.Selected.BackgroundBrush}"/>
         <Setter Property="Background" Value="{DynamicResource Editor.Window.GrayBrush1}"/>
@@ -69,6 +92,18 @@
                                             <Path Data="M1,1.5L 8,8.5" Margin="0"/>
                                             <Path Data="M1,8.5L 8,1.5" Margin="0"/>
                                         </Grid>
+                                    </Button.Content>
+                                </Button>
+
+                                <Button x:Name="btnRestore" Click="OnMaximizeRestore_Btn_Click">
+                                    <Button.Content>
+                                        <Rectangle Stroke="{DynamicResource Editor.FontBrush}" StrokeThickness="1" Width="10" Height="8"/>
+                                    </Button.Content>
+                                </Button>
+
+                                <Button x:Name="btnMinimize" Click="OnMinimize_Btn_Click">
+                                    <Button.Content>
+                                        <Rectangle Stroke="{DynamicResource Editor.FontBrush}" StrokeThickness="1" Width="10" Height="1" Margin="0,4,0,0"/>
                                     </Button.Content>
                                 </Button>
                             </DockPanel>

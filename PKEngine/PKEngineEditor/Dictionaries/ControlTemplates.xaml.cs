@@ -13,7 +13,8 @@ namespace PKEngineEditor.Dictionaries
 
             if (e.Key == Key.Enter)
             {
-                if ((textBox.Tag is ICommand command) && command.CanExecute(textBox.Text)){
+                if ((textBox.Tag is ICommand command) && command.CanExecute(textBox.Text))
+                {
                     command.Execute(textBox.Text);
                 }
                 else
@@ -34,6 +35,18 @@ namespace PKEngineEditor.Dictionaries
         {
             var window = (Window)((FrameworkElement)sender).TemplatedParent;
             window.Close();
+        }
+
+        private void OnMaximizeRestore_Btn_Click(object sender, RoutedEventArgs e)
+        {
+            var window = (Window)((FrameworkElement)sender).TemplatedParent;
+            window.WindowState = (window.WindowState == WindowState.Normal) ? WindowState.Maximized : WindowState.Normal;
+        }
+
+        private void OnMinimize_Btn_Click(object sender, RoutedEventArgs e)
+        {
+            var window = (Window)((FrameworkElement)sender).TemplatedParent;
+            window.WindowState = WindowState.Minimized;
         }
     }
 }
