@@ -9,6 +9,7 @@ using System.Windows.Data;
 using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
+using System.Windows.Media.Animation;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 
@@ -19,6 +20,8 @@ namespace PKEngineEditor.GameProject
     /// </summary>
     public partial class ProjectBrowserDialog : Window
     {
+        private readonly CubicEase _easing = new CubicEase() { EasingMode = EasingMode.EaseInOut};
+
         public ProjectBrowserDialog()
         {
             InitializeComponent();
@@ -32,7 +35,7 @@ namespace PKEngineEditor.GameProject
             {
                 openProjectBtn.IsEnabled = false;
                 openProjectBtn.Visibility = Visibility.Hidden;
-                OnToggleBtn_Click(createProjectBtn,new RoutedEventArgs());
+                OnToggleBtn_Click(createProjectBtn, new RoutedEventArgs());
             }
         }
 
@@ -40,22 +43,52 @@ namespace PKEngineEditor.GameProject
         {
             if (sender == openProjectBtn)
             {
-                if(createProjectBtn.IsChecked == true)
+                if (createProjectBtn.IsChecked == true)
                 {
                     createProjectBtn.IsChecked = false;
-                    browserContent.Margin =new Thickness(0);
+                    AnimateToOpenProject();
+                    openProjectView.IsEnabled = true;
+                    newProjectView.IsEnabled = false;
                 }
                 openProjectBtn.IsChecked = true;
             }
             else
             {
-                if(openProjectBtn.IsChecked == true)
+                if (openProjectBtn.IsChecked == true)
                 {
                     openProjectBtn.IsChecked = false;
-                    browserContent.Margin = new Thickness(-800,0,0,0);
+                    AnimateToCreateProject();
+                    openProjectView.IsEnabled = false;
+                    newProjectView.IsEnabled = true;
                 }
                 createProjectBtn.IsChecked = true;
             }
+        }
+
+        private void AnimateToCreateProject()
+        {
+            var hightlightAnimation = new DoubleAnimation(200, 400, new Duration(TimeSpan.FromSeconds(0.2)));
+            hightlightAnimation.EasingFunction = _easing;
+            hightlightAnimation.Completed += (s, e) =>
+            {
+                var animation = new ThicknessAnimation(new Thickness(0), new Thickness(-1600, 0, 0, 0), new Duration(TimeSpan.FromSeconds(0.5)));
+                animation.EasingFunction = _easing;
+                browserContent.BeginAnimation(MarginProperty, animation);
+            };
+            hightlightRect.BeginAnimation(Canvas.LeftProperty, hightlightAnimation);
+        }
+
+        private void AnimateToOpenProject()
+        {
+            var hightlightAnimation = new DoubleAnimation(400, 200, new Duration(TimeSpan.FromSeconds(0.2)));
+            hightlightAnimation.EasingFunction = _easing;
+            hightlightAnimation.Completed += (s, e) =>
+            {
+                var animation = new ThicknessAnimation(new Thickness(-1600, 0, 0, 0), new Thickness(0), new Duration(TimeSpan.FromSeconds(0.5)));
+                animation.EasingFunction = _easing;
+                browserContent.BeginAnimation(MarginProperty, animation);
+            };
+            hightlightRect.BeginAnimation(Canvas.LeftProperty, hightlightAnimation);
         }
     }
 }
