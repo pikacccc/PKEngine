@@ -19,7 +19,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\EngineTest\EngineTest.vcxproj" />
+    <ProjectReference Include="..\EngineDLL\EngineDLL.vcxproj" />
   </ItemGroup>
 
   <ItemGroup>
