@@ -13,12 +13,13 @@
     <Border CornerRadius="3" Background="{DynamicResource Editor.Window.GrayBrush3}" Width="700" HorizontalAlignment="Center" Margin="0,30">
         <StackPanel>
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,20,0,0">
-                <ListBox Width="195" Height="250" ItemsSource="{Binding ReadOnlyProjectTemplates}" x:Name="templateListBox" SelectedIndex="0">
+                <ListBox Width="195" Height="250" ItemsSource="{Binding ReadOnlyProjectTemplates}" x:Name="templateListBox" SelectedIndex="0" d:ItemsSource="{d:SampleData ItemCount=5}">
                     <ListBox.ItemTemplate>
                         <DataTemplate>
                             <StackPanel Orientation="Horizontal">
-                                <Image Source="{Binding Icon}"></Image>
-                                <TextBlock Text="{Binding ProjectType}"></TextBlock>
+                                <Image Source="{Binding Icon}" Margin="0,0,5,0"></Image>
+                                <TextBlock Text="{Binding ProjectType}" VerticalAlignment="Center" FontSize="18"
+                                           FontFamily="Bahnschrift Condensed" />
                             </StackPanel>
                         </DataTemplate>
                     </ListBox.ItemTemplate>

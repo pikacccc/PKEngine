@@ -4,3 +4,8 @@ PKEngine/PKEngineEditor/obj
 PKEngine/PKEngineEditor/bin
 PKEngine/Engine/x64
 PKEngine/x64
+PKEngine/EngineTest/x64
+PKEngine/EngineDLL/x64
+*.idb
+PKEngine/EngineDLL/x64/Debug
+PKEngine/EngineTest/x64/Debug

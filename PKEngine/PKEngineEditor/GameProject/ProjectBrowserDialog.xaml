@@ -52,12 +52,12 @@
         <Canvas x:Name="canvas">
             <Rectangle Width="{Binding Path=ActualWidth, ElementName=createProjectBtn}"
                        Height="{Binding Path=ActualHeight,ElementName=canvas}"
-                       x:Name="hightlightRect" Canvas.Left="200" Opacity="0.3">
+                       x:Name="hightlightRect" Canvas.Left="200" Opacity="0.5">
                 <Rectangle.Effect>
-                    <BlurEffect Radius="10" KernelType="Gaussian"/>
+                    <BlurEffect Radius="1" KernelType="Gaussian"/>
                 </Rectangle.Effect>
                 <Rectangle.Fill>
-                    <RadialGradientBrush GradientOrigin="0.5,1" Center="0.5,1" RadiusY="2">
+                    <RadialGradientBrush GradientOrigin="0.5,1" Center="0.5,1" RadiusY="1">
                         <RadialGradientBrush.GradientStops>
                             <GradientStop Color="White" Offset="0"/>
                             <GradientStop Color="Transparent" Offset="1"/>
@@ -65,7 +65,7 @@
                     </RadialGradientBrush>
                 </Rectangle.Fill>
                 <Rectangle.OpacityMask>
-                    <RadialGradientBrush GradientOrigin="0.5,1" Center="0.5,1" RadiusY="0.5">
+                    <RadialGradientBrush GradientOrigin="0.5,1" Center="0.5,1" RadiusY="1">
                         <RadialGradientBrush.GradientStops>
                             <GradientStop Color="White" Offset="0"/>
                             <GradientStop Color="Transparent" Offset="1"/>
@@ -86,7 +86,7 @@
                 </LinearGradientBrush>
             </Rectangle.Fill>
         </Rectangle>
-        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="20" Grid.Row="0">
+        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center"  Grid.Row="0">
             <ToggleButton Content="OPEN PROJECT" x:Name="openProjectBtn" Margin="10,20,0,20" Click="OnToggleBtn_Click" IsChecked="True"></ToggleButton>
             <ToggleButton Content="CREATE PROJECT" x:Name="createProjectBtn" Margin="40,20,0,20" Click="OnToggleBtn_Click"></ToggleButton>
         </StackPanel>

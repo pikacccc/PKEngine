@@ -2,10 +2,10 @@
 #define EDITOR_INTERFACE extern "C" __declspec(dllexport)
 #endif
 
-#include "CommonHeader.h"
-#include "Id.h"
-#include "..\Engine\Components\Entity.h"
-#include "..\Engine\Components\Transform.h"
+#include "Common/CommonHeader.h"
+#include "Common/Id.h"
+#include "Components/Entity.h"
+#include "Components/Transform.h"
 
 using namespace pk;
 

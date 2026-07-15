@@ -134,6 +134,11 @@
     <ClCompile Include="Main.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Engine\Engine.vcxproj">
+      <Project>{33cdcb24-d3b0-405b-8667-a3fe6a232ac8}</Project>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
     <ClInclude Include="Test.h" />
     <ClInclude Include="TestEntityComponents.h" />
   </ItemGroup>

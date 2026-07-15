@@ -7,24 +7,28 @@
              mc:Ignorable="d" Width="800"
              d:DataContext="{d:DesignInstance Type=local:OpenProjectViewModel}"
              d:DesignHeight="450" d:DesignWidth="800">
-
     <UserControl.DataContext>
         <local:OpenProjectViewModel></local:OpenProjectViewModel>
     </UserControl.DataContext>
     <Border CornerRadius="3" Background="{StaticResource Editor.Window.GrayBrush3}" Width="700" HorizontalAlignment="Center" Margin="0,30">
         <StackPanel>
             <StackPanel Height="250" Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,20,0,0">
-                <ListBox Width="195" Height="250" ItemsSource="{Binding Projects}" x:Name="projectListBox" SelectedIndex="0">
+                <ListBox Width="195" Height="250" ItemsSource="{Binding Projects}" x:Name="projectListBox" SelectedIndex="0" d:ItemsSource="{d:SampleData ItemCount=5}">
                     <ListBox.ItemContainerStyle>
-                        <Style TargetType="ListBoxItem">
+                        <Style TargetType="ListBoxItem" BasedOn="{StaticResource ListBoxItemStyle}">
                             <EventSetter Event="MouseDoubleClick" Handler="ListBoxItem_MouseDoubleClick"></EventSetter>
                         </Style>
                     </ListBox.ItemContainerStyle>
                     <ListBox.ItemTemplate>
                         <DataTemplate>
-                            <StackPanel Orientation="Horizontal">
-                                <Image Source="{Binding Icon}"></Image>
-                                <TextBlock Text="{Binding ProjectName}"></TextBlock>
+                            <StackPanel Width="180">
+                                <StackPanel Orientation="Horizontal">
+                                    <Image Source="{Binding Icon}" Margin="0,0,5,0"></Image>
+                                    <TextBlock Text="{Binding ProjectName}" FontSize="24" FontFamily="Bahnschrift condensed"
+                                               VerticalAlignment="Center"/>
+                                </StackPanel>
+                                <TextBlock Text="{Binding ProjectPath}" FontSize="8" TextTrimming="WordEllipsis"/>
+                                <TextBlock Text="{Binding Date}" FontSize="8"/>
                             </StackPanel>
                         </DataTemplate>
                     </ListBox.ItemTemplate>
