@@ -32,7 +32,7 @@ namespace PKEngineEditor.Editors
         {
             Loaded -= OnWorldEditorViewLoaded;
             Focus();
-            ((INotifyCollectionChanged)Project.UndoRedoMgr.UndoList).CollectionChanged += (s, e) => Focus();
+            //((INotifyCollectionChanged)Project.UndoRedoMgr.UndoList).CollectionChanged += (s, e) => Focus();
         }
     }
 }

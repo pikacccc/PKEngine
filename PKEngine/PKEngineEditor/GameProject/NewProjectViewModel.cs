@@ -28,7 +28,7 @@ namespace PKEngineEditor.GameProject
 
     public class NewProjectViewModel : ViewModelBase
     {
-        private readonly string _templatePath = @"..\..\PKEngineEditor\ProjectTemplates";
+        private readonly string _templatePath = Path.Combine(AppContext.BaseDirectory, "ProjectTemplates");
 
         private string _projectName = "NewProject";
         public string ProjectName
