@@ -16,6 +16,8 @@ namespace PKEngineEditor.Components
             Debug.Assert(owner != null);
             Owner = owner;
         }
+
+        public abstract IMSComponent GetMSComponent(MSEntity msEntity);
     }
 
     abstract class MSComponent<T> : ViewModelBase, IMSComponent where T : Component

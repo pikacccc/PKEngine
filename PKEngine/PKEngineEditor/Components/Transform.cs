@@ -55,6 +55,11 @@ namespace PKEngineEditor.Components
         public Transform(GameEntity owner) : base(owner)
         {
         }
+
+        public override IMSComponent GetMSComponent(MSEntity msEntity)
+        {
+            return new MSTransform(msEntity);
+        }
     }
 
     sealed class MSTransform : MSComponent<Transform>
@@ -237,22 +242,16 @@ namespace PKEngineEditor.Components
 
         protected override bool UpdateMSComponent()
         {
-            PosX = GetMixedValue(x => x.Position.X);
-            PosY = GetMixedValue(x => x.Position.Y);
-            PosZ = GetMixedValue(x => x.Position.Z);
-            RotX = GetMixedValue(x => x.Rotation.X);
-            RotY = GetMixedValue(x => x.Rotation.Y);
-            RotZ = GetMixedValue(x => x.Rotation.Z);
-            ScaleX = GetMixedValue(x => x.Scale.X);
-            ScaleY = GetMixedValue(x => x.Scale.Y);
-            ScaleZ = GetMixedValue(x => x.Scale.Z);
+            PosX = MSGameEntity.GetMixedValue(SelectedComponents, (x) => x.Position.X);
+            PosY = MSGameEntity.GetMixedValue(SelectedComponents, (x) => x.Position.Y);
+            PosZ = MSGameEntity.GetMixedValue(SelectedComponents, (x) => x.Position.Z);
+            RotX = MSGameEntity.GetMixedValue(SelectedComponents, (x) => x.Rotation.X);
+            RotY = MSGameEntity.GetMixedValue(SelectedComponents, (x) => x.Rotation.Y);
+            RotZ = MSGameEntity.GetMixedValue(SelectedComponents, (x) => x.Rotation.Z);
+            ScaleX = MSGameEntity.GetMixedValue(SelectedComponents, (x) => x.Scale.X);
+            ScaleY = MSGameEntity.GetMixedValue(SelectedComponents, (x) => x.Scale.Y);
+            ScaleZ = MSGameEntity.GetMixedValue(SelectedComponents, (x) => x.Scale.Z);
             return true;
-        }
-
-        private float? GetMixedValue(Func<Transform, float> getValue)
-        {
-            var value = getValue(SelectedComponents.First());
-            return SelectedComponents.Skip(1).Any(x => !value.IsTheSameAs(getValue(x))) ? null : value;
         }
     }
 }
