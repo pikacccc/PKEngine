@@ -16,6 +16,9 @@
     <Compile Update="Editors\WorldEditor\ProjectLayoutView.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Update="Editors\WorldEditor\TransformView.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Update="Editors\WorldEditor\WorldEditorView.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
