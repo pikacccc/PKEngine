@@ -13,7 +13,7 @@
             <Setter Property="FontFamily" Value="Bahnschrift condensed"/>
             <Setter Property="Background" Value="Transparent"/>
             <Setter Property="BorderBrush" Value="Transparent"/>
-            <Setter Property="Foreground" Value="{DynamicResource Editor.Disabled.FontBrush}"/>
+            <Setter Property="Foreground" Value="{StaticResource Editor.Disabled.FontBrush}"/>
             <Setter Property="HorizontalContentAlignment" Value="Center"/>
             <Setter Property="VerticalContentAlignment" Value="Center"/>
             <Setter Property="Template">
@@ -26,7 +26,7 @@
                         </TextBlock>
                         <ControlTemplate.Triggers>
                             <Trigger Property="IsEnabled" Value="False">
-                                <Setter Property="Background" Value="{DynamicResource Editor.Window.GrayBrush4}"/>
+                                <Setter Property="Background" Value="{StaticResource Editor.Window.GrayBrush4}"/>
                             </Trigger>
                             <Trigger Property="IsChecked" Value="True">
                                 <Setter Property="Foreground" Value="White"/>
@@ -36,7 +36,7 @@
                                     <Condition Property="IsMouseOver" Value="True"/>
                                     <Condition Property="IsChecked" Value="False"/>
                                 </MultiTrigger.Conditions>
-                                <Setter Property="Foreground" Value="{DynamicResource Editor.FontBrush}"/>
+                                <Setter Property="Foreground" Value="{StaticResource Editor.FontBrush}"/>
                             </MultiTrigger>
                         </ControlTemplate.Triggers>
                     </ControlTemplate>

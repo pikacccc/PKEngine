@@ -54,6 +54,7 @@ namespace PKEngineEditor.Editors
 
         private void OnName_TextBox_GotKeyboardFocus(object sender, System.Windows.Input.KeyboardFocusChangedEventArgs e)
         {
+            _protertyName = string.Empty;
             _undoAction = GetRenameAction();
         }
 

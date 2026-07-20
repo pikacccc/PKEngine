@@ -10,7 +10,7 @@ namespace PKEngineEditor.Utilities.Controls
         Vector4,
     }
 
-    class VectorBox : Control
+    public class VectorBox : Control
     {
         public VectorType VectorType
         {

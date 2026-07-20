@@ -19,10 +19,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\EngineDLL\EngineDLL.vcxproj" />
-  </ItemGroup>
-
-  <ItemGroup>
     <Content Include="ProjectTemplates\**\*">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>

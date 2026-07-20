@@ -195,9 +195,9 @@ namespace PKEngineEditor.Components
             Refresh();
         }
 
-        protected override bool UpdateComponents(string PropertyName)
+        protected override bool UpdateComponents(string propertyName)
         {
-            switch (PropertyName)
+            switch (propertyName)
             {
                 case nameof(PosX):
                     if (PosX.HasValue)
@@ -242,15 +242,15 @@ namespace PKEngineEditor.Components
 
         protected override bool UpdateMSComponent()
         {
-            PosX = MSGameEntity.GetMixedValue(SelectedComponents, (x) => x.Position.X);
-            PosY = MSGameEntity.GetMixedValue(SelectedComponents, (x) => x.Position.Y);
-            PosZ = MSGameEntity.GetMixedValue(SelectedComponents, (x) => x.Position.Z);
-            RotX = MSGameEntity.GetMixedValue(SelectedComponents, (x) => x.Rotation.X);
-            RotY = MSGameEntity.GetMixedValue(SelectedComponents, (x) => x.Rotation.Y);
-            RotZ = MSGameEntity.GetMixedValue(SelectedComponents, (x) => x.Rotation.Z);
-            ScaleX = MSGameEntity.GetMixedValue(SelectedComponents, (x) => x.Scale.X);
-            ScaleY = MSGameEntity.GetMixedValue(SelectedComponents, (x) => x.Scale.Y);
-            ScaleZ = MSGameEntity.GetMixedValue(SelectedComponents, (x) => x.Scale.Z);
+            PosX = MSEntity.GetMixedValue(SelectedComponents, (x) => x.Position.X);
+            PosY = MSEntity.GetMixedValue(SelectedComponents, (x) => x.Position.Y);
+            PosZ = MSEntity.GetMixedValue(SelectedComponents, (x) => x.Position.Z);
+            RotX = MSEntity.GetMixedValue(SelectedComponents, (x) => x.Rotation.X);
+            RotY = MSEntity.GetMixedValue(SelectedComponents, (x) => x.Rotation.Y);
+            RotZ = MSEntity.GetMixedValue(SelectedComponents, (x) => x.Rotation.Z);
+            ScaleX = MSEntity.GetMixedValue(SelectedComponents, (x) => x.Scale.X);
+            ScaleY = MSEntity.GetMixedValue(SelectedComponents, (x) => x.Scale.Y);
+            ScaleZ = MSEntity.GetMixedValue(SelectedComponents, (x) => x.Scale.Z);
             return true;
         }
     }

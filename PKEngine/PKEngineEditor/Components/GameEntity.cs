@@ -40,9 +40,10 @@ namespace PKEngineEditor.Components
                         EngineId = EngineAPI.CreateGameEntity(this);
                         Debug.Assert(ID.IsValid(_entityId));
                     }
-                    else
+                    else if(ID.IsValid(_entityId))
                     {
                         EngineAPI.RemoveGameEntity(this);
+                        EngineId = ID.INVALID_ID;
                     }
                     OnPropertyChanged(nameof(IsActive));
                 }
@@ -87,7 +88,7 @@ namespace PKEngineEditor.Components
         public ReadOnlyObservableCollection<Component> Components { get; private set; }
 
         public Component GetComponent(Type type) => Components.FirstOrDefault(c => c.GetType() == type);
-        public T GetComponent<T>() where T : Component => GetComponent(typeof(T)) as T;
+        public T? GetComponent<T>() where T : Component => GetComponent(typeof(T)) as T;
 
         [OnDeserialized]
         void OnDeserialized(StreamingContext context)
@@ -145,6 +146,8 @@ namespace PKEngineEditor.Components
         private readonly ObservableCollection<IMSComponent> _components = new ObservableCollection<IMSComponent>();
         public ReadOnlyObservableCollection<IMSComponent> Components { get; }
 
+        public IMSComponent GetComponent(Type type) => Components.FirstOrDefault(c => c.GetType() == type);
+        public T GetComponent<T>() where T : IMSComponent => (T)GetComponent(typeof(T));
         private void MakeComponentList()
         {
             _components.Clear();

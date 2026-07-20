@@ -6,7 +6,7 @@ namespace PKEngineEditor.Utilities.Controls
 {
     [TemplatePart(Name = "PART_textBlock", Type = typeof(TextBlock))]
     [TemplatePart(Name = "PART_textBox", Type = typeof(TextBox))]
-    class NumberBox : Control
+    public class NumberBox : Control
     {
         public double Multiplier
         {
@@ -87,6 +87,7 @@ namespace PKEngineEditor.Utilities.Controls
             _valueChanged = false;
             e.Handled = true;
             _mouseXStart = e.GetPosition(this).X;
+            Focus();
         }
 
         static NumberBox()
