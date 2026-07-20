@@ -24,7 +24,7 @@ namespace pk::transform {
 			scales.emplace_back(math::v3(info.scale));
 		}
 
-		return component(transform_id{ (id::id_type)positions.size() - 1 });
+		return component(transform_id{ entity.get_id() });
 	}
 
 	void remove_transform(component c) {
