@@ -1,6 +1,5 @@
 #pragma once
-
-#include "..\Components\ComponentsCommon.h"
+#include "Id.h"
 
 namespace pk::transform {
 	DEFINE_TYPED_ID(transform_id);

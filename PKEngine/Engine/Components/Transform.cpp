@@ -8,7 +8,7 @@ namespace pk::transform {
 		util::vector<math::v3> scales;
 	}
 
-	component create_transform(const init_info& info, game_entity::entity entity) {
+	component create(const init_info& info, game_entity::entity entity) {
 		assert(entity.is_valid());
 		const id::id_type entity_index{ id::index(entity.get_id()) };
 		if (positions.size() > entity_index) {
@@ -27,14 +27,15 @@ namespace pk::transform {
 		return component(transform_id{ entity.get_id() });
 	}
 
-	void remove_transform(component c) {
+	void remove(component c) {
 		assert(c.is_valid());
 	}
-
+	
 	math::v3 component::position() const {
 		assert(is_valid());
 		return positions[id::index(_id)];
 	}
+
 	math::v4 component::rotation() const {
 		assert(is_valid());
 		return rotations[id::index(_id)];
