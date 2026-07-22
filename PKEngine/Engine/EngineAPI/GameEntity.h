@@ -38,24 +38,37 @@ namespace pk
         {
         public:
             virtual ~entity_script() = default;
-            virtual void begin_play() = 0;
-            virtual void update(float) = 0;
+            virtual void begin_play(){};
+            virtual void update(float){};
 
         protected:
             constexpr explicit entity_script(game_entity::entity entity) : game_entity::entity{entity}
             {
             }
         };
-        
+
         namespace detail
         {
-            using script_ptr= std::unique_ptr<entity_script>;
+            using script_ptr = std::unique_ptr<entity_script>;
             using script_creator = script_ptr(*)(game_entity::entity entity);
-        
-            template<class script_class>
+            using string_hash = std::hash<std::string>;
+            u8 register_script(size_t, script_creator);
+
+            template <class script_class>
             script_ptr create_script(game_entity::entity entity)
             {
+                assert(entity.is_valid());
                 return std::make_unique<script_class>(entity);
+            }
+
+#define REGISTER_SCRIPT(TYPE)                                                   \
+            class TYPE;                                                         \
+            namespace{                                                          \
+                const u8 reg_##TYPE{                                            \
+                    pk::script::detail::register_script(                        \
+                        pk::script::detail::string_hash()(#TYPE),               \
+                        &pk::script::detail::create_script<TYPE>)               \
+                };                                                              \
             }
         }
     }
