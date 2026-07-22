@@ -1,11 +1,31 @@
+# Visual Studio user state and caches
+.vs/
+*.suo
+*.user
+*.VC.db
+*.VC.opendb
 
-PKEngine/.vs
-PKEngine/PKEngineEditor/obj
-PKEngine/PKEngineEditor/bin
-PKEngine/Engine/x64
-PKEngine/x64
-PKEngine/EngineTest/x64
-PKEngine/EngineDLL/x64
+# JetBrains Rider / IntelliJ IDEA
+.idea/
+*.sln.iml
+*.DotSettings.user
+
+# .NET build outputs
+[Bb]in/
+[Oo]bj/
+
+# MSVC build outputs
+x64/
+Win32/
+[Dd]ebug/
+[Rr]elease/
 *.idb
-PKEngine/EngineDLL/x64/Debug
-PKEngine/EngineTest/x64/Debug
+*.pdb
+*.ilk
+*.ipch
+*.tlog
+*.recipe
+
+# Visual Studio upgrade artifacts
+UpgradeLog*.htm
+Backup*/
