@@ -1,4 +1,4 @@
 #pragma once
-#include "CommonHeader.h"
-#include "Id.h"
+#include "..\Common/CommonHeader.h"
+#include "..\Common/Id.h"
 #include "..\EngineAPI\GameEntity.h"

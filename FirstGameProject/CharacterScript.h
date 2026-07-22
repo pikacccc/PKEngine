@@ -2,7 +2,7 @@
 
 namespace first_game_project
 {
-    class CharacterScript
+    class character_script:public pk::script::entity_script
     {
     public:
     
