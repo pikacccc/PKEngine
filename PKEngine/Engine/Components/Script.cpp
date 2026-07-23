@@ -11,11 +11,11 @@ namespace pk::script
         util::vector<id::generation_type> generations;
         util::deque<script_id> free_ids;
 
-        using script_registery = std::unordered_map<u8, detail::script_creator>;
+        using script_registry = std::unordered_map<u8, detail::script_creator>;
 
-        script_registery& registry()
+        script_registry& registry()
         {
-            static script_registery reg;
+            static script_registry reg;
             return reg;
         }
 
@@ -34,7 +34,7 @@ namespace pk::script
     {
         u8 register_script(size_t tag, script_creator func)
         {
-            bool res{registry().insert(script_registery::value_type{tag, func}).second};
+            bool res{registry().insert(script_registry::value_type{tag, func}).second};
             assert(res);
             return res;
         }
@@ -61,9 +61,9 @@ namespace pk::script
         }
 
         assert(id::is_valid(id));
+        const id::id_type index{static_cast<id::id_type>(entity_scripts.size())};
         entity_scripts.emplace_back(info.script_creator(entity));
         assert(entity_scripts.back()->get_id()==entity.get_id());
-        const id::id_type index{static_cast<id::id_type>(entity_scripts.size())};
         id_mapping[id::index(id)] = index;
 
         return component{id};

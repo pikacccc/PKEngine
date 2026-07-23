@@ -12,18 +12,16 @@ namespace PKEngineEditor.GameProject
     [DataContract]
     public class ProjectTemplate
     {
-        [DataMember]
-        public string? ProjectType { get; set; }
-        [DataMember]
-        public string? ProjectFile { get; set; }
-        [DataMember]
-        public List<string>? Folders { get; set; }
+        [DataMember] public string? ProjectType { get; set; }
+        [DataMember] public string? ProjectFile { get; set; }
+        [DataMember] public List<string>? Folders { get; set; }
 
         public byte[]? Icon { get; set; }
         public byte[]? ScreenShot { get; set; }
         public string? IconFilePath { get; set; }
         public string? ScreenShotFilePath { get; set; }
         public string? ProjectFilePath { get; set; }
+        public string? TemplatePath { get; set; }
     }
 
     public class NewProjectViewModel : ViewModelBase
@@ -31,6 +29,7 @@ namespace PKEngineEditor.GameProject
         private readonly string _templatePath = Path.Combine(AppContext.BaseDirectory, "ProjectTemplates");
 
         private string _projectName = "NewProject";
+
         public string ProjectName
         {
             get => _projectName;
@@ -46,6 +45,7 @@ namespace PKEngineEditor.GameProject
         }
 
         private string _projectPath = $@"{Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments)}\PKProject\";
+
         public string ProjectPath
         {
             get => _projectPath;
@@ -63,6 +63,7 @@ namespace PKEngineEditor.GameProject
         private ObservableCollection<ProjectTemplate> _projectTemplates = new ObservableCollection<ProjectTemplate>();
 
         private ReadOnlyObservableCollection<ProjectTemplate> _readOnlyProjectTemplates;
+
         public ReadOnlyObservableCollection<ProjectTemplate> ReadOnlyProjectTemplates
         {
             get
@@ -71,11 +72,13 @@ namespace PKEngineEditor.GameProject
                 {
                     _readOnlyProjectTemplates = new ReadOnlyObservableCollection<ProjectTemplate>(_projectTemplates);
                 }
+
                 return _readOnlyProjectTemplates;
             }
         }
 
         private bool _isValid;
+
         public bool IsValid
         {
             get => _isValid;
@@ -90,6 +93,7 @@ namespace PKEngineEditor.GameProject
         }
 
         private string _errorMsg;
+
         public string ErrorMsg
         {
             get => _errorMsg;
@@ -113,9 +117,12 @@ namespace PKEngineEditor.GameProject
                     var temp = Serializer.FromFile<ProjectTemplate>(templateFile);
                     temp.IconFilePath = Path.GetFullPath(Path.Combine(Path.GetDirectoryName(templateFile), "Icon.png"));
                     temp.Icon = File.ReadAllBytes(temp.IconFilePath);
-                    temp.ScreenShotFilePath = Path.GetFullPath(Path.Combine(Path.GetDirectoryName(templateFile), "ScreenShot.png"));
+                    temp.ScreenShotFilePath =
+                        Path.GetFullPath(Path.Combine(Path.GetDirectoryName(templateFile), "ScreenShot.png"));
                     temp.ScreenShot = File.ReadAllBytes(temp.ScreenShotFilePath);
-                    temp.ProjectFilePath = Path.GetFullPath(Path.Combine(Path.GetDirectoryName(templateFile), temp.ProjectFile));
+                    temp.ProjectFilePath =
+                        Path.GetFullPath(Path.Combine(Path.GetDirectoryName(templateFile), temp.ProjectFile));
+                    temp.TemplatePath = Path.GetDirectoryName(templateFile);
                     _projectTemplates.Add(temp);
                 }
 
@@ -164,6 +171,7 @@ namespace PKEngineEditor.GameProject
                 ErrorMsg = string.Empty;
                 IsValid = true;
             }
+
             return IsValid;
         }
 
@@ -185,15 +193,19 @@ namespace PKEngineEditor.GameProject
                     var fullPath = Path.GetFullPath(tempPath);
                     Directory.CreateDirectory(fullPath);
                 }
+
                 var dirInfo = new DirectoryInfo(path + @".Pk\");
                 dirInfo.Attributes |= FileAttributes.Hidden;
                 File.Copy(template.IconFilePath, Path.GetFullPath(Path.Combine(dirInfo.FullName, "Icon.png")));
-                File.Copy(template.ScreenShotFilePath, Path.GetFullPath(Path.Combine(dirInfo.FullName, "ScreenShot.png")));
+                File.Copy(template.ScreenShotFilePath,
+                    Path.GetFullPath(Path.Combine(dirInfo.FullName, "ScreenShot.png")));
 
                 var projectXml = File.ReadAllText(template.ProjectFilePath);
                 projectXml = string.Format(projectXml, ProjectName, path);
-                var projectFilePath = Path.GetFullPath(Path.Combine(path,$"{ProjectName}{Project.Extension}"));
+                var projectFilePath = Path.GetFullPath(Path.Combine(path, $"{ProjectName}{Project.Extension}"));
                 File.WriteAllText(projectFilePath, projectXml);
+
+                CreateMsvcSolution(template, path);
                 return path;
             }
             catch (Exception ex)
@@ -202,6 +214,33 @@ namespace PKEngineEditor.GameProject
                 Logger.Log(MessageType.Error, $"Failed to create {ProjectName}");
                 throw;
             }
+        }
+
+        //Create C++ GameCode Solution
+        private void CreateMsvcSolution(ProjectTemplate template, string projectPath)
+        {
+            Debug.Assert(template.TemplatePath != null);
+            Debug.Assert(File.Exists(Path.Combine(template.TemplatePath, "MSVCSolution")));
+            Debug.Assert(File.Exists(Path.Combine(template.TemplatePath, "MSVCProject")));
+
+            var engineApiPath = Path.Combine(MainWindow.PkEnginePath, @"Engine\EngineAPI\");
+            Debug.Assert(Path.Exists(engineApiPath));
+
+            var p0 = ProjectName;
+            var p1 = "{" + Guid.NewGuid().ToString().ToUpper() + "}";
+
+            var solution = File.ReadAllText(Path.Combine(template.TemplatePath, "MSVCSolution"));
+            var solutionP2 = "{" + Guid.NewGuid().ToString().ToUpper() + "}";
+            solution = string.Format(solution, p0, p1, solutionP2);
+            File.WriteAllText(Path.GetFullPath(Path.Combine(projectPath, $"{p0}.sln")), solution);
+
+            var project = File.ReadAllText(Path.Combine(template.TemplatePath, "MSVCProject"));
+
+            var projectP2 = engineApiPath;
+            var projectP3 = MainWindow.PkEnginePath;
+            project = string.Format(project, p0, p1, projectP2, projectP3);
+
+            File.WriteAllText(Path.GetFullPath(Path.Combine(projectPath, $"GameCode/{p0}.vcxproj")), project);
         }
     }
 }

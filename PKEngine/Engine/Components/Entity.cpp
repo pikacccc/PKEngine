@@ -57,6 +57,11 @@ namespace pk::game_entity
     {
         const id::id_type index{id::index(id)};
         assert(id::is_valid(id));
+        if (scripts[index].is_valid())
+        {
+            script::remove(scripts[index]);
+            scripts[index]={};
+        }
         transform::remove(transforms[index]);
         transforms[index] = {};
         free_ids.push_back(id);

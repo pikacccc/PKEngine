@@ -1,15 +1,8 @@
 ﻿using PKEngineEditor.GameProject;
 using System.ComponentModel;
-using System.Text;
+using System.IO;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
+using Path = System.IO.Path;
 
 namespace PKEngineEditor
 {
@@ -18,6 +11,7 @@ namespace PKEngineEditor
     /// </summary>
     public partial class MainWindow : Window
     {
+        public static string PkEnginePath { get; private set; }
         public MainWindow()
         {
             InitializeComponent();
@@ -34,7 +28,30 @@ namespace PKEngineEditor
         private void OnMainWindowLoaded(object sender, RoutedEventArgs e)
         {
             Loaded -= OnMainWindowLoaded;
+            GetEnginePath();
             OpenProjectBrowsereDialog();
+        }
+
+        private void GetEnginePath()
+        {
+            var enginePath = Environment.GetEnvironmentVariable("PK_ENGINE", EnvironmentVariableTarget.User);
+            if (enginePath == null || !Directory.Exists(Path.Combine(enginePath, @"Engine\EngineAPI")))
+            {
+                var dlg = new EnginePathDialog();
+                if (dlg.ShowDialog() == true)
+                {
+                    PkEnginePath = dlg.PkEnginePath;
+                    Environment.SetEnvironmentVariable("PK_ENGINE", dlg.PkEnginePath.ToUpper(), EnvironmentVariableTarget.User);
+                }
+                else
+                {
+                    Application.Current.Shutdown();
+                }
+            }
+            else
+            {
+                PkEnginePath = enginePath;
+            }
         }
 
         private void OpenProjectBrowsereDialog()
