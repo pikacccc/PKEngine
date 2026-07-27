@@ -6,6 +6,7 @@ using System.IO;
 using System.Runtime.Serialization;
 using System.Windows;
 using System.Windows.Input;
+using PKEngineEditor.GameDev;
 
 namespace PKEngineEditor.GameProject
 {
@@ -22,6 +23,8 @@ namespace PKEngineEditor.GameProject
 
         public string FullPath => $@"{Path}{Name}{Extension}";
 
+        public string Solution => $@"{Path}{Name}.sln";
+        
         [DataMember(Name = "Scenes")]
         private ObservableCollection<Scene> _scenes = new ObservableCollection<Scene>();
         public ReadOnlyObservableCollection<Scene> ReadOnlyScenes { get; private set; }
@@ -79,6 +82,7 @@ namespace PKEngineEditor.GameProject
 
         public void Unload()
         {
+            VisualStudio.CloseVisualStudio();
             UndoRedoMgr.Reset();
         }
 

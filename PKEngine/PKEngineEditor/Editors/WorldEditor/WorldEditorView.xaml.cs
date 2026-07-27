@@ -14,6 +14,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using PKEngineEditor.GameDev;
 
 namespace PKEngineEditor.Editors
 {
@@ -34,5 +35,12 @@ namespace PKEngineEditor.Editors
             Focus();
             //((INotifyCollectionChanged)Project.UndoRedoMgr.UndoList).CollectionChanged += (s, e) => Focus();
         }
+
+        private void OnNewScript_Button_Click(object sender, RoutedEventArgs e)
+        {
+            new NewScriptDialog().ShowDialog();
+
+        }
     }
+
 }
