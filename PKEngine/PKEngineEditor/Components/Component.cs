@@ -4,10 +4,10 @@ using System.Runtime.Serialization;
 
 namespace PKEngineEditor.Components
 {
-    interface IMSComponent { }
+    public interface IMSComponent { }
 
     [DataContract]
-    abstract class Component : ViewModelBase
+    public abstract class Component : ViewModelBase
     {
         [DataMember]
         public GameEntity Owner { get;private set; }

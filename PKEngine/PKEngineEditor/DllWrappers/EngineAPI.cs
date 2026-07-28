@@ -24,28 +24,39 @@ namespace PKEngineEditor.DllWrappers
 {
     static class EngineAPI
     {
-        private const string _dllName = "EngineDll.dll";
+        private const string EngineDll = "EngineDll.dll";
 
-        [DllImport(_dllName)]
-        private static extern int CreateGameEntity(GameEntityDescriptor desc);
-        public static int CreateGameEntity(GameEntity entity)
+        [DllImport(EngineDll,CharSet = CharSet.Ansi)]
+        public static extern int LoadGameCodeDll(string dllPath);
+        
+        [DllImport(EngineDll)]
+        public static extern int UnloadGameCodeDll();
+        
+        internal static class EntityAPI
         {
-            GameEntityDescriptor desc = new GameEntityDescriptor();
+            [DllImport(EngineDll)]
+            private static extern int CreateGameEntity(GameEntityDescriptor desc);
 
+            public static int CreateGameEntity(GameEntity entity)
             {
-                var c = entity.GetComponent<Transform>();
-                desc.Transform.Position = c.Position;
-                desc.Transform.Rotation = c.Rotation;
-                desc.Transform.Scale = c.Scale;
-            }
-            return CreateGameEntity(desc);
-        }
+                GameEntityDescriptor desc = new GameEntityDescriptor();
 
-        [DllImport(_dllName)]
-        private static extern void RemoveGameEntity(int id);
-        public static void RemoveGameEntity(GameEntity entity)
-        {
-            RemoveGameEntity(entity.EngineId);
+                {
+                    var c = entity.GetComponent<Transform>();
+                    desc.Transform.Position = c.Position;
+                    desc.Transform.Rotation = c.Rotation;
+                    desc.Transform.Scale = c.Scale;
+                }
+                return CreateGameEntity(desc);
+            }
+
+            [DllImport(EngineDll)]
+            private static extern void RemoveGameEntity(int id);
+
+            public static void RemoveGameEntity(GameEntity entity)
+            {
+                RemoveGameEntity(entity.EngineId);
+            }
         }
     }
 }

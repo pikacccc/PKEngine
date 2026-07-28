@@ -1,4 +1,4 @@
-﻿using PKEngineEditor.Common;
+using PKEngineEditor.Common;
 using PKEngineEditor.Utilities;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
@@ -6,30 +6,61 @@ using System.IO;
 using System.Runtime.Serialization;
 using System.Windows;
 using System.Windows.Input;
+using PKEngineEditor.DllWrappers;
 using PKEngineEditor.GameDev;
 
 namespace PKEngineEditor.GameProject
 {
+    public enum BuildConfiguration
+    {
+        Debug,
+        DebugEditor,
+        Release,
+        ReleaseEditor,
+    }
+
     [DataContract(Name = "Game")]
-    class Project : ViewModelBase
+    public class Project : ViewModelBase
     {
         public static string Extension { get; } = ".pk";
 
-        [DataMember]
-        public string Name { get; private set; } = "New Project";
+        [DataMember] public string Name { get; private set; } = "New Project";
 
-        [DataMember]
-        public string Path { get; private set; }
+        [DataMember] public string Path { get; private set; }
 
         public string FullPath => $@"{Path}{Name}{Extension}";
 
         public string Solution => $@"{Path}{Name}.sln";
-        
-        [DataMember(Name = "Scenes")]
-        private ObservableCollection<Scene> _scenes = new ObservableCollection<Scene>();
+
+        private static readonly string[] _buildConfigurations = { "Debug", "DebugEditor", "Release", "ReleaseEditor" };
+
+        [DataMember(Name = "Scenes")] private ObservableCollection<Scene> _scenes = new ObservableCollection<Scene>();
         public ReadOnlyObservableCollection<Scene> ReadOnlyScenes { get; private set; }
 
+        private int _buildConfig;
+
+        [DataMember]
+        public int BuildConfig
+        {
+            get => _buildConfig;
+            set
+            {
+                if (_buildConfig != value)
+                {
+                    _buildConfig = value;
+                    OnPropertyChanged(nameof(BuildConfig));
+                }
+            }
+        }
+
+        public BuildConfiguration StandAloneBuildConfig =>
+            BuildConfig == 0 ? BuildConfiguration.Debug : BuildConfiguration.Release;
+
+        public BuildConfiguration DllBuildConfig =>
+            BuildConfig == 0 ? BuildConfiguration.DebugEditor : BuildConfiguration.ReleaseEditor;
+
         private Scene _activeScene;
+
         public Scene ActiveScene
         {
             get => _activeScene;
@@ -41,7 +72,6 @@ namespace PKEngineEditor.GameProject
                     OnPropertyChanged(nameof(ActiveScene));
                 }
             }
-
         }
 
         public static Project CurProject => Application.Current.MainWindow.DataContext as Project;
@@ -55,6 +85,10 @@ namespace PKEngineEditor.GameProject
         public ICommand RemoveSceneCommand { get; private set; }
 
         public ICommand SaveCommand { get; private set; }
+
+        public ICommand BuidlCommand { get; private set; }
+
+        private static string GetConfigurationName(BuildConfiguration config) => _buildConfigurations[(int)config];
 
         private void AddScene(string sceneName)
         {
@@ -80,23 +114,75 @@ namespace PKEngineEditor.GameProject
             Logger.Log(MessageType.Info, $"Project saved to {project.FullPath}");
         }
 
+        private async Task BuildGameCodeDll(bool showWindow = true)
+        {
+            try
+            {
+                UnloadGameCodeDll();
+
+                await Task.Run(() => VisualStudio.BuildSolution(this, GetConfigurationName(DllBuildConfig), showWindow));
+                if (VisualStudio.BuildSucceeded)
+                {
+                    LoadGameCodeDll();
+                }
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine(ex.Message);
+                throw;
+            }
+        }
+
+        private void LoadGameCodeDll()
+        {
+            var configName = GetConfigurationName(DllBuildConfig);
+            var dll = $@"{Path}x64\{configName}\{Name}.dll";
+            if (File.Exists(dll) && EngineAPI.LoadGameCodeDll(dll) != 0)
+            {
+                Logger.Log(MessageType.Info, $"Game code loaded from {dll}");
+            }
+            else
+            {
+                Logger.Log(MessageType.Warning, $"Game code could not be loaded from {dll}");
+            }
+        }
+
+        private void UnloadGameCodeDll()
+        {
+            if (EngineAPI.UnloadGameCodeDll() != 0)
+            {
+                Logger.Log(MessageType.Info, "Game code unloaded");
+            }
+        }
+
         public void Unload()
         {
+            UnloadGameCodeDll();
             VisualStudio.CloseVisualStudio();
             UndoRedoMgr.Reset();
         }
 
         [OnDeserialized]
-        public void OnDeserialized(StreamingContext context)
+        public async void OnDeserialized(StreamingContext context)
         {
-            if (_scenes != null)
+            try
             {
-                ReadOnlyScenes = new ReadOnlyObservableCollection<Scene>(_scenes);
-                OnPropertyChanged(nameof(ReadOnlyScenes));
-            }
-            ActiveScene = ReadOnlyScenes.FirstOrDefault(s => s.IsActive);
+                if (_scenes != null)
+                {
+                    ReadOnlyScenes = new ReadOnlyObservableCollection<Scene>(_scenes);
+                    OnPropertyChanged(nameof(ReadOnlyScenes));
+                }
 
-            InitCommands();
+                ActiveScene = ReadOnlyScenes.FirstOrDefault(s => s.IsActive);
+
+                await BuildGameCodeDll(false);
+
+                InitCommands();
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine(ex.Message);
+            }
         }
 
         private void InitCommands()
@@ -124,11 +210,20 @@ namespace PKEngineEditor.GameProject
                     $"Remove {x.Name}"));
             }, x => !x.IsActive);
 
-            UndoCommand = new RelayCommand<object>((x) => UndoRedoMgr.Undo());
+            UndoCommand = new RelayCommand<object>((x) => UndoRedoMgr.Undo(), x => UndoRedoMgr.UndoList.Any());
 
-            RedoCommand = new RelayCommand<object>((x) => UndoRedoMgr.Redo());
+            RedoCommand = new RelayCommand<object>((x) => UndoRedoMgr.Redo(), x => UndoRedoMgr.RedoList.Any());
 
             SaveCommand = new RelayCommand<object>((x) => Save(this));
+            BuidlCommand = new RelayCommand<bool>(async (x) => await BuildGameCodeDll(x),
+                x => !(VisualStudio.IsDebugging() && VisualStudio.BuildDone));
+
+            OnPropertyChanged(nameof(AddSceneCommand));
+            OnPropertyChanged(nameof(RemoveSceneCommand));
+            OnPropertyChanged(nameof(UndoCommand));
+            OnPropertyChanged(nameof(RedoCommand));
+            OnPropertyChanged(nameof(SaveCommand));
+            OnPropertyChanged(nameof(BuidlCommand));
         }
 
         public Project(string name, string path)
@@ -141,7 +236,6 @@ namespace PKEngineEditor.GameProject
 
         public Project()
         {
-
         }
     }
 }

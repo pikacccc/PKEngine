@@ -30,7 +30,7 @@ namespace {1} {{
 
     }}
 
-    void {0}::update(float x)
+    void {0}::update(float dt)
     {{
 
     }}

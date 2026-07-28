@@ -10,7 +10,7 @@ namespace PKEngineEditor.Components
 {
     [DataContract]
     [KnownType(typeof(Transform))]
-    class GameEntity : ViewModelBase
+    public class GameEntity : ViewModelBase
     {
         private int _entityId = ID.INVALID_ID;
         public int EngineId
@@ -37,12 +37,12 @@ namespace PKEngineEditor.Components
                     _isActive = value;
                     if (_isActive)
                     {
-                        EngineId = EngineAPI.CreateGameEntity(this);
+                        EngineId = EngineAPI.EntityAPI.CreateGameEntity(this);
                         Debug.Assert(ID.IsValid(_entityId));
                     }
                     else if(ID.IsValid(_entityId))
                     {
-                        EngineAPI.RemoveGameEntity(this);
+                        EngineAPI.EntityAPI.RemoveGameEntity(this);
                         EngineId = ID.INVALID_ID;
                     }
                     OnPropertyChanged(nameof(IsActive));
@@ -111,7 +111,7 @@ namespace PKEngineEditor.Components
         }
     }
 
-    abstract class MSEntity : ViewModelBase
+    public abstract class MSEntity : ViewModelBase
     {
         private bool _enableUpdates = true;
 

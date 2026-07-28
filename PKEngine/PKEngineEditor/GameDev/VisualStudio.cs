@@ -5,6 +5,7 @@ using System.Runtime.InteropServices.ComTypes;
 using EnvDTE;
 using EnvDTE80;
 using PKEngineEditor.Utilities;
+using Project = PKEngineEditor.GameProject.Project;
 
 namespace PKEngineEditor.GameDev
 {
@@ -13,6 +14,8 @@ namespace PKEngineEditor.GameDev
         private static DTE2? _vsInstance;
 
         private static readonly string ProgId = "VisualStudio.DTE.17.0";
+        public static bool BuildSucceeded { get; private set; }
+        public static bool BuildDone { get; private set; }
 
         [DllImport("ole32.dll")]
         private static extern int CreateBindCtx(int reserved, out IBindCtx ppbc);
@@ -120,6 +123,7 @@ namespace PKEngineEditor.GameDev
                     {
                         _vsInstance.ItemOperations.OpenFile(cpp, Constants.vsViewKindTextView).Visible = true;
                     }
+
                     _vsInstance.MainWindow.Activate();
                     _vsInstance.MainWindow.Visible = true;
                 }
@@ -132,6 +136,100 @@ namespace PKEngineEditor.GameDev
             }
 
             return true;
+        }
+
+        public static bool IsDebugging()
+        {
+            bool res = false;
+            bool trueAgain = true;
+            for (int i = 0; i < 3 && trueAgain; ++i)
+            {
+                try
+                {
+                    res = _vsInstance != null && (_vsInstance.Debugger.CurrentProgram != null ||
+                                                  _vsInstance.Debugger.CurrentMode == EnvDTE.dbgDebugMode.dbgRunMode);
+                    trueAgain = false;
+                }
+                catch (Exception ex)
+                {
+                    Debug.WriteLine(ex.Message);
+                    System.Threading.Thread.Sleep(1000);
+                }
+            }
+
+            return res;
+        }
+
+        public static void BuildSolution(Project project, string configName, bool showWindow = true)
+        {
+            if (IsDebugging())
+            {
+                Logger.Log(MessageType.Error, "Visual Studio is currently running a process");
+                return;
+            }
+
+            OpenVisualStudio(project.Solution);
+            BuildDone = BuildSucceeded = false;
+
+            for (int i = 0; i < 3 && !BuildDone; ++i)
+            {
+                try
+                {
+                    if (_vsInstance != null && !_vsInstance.Solution.IsOpen)
+                        _vsInstance.Solution.Open(project.Solution);
+
+                    if (_vsInstance != null)
+                    {
+                        _vsInstance.MainWindow.Visible = showWindow;
+                        _vsInstance.Events.BuildEvents.OnBuildProjConfigBegin += BuildEventsOnOnBuildProjConfigBegin;
+                        _vsInstance.Events.BuildEvents.OnBuildProjConfigDone += BuildEventsOnOnBuildProjConfigDone;
+
+                        try
+                        {
+                            foreach (var pdbFile in Directory.GetFiles(
+                                         Path.Combine($"{project.Path}", $@"x64\{configName}"), "*.pdb"))
+                            {
+                                File.Delete(pdbFile);
+                            }
+                        }
+                        catch (Exception ex)
+                        {
+                            Debug.WriteLine(ex.Message);
+                        }
+
+                        _vsInstance.Solution.SolutionBuild.SolutionConfigurations.Item(configName).Activate();
+                        _vsInstance.ExecuteCommand("Build.BuildSolution");
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Debug.WriteLine(ex.Message);
+                    Debug.WriteLine($"Attempt {i}:failed to build {project.Name}");
+                    System.Threading.Thread.Sleep(1000);
+                }
+            }
+        }
+
+        private static void BuildEventsOnOnBuildProjConfigDone(string project, string projectConfig, string platform,
+            string solutionConfig, bool success)
+        {
+            if (_vsInstance != null)
+                _vsInstance.Events.BuildEvents.OnBuildProjConfigDone -= BuildEventsOnOnBuildProjConfigDone;
+            if (BuildDone) return;
+
+            if (success) Logger.Log(MessageType.Info, $"Building {projectConfig} configuration succeeded");
+            else Logger.Log(MessageType.Error, $"Building {projectConfig} configuration failed");
+
+            BuildDone = true;
+            BuildSucceeded = success;
+        }
+
+        private static void BuildEventsOnOnBuildProjConfigBegin(string project, string projectConfig, string platform,
+            string solutionConfig)
+        {
+            if (_vsInstance != null)
+                _vsInstance.Events.BuildEvents.OnBuildProjConfigBegin -= BuildEventsOnOnBuildProjConfigBegin;
+            Logger.Log(MessageType.Info, $"Building {project}, {projectConfig}, {platform}, {solutionConfig} ...");
         }
     }
 }
