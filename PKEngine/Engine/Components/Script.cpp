@@ -1,5 +1,6 @@
 ﻿#include "Script.h"
 #include "Entity.h"
+#include <Windows.h>
 
 namespace pk::script
 {
@@ -11,13 +12,21 @@ namespace pk::script
         util::vector<id::generation_type> generations;
         util::deque<script_id> free_ids;
 
-        using script_registry = std::unordered_map<u8, detail::script_creator>;
+        using script_registry = std::unordered_map<size_t, detail::script_creator>;
 
         script_registry& registry()
         {
             static script_registry reg;
             return reg;
         }
+
+#ifdef USE_WITH_EDITOR
+        util::vector<std::string>& script_name()
+        {
+            static util::vector<std::string> names;
+            return names;
+        }
+#endif
 
         bool exists(script_id id)
         {
@@ -37,6 +46,19 @@ namespace pk::script
             bool res{registry().insert(script_registry::value_type{tag, func}).second};
             assert(res);
             return res;
+        }
+
+        script_creator get_script_creator(size_t tag)
+        {
+            auto script = pk::script::registry().find(tag);
+            assert(script != pk::script::registry().end() && script->first == tag);
+            return script->second;
+        }
+
+        u8 add_script_name(const char* name)
+        {
+            script_name().emplace_back(name);
+            return true;
         }
     }
 
@@ -80,3 +102,22 @@ namespace pk::script
         id_mapping[id::index(id)] = id::invalid_id;
     }
 }
+
+#ifdef USE_WITH_EDITOR
+
+#include <atlsafe.h>
+
+extern "C" __declspec(dllexport)
+LPSAFEARRAY
+get_script_names()
+{
+    const u32 size{static_cast<u32>(pk::script::script_name().size())};
+    if (!size) return nullptr;
+    CComSafeArray<BSTR> names(size);
+    for (u32 i{0}; i < size; ++i)
+    {
+        names.SetAt(i, A2BSTR_EX(pk::script::script_name()[i].c_str()), false);
+    }
+    return names.Detach();
+}
+#endif

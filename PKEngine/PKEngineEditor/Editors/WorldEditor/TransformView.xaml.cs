@@ -7,7 +7,7 @@ using PKEngineEditor.GameProject;
 using PKEngineEditor.Utilities;
 using Vector3 = System.Numerics.Vector3;
 
-namespace PKEngineEditor.Editors.WorldEditor
+namespace PKEngineEditor.Editors
 {
     /// <summary>
     /// TransformView.xaml 的交互逻辑

@@ -6,6 +6,7 @@ using System.IO;
 using System.Runtime.Serialization;
 using System.Windows;
 using System.Windows.Input;
+using PKEngineEditor.Components;
 using PKEngineEditor.DllWrappers;
 using PKEngineEditor.GameDev;
 
@@ -59,6 +60,21 @@ namespace PKEngineEditor.GameProject
         public BuildConfiguration DllBuildConfig =>
             BuildConfig == 0 ? BuildConfiguration.DebugEditor : BuildConfiguration.ReleaseEditor;
 
+        private string[] _availableScripts;
+
+        public string[] AvailableScripts
+        {
+            get => _availableScripts;
+            set
+            {
+                if (_availableScripts != value)
+                {
+                    _availableScripts = value;
+                    OnPropertyChanged(nameof(AvailableScripts));
+                }
+            }
+        }
+
         private Scene _activeScene;
 
         public Scene ActiveScene
@@ -86,7 +102,7 @@ namespace PKEngineEditor.GameProject
 
         public ICommand SaveCommand { get; private set; }
 
-        public ICommand BuidlCommand { get; private set; }
+        public ICommand BuildCommand { get; private set; }
 
         private static string GetConfigurationName(BuildConfiguration config) => _buildConfigurations[(int)config];
 
@@ -120,7 +136,8 @@ namespace PKEngineEditor.GameProject
             {
                 UnloadGameCodeDll();
 
-                await Task.Run(() => VisualStudio.BuildSolution(this, GetConfigurationName(DllBuildConfig), showWindow));
+                await Task.Run(() =>
+                    VisualStudio.BuildSolution(this, GetConfigurationName(DllBuildConfig), showWindow));
                 if (VisualStudio.BuildSucceeded)
                 {
                     LoadGameCodeDll();
@@ -137,8 +154,12 @@ namespace PKEngineEditor.GameProject
         {
             var configName = GetConfigurationName(DllBuildConfig);
             var dll = $@"{Path}x64\{configName}\{Name}.dll";
+            AvailableScripts = null;
             if (File.Exists(dll) && EngineAPI.LoadGameCodeDll(dll) != 0)
             {
+                AvailableScripts = EngineAPI.GetScriptNames();
+                ActiveScene.GameEntities.Where(x => x.GetComponent<Script>() != null).ToList()
+                    .ForEach(x => x.IsActive = true);
                 Logger.Log(MessageType.Info, $"Game code loaded from {dll}");
             }
             else
@@ -149,8 +170,11 @@ namespace PKEngineEditor.GameProject
 
         private void UnloadGameCodeDll()
         {
+            ActiveScene.GameEntities.Where(x => x.GetComponent<Script>() != null).ToList()
+                .ForEach(x => x.IsActive = false);
             if (EngineAPI.UnloadGameCodeDll() != 0)
             {
+                AvailableScripts = null;
                 Logger.Log(MessageType.Info, "Game code unloaded");
             }
         }
@@ -174,7 +198,7 @@ namespace PKEngineEditor.GameProject
                 }
 
                 ActiveScene = ReadOnlyScenes.FirstOrDefault(s => s.IsActive);
-
+                Debug.Assert(ActiveScene != null);
                 await BuildGameCodeDll(false);
 
                 InitCommands();
@@ -215,7 +239,7 @@ namespace PKEngineEditor.GameProject
             RedoCommand = new RelayCommand<object>((x) => UndoRedoMgr.Redo(), x => UndoRedoMgr.RedoList.Any());
 
             SaveCommand = new RelayCommand<object>((x) => Save(this));
-            BuidlCommand = new RelayCommand<bool>(async (x) => await BuildGameCodeDll(x),
+            BuildCommand = new RelayCommand<bool>(async (x) => await BuildGameCodeDll(x),
                 x => !(VisualStudio.IsDebugging() && VisualStudio.BuildDone));
 
             OnPropertyChanged(nameof(AddSceneCommand));
@@ -223,7 +247,7 @@ namespace PKEngineEditor.GameProject
             OnPropertyChanged(nameof(UndoCommand));
             OnPropertyChanged(nameof(RedoCommand));
             OnPropertyChanged(nameof(SaveCommand));
-            OnPropertyChanged(nameof(BuidlCommand));
+            OnPropertyChanged(nameof(BuildCommand));
         }
 
         public Project(string name, string path)

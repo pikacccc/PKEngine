@@ -1,10 +1,28 @@
-﻿using PKEngineEditor.Components;
+﻿using System.Globalization;
+using System.Windows;
+using PKEngineEditor.Components;
 using PKEngineEditor.GameProject;
 using PKEngineEditor.Utilities;
 using System.Windows.Controls;
+using System.Windows.Controls.Primitives;
+using System.Windows.Data;
+using System.Windows.Input;
 
 namespace PKEngineEditor.Editors
 {
+    public class NullableBoolToBoolConverter : IValueConverter
+    {
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            return value is bool b && b == true;
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            return value is bool b && b == true;
+        }
+    }
+
     /// <summary>
     /// GameEntityView.xaml 的交互逻辑
     /// </summary>
@@ -52,13 +70,15 @@ namespace PKEngineEditor.Editors
             });
         }
 
-        private void OnName_TextBox_GotKeyboardFocus(object sender, System.Windows.Input.KeyboardFocusChangedEventArgs e)
+        private void OnName_TextBox_GotKeyboardFocus(object sender,
+            System.Windows.Input.KeyboardFocusChangedEventArgs e)
         {
             _protertyName = string.Empty;
             _undoAction = GetRenameAction();
         }
 
-        private void OnName_TextBox_LostKeyboardFocus(object sender, System.Windows.Input.KeyboardFocusChangedEventArgs e)
+        private void OnName_TextBox_LostKeyboardFocus(object sender,
+            System.Windows.Input.KeyboardFocusChangedEventArgs e)
         {
             if (_protertyName == nameof(MSEntity.Name) && _undoAction != null)
             {
@@ -66,6 +86,7 @@ namespace PKEngineEditor.Editors
                 Project.UndoRedoMgr.Add(new UndoRedoAction(_undoAction, redoAction, "Rename game entity"));
                 _protertyName = null;
             }
+
             _undoAction = null;
         }
 
@@ -75,7 +96,55 @@ namespace PKEngineEditor.Editors
             var undoAction = GetISEnabledAction();
             vm.IsEnabled = (sender as CheckBox).IsChecked == true;
             var redoAction = GetISEnabledAction();
-            Project.UndoRedoMgr.Add(new UndoRedoAction(undoAction, redoAction, vm.IsEnabled == true ? "Enable game entity" : "Disable game Entity"));
+            Project.UndoRedoMgr.Add(new UndoRedoAction(undoAction, redoAction,
+                vm.IsEnabled == true ? "Enable game entity" : "Disable game Entity"));
+        }
+
+        private void OnAddScriptComponent(object sender, RoutedEventArgs e)
+        {
+            AddComponent(ComponentType.Script, (sender as MenuItem)?.Header.ToString());
+        }
+
+        private void AddComponent(ComponentType componentType, object? data)
+        {
+            var creationFunction = ComponentFactory.GetCreationFunction(componentType);
+            var changedEntities = new List<(GameEntity entity, Component component)>();
+            var vm = DataContext as MSEntity;
+            if (vm == null) throw new ArgumentNullException(nameof(vm));
+            foreach (var entity in vm.SelectedEntities)
+            {
+                var component = creationFunction(entity, data);
+                if (entity.AddComponent(component))
+                {
+                    changedEntities.Add((entity, component));
+                }
+            }
+
+            if (changedEntities.Any())
+            {
+                vm.Refresh();
+                Project.UndoRedoMgr.Add(new UndoRedoAction(() =>
+                    {
+                        changedEntities.ForEach(x => x.entity.RemoveComponent(x.component));
+                        (DataContext as MSEntity).Refresh();
+                    }, () =>
+                    {
+                        changedEntities.ForEach(x => x.entity.AddComponent(x.component));
+                        (DataContext as MSEntity).Refresh();
+                    },
+                    $"Add {componentType} component"));
+            }
+        }
+
+        private void OnAddComponent_Button_PreviewMouse_LBD(object sender, MouseButtonEventArgs e)
+        {
+            var menu = FindResource("AddComponentMenu") as ContextMenu;
+            var btn = sender as ToggleButton;
+            btn.IsChecked = true;
+            menu.Placement = PlacementMode.Bottom;
+            menu.PlacementTarget = btn;
+            menu.MinWidth = btn.ActualWidth;
+            menu.IsOpen = true;
         }
     }
 }

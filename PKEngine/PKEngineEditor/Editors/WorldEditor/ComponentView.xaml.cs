@@ -15,7 +15,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace PKEngineEditor.Editors.WorldEditor
+namespace PKEngineEditor.Editors
 {
     [ContentProperty(nameof(ComponentContent))]
     public partial class ComponentView : UserControl
