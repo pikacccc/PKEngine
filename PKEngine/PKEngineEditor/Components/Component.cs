@@ -1,5 +1,6 @@
 ﻿using PKEngineEditor.Common;
 using System.Diagnostics;
+using System.IO;
 using System.Runtime.Serialization;
 
 namespace PKEngineEditor.Components
@@ -11,13 +12,15 @@ namespace PKEngineEditor.Components
     {
         [DataMember]
         public GameEntity Owner { get;private set; }
-
+        
+        public abstract IMSComponent GetMSComponent(MSEntity msEntity);
+        
+        public abstract void WriteBinary(BinaryWriter bw);
+        
         public Component(GameEntity owner) {
             Debug.Assert(owner != null);
             Owner = owner;
         }
-
-        public abstract IMSComponent GetMSComponent(MSEntity msEntity);
     }
 
     abstract class MSComponent<T> : ViewModelBase, IMSComponent where T : Component

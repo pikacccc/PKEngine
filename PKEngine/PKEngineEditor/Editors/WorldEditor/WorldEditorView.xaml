@@ -19,7 +19,10 @@
         <KeyBinding Command="{Binding UndoCommand}" Key="Z" Modifiers="Ctrl" />
         <KeyBinding Command="{Binding RedoCommand}" Key="Z" Modifiers="Ctrl+Shift" />
         <KeyBinding Command="{Binding SaveCommand}" Key="S" Modifiers="Ctrl" />
-        <KeyBinding Command="{Binding BuildCommand}" CommandParameter="{StaticResource True}" Key="R" Modifiers="Ctrl" />
+        <KeyBinding Command="{Binding DebugStartCommand}" Key="F5" />
+        <KeyBinding Command="{Binding DebugStopCommand}" Key="F5" Modifiers="Shift" />
+        <KeyBinding Command="{Binding DebugStartWithoutDebuggingCommand}" Key="F5" Modifiers="Ctrl" />
+        <KeyBinding Command="{Binding BuildCommand}" CommandParameter="{StaticResource True}" Key="F7" />
     </UserControl.InputBindings>
     <Grid>
         <Grid.RowDefinitions>
@@ -41,7 +44,7 @@
         <Grid Grid.Row="1">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition />
-                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
             <Grid Grid.Column="0">
                 <Grid.RowDefinitions>

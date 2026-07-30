@@ -10,4 +10,5 @@ namespace pk::script {
 
     component create(const init_info& info, game_entity::entity entity);
     void remove(const component c);
+    void update(float dt);
 }

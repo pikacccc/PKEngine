@@ -21,5 +21,15 @@ namespace PKEngineEditor.Components
             Debug.Assert((int)componentType < Functions.Length);
             return Functions[(int)componentType];
         }
+
+        public static ComponentType ToEnumType(this Component component)
+        {
+            return component switch
+            {
+                Transform => ComponentType.Transform,
+                Script => ComponentType.Script,
+                _ => throw new ArgumentException("Unknown component type")
+            };
+        }
     }
 }

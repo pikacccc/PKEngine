@@ -55,11 +55,13 @@ namespace pk::script
             return script->second;
         }
 
+#ifdef USE_WITH_EDITOR
         u8 add_script_name(const char* name)
         {
             script_name().emplace_back(name);
             return true;
         }
+#endif
     }
 
     component create(const init_info& info, game_entity::entity entity)
@@ -100,6 +102,14 @@ namespace pk::script
         util::erase_unordered(entity_scripts, script_ptr_index);
         id_mapping[id::index(last_id)] = script_ptr_index;
         id_mapping[id::index(id)] = id::invalid_id;
+    }
+
+    void update(float dt)
+    {
+        for (auto& ptr : entity_scripts)
+        {
+            ptr->update(dt);
+        }
     }
 }
 

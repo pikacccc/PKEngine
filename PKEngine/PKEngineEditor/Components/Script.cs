@@ -1,4 +1,6 @@
-﻿using System.Runtime.Serialization;
+﻿using System.IO;
+using System.Runtime.Serialization;
+using System.Text;
 
 namespace PKEngineEditor.Components
 {
@@ -25,6 +27,12 @@ namespace PKEngineEditor.Components
         }
 
         public override IMSComponent GetMSComponent(MSEntity msEntity) => new MSScript(msEntity);
+        public override void WriteBinary(BinaryWriter bw)
+        {
+            var nameBytes = Encoding.UTF8.GetBytes(Name);
+            bw.Write(nameBytes.Length);
+            bw.Write(nameBytes);
+        }
     }
 
     sealed class MSScript : MSComponent<Script>

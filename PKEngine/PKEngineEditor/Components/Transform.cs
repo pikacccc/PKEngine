@@ -1,4 +1,5 @@
-﻿using PKEngineEditor.Utilities;
+﻿using System.IO;
+using PKEngineEditor.Utilities;
 using System.Numerics;
 using System.Runtime.Serialization;
 
@@ -59,6 +60,19 @@ namespace PKEngineEditor.Components
         public override IMSComponent GetMSComponent(MSEntity msEntity)
         {
             return new MSTransform(msEntity);
+        }
+
+        public override void WriteBinary(BinaryWriter bw)
+        {
+            bw.Write(_position.X);
+            bw.Write(_position.Y);
+            bw.Write(_position.Z);
+            bw.Write(_rotation.X);
+            bw.Write(_rotation.Y);
+            bw.Write(_rotation.Z);
+            bw.Write(_scale.X);
+            bw.Write(_scale.Y);
+            bw.Write(_scale.Z);
         }
     }
 
