@@ -15,3 +15,10 @@
 #include "..\Utilities\Utilities.h"
 #include "..\Utilities\MathTypes.h"
 #include "PrimitiveType.h"
+#include "Id.h"
+
+#ifdef _DEBUG
+#define DEBUG_OP(X) X
+#else
+#define DEBUG_OP(X) (void(0))
+#endif

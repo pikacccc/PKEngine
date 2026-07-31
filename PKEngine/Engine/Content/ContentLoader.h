@@ -1,5 +1,5 @@
 ﻿#pragma once
-#include "CommonHeader.h"
+#include "../Common/CommonHeader.h"
 #ifndef SHIPPING
 namespace pk::content
 {
