@@ -110,11 +110,17 @@ namespace pk::platform
         void resize_window(window_id id, u32 width, u32 height)
         {
             window_info& info{get_from_id(id)};
-
-            RECT& area{info.is_fullscreen ? info.fullscreen_area : info.client_area};
-            area.bottom = area.top + height;
-            area.right = area.left + width;
-            resize_window(info, area);
+            if (info.style & WS_CHILD)
+            {
+                GetClientRect(info.hwnd, &info.client_area);
+            }
+            else
+            {
+                RECT& area{info.is_fullscreen ? info.fullscreen_area : info.client_area};
+                area.bottom = area.top + height;
+                area.right = area.left + width;
+                resize_window(info, area);
+            }
         }
 
         void set_window_fullscreen(window_id id, bool is_fullscreen)
@@ -128,13 +134,11 @@ namespace pk::platform
                 GetWindowRect(info.hwnd, &rect);
                 info.top_left.x = rect.left;
                 info.top_left.y = rect.top;
-                info.style = 0;
-                SetWindowLongPtr(info.hwnd, GWL_STYLE, info.style);
+                SetWindowLongPtr(info.hwnd, GWL_STYLE, 0);
                 ShowWindow(info.hwnd, SW_SHOWMAXIMIZED);
             }
             else
             {
-                info.style = WS_VISIBLE | WS_OVERLAPPEDWINDOW;
                 SetWindowLongPtr(info.hwnd, GWL_STYLE, info.style);
                 resize_window(info, info.client_area);
                 ShowWindow(info.hwnd, SW_SHOWNORMAL);
@@ -202,6 +206,7 @@ namespace pk::platform
                                       ? info.client_area.top + init_info->height
                                       : info.client_area.bottom;
 
+        info.style |= parent ? WS_CHILD : WS_OVERLAPPEDWINDOW;
 
         RECT rect{info.client_area};
 
@@ -213,8 +218,6 @@ namespace pk::platform
         const s32 top{init_info ? init_info->top : info.top_left.y};
         const s32 width{rect.right - rect.left};
         const s32 height{rect.bottom - rect.top};
-
-        info.style |= parent ? WS_CHILD : WS_OVERLAPPEDWINDOW;
 
         //Create an instance of the window class
         info.hwnd = CreateWindowEx(0, wc.lpszClassName, caption, info.style, left, top, width, height, parent,NULL,NULL,
@@ -243,7 +246,7 @@ namespace pk::platform
         remove_from_windows(id);
     }
 #elif LINUX
-    
+
 #else
 #error "must implement at least one platform"
 #endif

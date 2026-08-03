@@ -48,6 +48,18 @@ namespace PKEngineEditor.DllWrappers
         [return: MarshalAs(UnmanagedType.SafeArray)]
         public static extern string[] GetScriptNames();
 
+        [DllImport(EngineDll)]
+        public static extern int CreateRenderSurface(IntPtr host, int width, int height);
+
+        [DllImport(EngineDll)]
+        public static extern void RemoveRenderSurface(int id);
+        
+        [DllImport(EngineDll)]
+        public static extern IntPtr GetRenderHandle(int id);
+        
+        [DllImport(EngineDll)]
+        public static extern void ResizeRenderSurface(int id);
+        
         internal static class EntityAPI
         {
             [DllImport(EngineDll)]
@@ -76,7 +88,8 @@ namespace PKEngineEditor.DllWrappers
                         }
                         else
                         {
-                            Logger.Log(MessageType.Error,$"Unable to find script with name {c.Name}. Game entity will be created without script component!");
+                            Logger.Log(MessageType.Error,
+                                $"Unable to find script with name {c.Name}. Game entity will be created without script component!");
                         }
                     }
                 }

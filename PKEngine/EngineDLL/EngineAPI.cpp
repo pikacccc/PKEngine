@@ -1,12 +1,19 @@
 #include "common.h"
 #include "CommonHeader.h"
 #include "..\Engine\Components\Script.h"
+#include "..\Graphics\Renderer.h"
+#include "..\Platform\PlatformTypes.h"
+#include "..\Platform\Platform.h"
+
 
 #ifndef WIN32_MEAN_AND_LEAN
 #define WIN32_MEAN_AND_LEAN
 #endif
 
+#include <OleCtl.h>
 #include <Windows.h>
+
+#include "Platform/PlatformTypes.h"
 
 using namespace pk;
 
@@ -17,6 +24,8 @@ namespace
     _get_script_creator get_script_creator{nullptr};
     using _get_script_names = LPSAFEARRAY(*)(void);
     _get_script_names get_script_names{nullptr};
+
+    util::vector<graphics::render_surface> render_surfaces;
 }
 
 EDITOR_INTERFACE u32
@@ -50,11 +59,46 @@ UnloadGameCodeDll()
 EDITOR_INTERFACE pk::script::detail::script_creator
 GetScriptCreator(const char* name)
 {
-    return (game_code_dll && get_script_creator) ? get_script_creator(pk::script::detail::string_hash()(name)) : nullptr;
+    return (game_code_dll && get_script_creator)
+               ? get_script_creator(pk::script::detail::string_hash()(name))
+               : nullptr;
 }
 
 EDITOR_INTERFACE LPSAFEARRAY
 GetScriptNames()
 {
-    return (game_code_dll && get_script_names) ? get_script_names() : nullptr; 
+    return (game_code_dll && get_script_names) ? get_script_names() : nullptr;
+}
+
+EDITOR_INTERFACE u32
+CreateRenderSurface(HWND host, s32 width, s32 height)
+{
+    assert(host);
+    platform::window_init_info init_info{nullptr, host, nullptr, 0, 0, width, height};
+    graphics::render_surface surface{platform::create_window(&init_info), {}};
+    assert(surface.window.is_valid());
+    render_surfaces.emplace_back(surface);
+    return static_cast<u32>(render_surfaces.size()) - 1;
+}
+
+EDITOR_INTERFACE void
+RemoveRenderSurface(u32 id)
+{
+    assert(id<render_surfaces.size());
+    platform::remove_window(render_surfaces[id].window.get_id());
+    util::erase_unordered(render_surfaces, id);
+}
+
+EDITOR_INTERFACE HWND
+GetRenderHandle(u32 id)
+{
+    assert(id < render_surfaces.size());
+    return static_cast<HWND>(render_surfaces[id].window.handle());
+}
+
+EDITOR_INTERFACE void
+ResizeRenderSurface(u32 id)
+{
+    assert(id<render_surfaces.size());
+    render_surfaces[id].window.resize(0, 0);
 }
