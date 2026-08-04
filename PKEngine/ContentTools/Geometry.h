@@ -12,7 +12,7 @@ namespace pk::tools
             u8       t_sign;
             u16      normal[2];
             u16      tangent[2];
-            math::v2 uc;
+            math::v2 uv;
         };
     }
 
