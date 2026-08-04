@@ -62,7 +62,7 @@ namespace pk::tools
                     f32* const as_array { &offset.x };
 
                     as_array[horizontal_index] += i * horizontal_step;
-                    as_array[vertical_index]   += j * vertical_step;
+                    as_array[vertical_index] += j * vertical_step;
 
                     m.positions.emplace_back(position.x * info.size.x,
                                              position.y * info.size.y,
@@ -102,7 +102,7 @@ namespace pk::tools
 
             const u32 num_indices { 3 * 2 * horizontal_count * vertical_count };
             assert(m.raw_indices.size() == num_indices);
-            
+
             for (u32 i { 0 }; i < num_indices; i++)
             {
                 m.uv_sets[0].emplace_back(uvs[m.raw_indices[i]]);
@@ -147,9 +147,9 @@ namespace pk::tools
         assert(info->type < primitive_mesh_type::count);
         scene scene {};
         creators[info->type](scene, *info);
-        
+
         data->settings.calculate_normals = 1;
-        process_scene(scene,data->settings);
-        pack_data(scene,*data);
+        process_scene(scene, data->settings);
+        pack_data(scene, *data);
     }
 }

@@ -13,12 +13,12 @@ namespace pk::transform
     component create(const init_info& info, game_entity::entity entity)
     {
         assert(entity.is_valid());
-        const id::id_type entity_index{ id::index(entity.get_id()) };
+        const id::id_type entity_index{id::index(entity.get_id())};
         if (positions.size() > entity_index)
         {
             positions[entity_index] = math::v3(info.position);
             rotations[entity_index] = math::v4(info.rotation);
-            scales[entity_index]    = math::v3(info.scale);
+            scales[entity_index] = math::v3(info.scale);
         }
         else
         {
@@ -28,7 +28,7 @@ namespace pk::transform
             scales.emplace_back(math::v3(info.scale));
         }
 
-        return component(transform_id{ entity.get_id() });
+        return component(transform_id{entity.get_id()});
     }
 
     void remove(component c)

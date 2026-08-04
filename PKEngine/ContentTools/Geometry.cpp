@@ -99,7 +99,6 @@ namespace pk::tools
             const u32 num_indices { (u32)old_indices.size() };
             const u32 num_vertices { (u32)old_vertices.size() };
 
-
             util::vector<util::vector<u32>> idx_ref(num_vertices);
             for (u32 i { 0 }; i < num_indices; ++i)
             {
@@ -134,6 +133,26 @@ namespace pk::tools
 
         void process_vertices_static(mesh& m)
         {
+            const u32 num_vertices { (u32)m.vertices.size() };
+            assert(num_vertices);
+            m.packed_vertices_statics.reserve(num_vertices);
+
+            for (u32 i { 0 }; i < num_vertices; ++i)
+            {
+                vertex&   v { m.vertices[i] };
+                const u8  signs { static_cast<u8>((v.normal.z > 0.0f) << 1) };
+                const u16 normal_x { static_cast<u16>(pack_float<16>(v.normal.x, -1.0, 1.0f)) };
+                const u16 normal_y { static_cast<u16>(pack_float<16>(v.normal.y, -1.0, 1.0f)) };
+
+                m.packed_vertices_statics.emplace_back(packed_vertex::vertex_static {
+                                                           v.position,
+                                                           { 0, 0, 0 },
+                                                           signs,
+                                                           { normal_x, normal_y },
+                                                           {},
+                                                           v.uv
+                                                       });
+            }
         }
 
         void process_vertices(mesh& m, const geometry_import_settings& settings)

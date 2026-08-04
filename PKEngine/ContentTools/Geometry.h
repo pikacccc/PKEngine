@@ -3,6 +3,19 @@
 
 namespace pk::tools
 {
+    namespace packed_vertex
+    {
+        struct vertex_static
+        {
+            math::v3 position;
+            u8       reserved[3];
+            u8       t_sign;
+            u16      normal[2];
+            u16      tangent[2];
+            math::v2 uc;
+        };
+    }
+
     struct vertex
     {
         math::v4 tangents {};
@@ -23,7 +36,12 @@ namespace pk::tools
         //Intermediate data
         util::vector<vertex> vertices;
         util::vector<u32>    indices;
+
         //Output data
+        std::string                                name;
+        util::vector<packed_vertex::vertex_static> packed_vertices_statics;
+        f32                                        lod_threshold { -1.0f };
+        u32                                        lod_id { id::invalid_id };
     };
 
     struct lod_group
