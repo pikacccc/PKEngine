@@ -12,8 +12,8 @@
 #endif
 
 // common headers
-#include "..\Utilities\Utilities.h"
-#include "..\Utilities\MathTypes.h"
+#include "../Utilities/Utilities.h"
+#include "../Utilities/MathTypes.h"
 #include "PrimitiveType.h"
 #include "Id.h"
 

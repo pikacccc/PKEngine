@@ -7,10 +7,10 @@ namespace pk::script
     namespace
     {
         util::vector<detail::script_ptr> entity_scripts;
-        util::vector<id::id_type> id_mapping;
+        util::vector<id::id_type>        id_mapping;
 
         util::vector<id::generation_type> generations;
-        util::deque<script_id> free_ids;
+        util::deque<script_id>            free_ids;
 
         using script_registry = std::unordered_map<size_t, detail::script_creator>;
 
@@ -20,13 +20,13 @@ namespace pk::script
             return reg;
         }
 
-#ifdef USE_WITH_EDITOR
+        #ifdef USE_WITH_EDITOR
         util::vector<std::string>& script_name()
         {
             static util::vector<std::string> names;
             return names;
         }
-#endif
+        #endif
 
         bool exists(script_id id)
         {
@@ -34,10 +34,9 @@ namespace pk::script
             const id::id_type index{id::index(id)};
             assert(index<generations.size() && id_mapping[index]<entity_scripts.size());
             return generations[index] == id::generation(id)
-                && entity_scripts[id_mapping[index]] && entity_scripts[id_mapping[index]]->is_valid();
+                   && entity_scripts[id_mapping[index]] && entity_scripts[id_mapping[index]]->is_valid();
         }
     }
-
 
     namespace detail
     {
@@ -50,18 +49,18 @@ namespace pk::script
 
         script_creator get_script_creator(size_t tag)
         {
-            auto script = pk::script::registry().find(tag);
+            auto script = registry().find(tag);
             assert(script != pk::script::registry().end() && script->first == tag);
             return script->second;
         }
 
-#ifdef USE_WITH_EDITOR
+        #ifdef USE_WITH_EDITOR
         u8 add_script_name(const char* name)
         {
             script_name().emplace_back(name);
             return true;
         }
-#endif
+        #endif
     }
 
     component create(const init_info& info, game_entity::entity entity)
@@ -96,12 +95,12 @@ namespace pk::script
     void remove(const component c)
     {
         assert(c.is_valid() && exists(c.get_id()));
-        const script_id id{c.get_id()};
+        const script_id   id{c.get_id()};
         const id::id_type script_ptr_index{id_mapping[id::index(id)]};
-        const script_id last_id{entity_scripts.back()->script().get_id()};
+        const script_id   last_id{entity_scripts.back()->script().get_id()};
         util::erase_unordered(entity_scripts, script_ptr_index);
         id_mapping[id::index(last_id)] = script_ptr_index;
-        id_mapping[id::index(id)] = id::invalid_id;
+        id_mapping[id::index(id)]      = id::invalid_id;
     }
 
     void update(float dt)

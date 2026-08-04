@@ -6,33 +6,38 @@
 #if USE_STL_VECTOR
 #include <algorithm>
 #include <vector>
-namespace pk::util {
-	template<typename T>
-	using vector = std::vector<T>;
-	
-	template<typename T>
-	void erase_unordered(vector<T>& vec, size_t index)
-	{
-		assert(index < vec.size());
 
-		if (index != vec.size() - 1)
-		{
-			vec[index] = std::move(vec.back());
-		}
+namespace pk::util
+{
+    template <typename T>
+    using vector = std::vector<T>;
 
-		vec.pop_back();
-	}
+    template <typename T>
+    void erase_unordered(vector<T>& vec, size_t index)
+    {
+        assert(index < vec.size());
+
+        if (index != vec.size() - 1)
+        {
+            vec[index] = std::move(vec.back());
+        }
+
+        vec.pop_back();
+    }
 }
 #endif // USE_STL_VECTOR
 
 #if USE_STL_DEQUE
 #include <deque>
-namespace pk::util {
-	template<typename T>
-	using deque = std::deque<T>;
+
+namespace pk::util
+{
+    template <typename T>
+    using deque = std::deque<T>;
 }
 #endif // USE_STL_DEQUE
 
-namespace pk::util {
-	//TODO: implement our own containers
+namespace pk::util
+{
+    //TODO: implement our own containers
 }

@@ -9,7 +9,7 @@
     <BaseOutputPath>..\x64</BaseOutputPath>
     <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
     <AppendRuntimeIdentifierToOutputPath>false</AppendRuntimeIdentifierToOutputPath>
-    <Configurations>Debug;Release;DebugEditor;ReleaseEditor</Configurations>
+    <Configurations>DebugEditor;ReleaseEditor</Configurations>
     <Platforms>x64</Platforms>
   </PropertyGroup>
 
@@ -22,14 +22,6 @@
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'ReleaseEditor|x64' ">
     <Optimize Condition=" '$(Optimize)' == '' ">true</Optimize>
     <OutputPath>..\x64\ReleaseEditor\</OutputPath>
-  </PropertyGroup>
-
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x64' ">
-    <OutputPath>..\x64\Debug\</OutputPath>
-  </PropertyGroup>
-
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x64' ">
-    <OutputPath>..\x64\Release\</OutputPath>
   </PropertyGroup>
 
   <ItemGroup>

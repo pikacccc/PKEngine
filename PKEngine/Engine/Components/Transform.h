@@ -1,15 +1,15 @@
 #pragma once
 #include "ComponentsCommon.h"
 
-namespace pk::transform {
+namespace pk::transform
+{
+    struct init_info
+    {
+        f32 position[3]{};
+        f32 rotation[4]{};
+        f32 scale[3]{1.f, 1.f, 1.f};
+    };
 
-	struct init_info
-	{
-		f32 position[3]{};
-		f32 rotation[4]{};
-		f32 scale[3]{ 1.f,1.f,1.f };
-	};
-
-	component create(const init_info& info, game_entity::entity entity);
-	void remove(component c);
+    component create(const init_info& info, game_entity::entity entity);
+    void      remove(component c);
 }

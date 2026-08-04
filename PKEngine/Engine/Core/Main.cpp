@@ -13,16 +13,16 @@ extern void engine_shutdown();
 
 int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 {
-#if _DEBUG
+    #if _DEBUG
     _CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
-#endif
+    #endif
     if (engine_initialize())
     {
-        MSG msg{};
+        MSG  msg{};
         bool is_running = true;
         while (is_running)
         {
-            while (PeekMessage(&msg, NULL, 0, 0, PM_REMOVE))
+            while (PeekMessage(&msg, nullptr, 0, 0, PM_REMOVE))
             {
                 TranslateMessage(&msg);
                 DispatchMessage(&msg);
@@ -31,7 +31,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
             engine_update();
         }
     }
-    
+
     engine_shutdown();
     return 0;
 }

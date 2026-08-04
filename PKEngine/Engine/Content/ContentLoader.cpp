@@ -2,9 +2,9 @@
 
 #include <filesystem>
 
-#include "..\Components\Entity.h"
-#include "..\Components\Transform.h"
-#include "..\Components\Script.h"
+#include "../Components/Entity.h"
+#include "../Components/Transform.h"
+#include "../Components/Script.h"
 #include <fstream>
 #include <Windows.h>
 
@@ -22,8 +22,8 @@ namespace pk::content
         };
 
         util::vector<game_entity::entity> entities;
-        pk::transform::init_info transform_info{};
-        pk::script::init_info script_info{};
+        transform::init_info              transform_info{};
+        script::init_info                 script_info{};
 
         bool read_tranform(const u8*& data, game_entity::entity_info& info)
         {
@@ -40,7 +40,7 @@ namespace pk::content
             data += sizeof(transform_info.scale);
 
             XMFLOAT3A rot{&rotation[0]};
-            XMVECTOR quat{XMQuaternionRotationRollPitchYawFromVector(XMLoadFloat3A(&rot))};
+            XMVECTOR  quat{XMQuaternionRotationRollPitchYawFromVector(XMLoadFloat3A(&rot))};
             XMFLOAT4A rot_quat{};
             XMStoreFloat4A(&rot_quat, quat);
             memcpy(&transform_info.rotation[0], &rot_quat.x, sizeof(transform_info.rotation));
@@ -59,8 +59,8 @@ namespace pk::content
             assert(name_length<256);
             char script_name[256];
             memcpy(&script_name[0], data, name_length * sizeof(char));
-            data += name_length * sizeof(char);
-            script_name[name_length] = 0;
+            data                       += name_length * sizeof(char);
+            script_name[name_length]   = 0;
             script_info.script_creator = script::detail::get_script_creator(script::detail::string_hash()(script_name));
 
             info.script = &script_info;
@@ -75,24 +75,24 @@ namespace pk::content
             read_script,
         };
 
-        static_assert(_countof(component_readers) == component_type::count);
+        static_assert(_countof(component_readers) == count);
     }
 
     bool load_game()
     {
-        wchar_t path[MAX_PATH];
-        const u32 length{GetModuleFileName(0, &path[0],MAX_PATH)};
+        wchar_t   path[MAX_PATH];
+        const u32 length{GetModuleFileName(nullptr, &path[0],MAX_PATH)};
         if (!length || GetLastError() == ERROR_INSUFFICIENT_BUFFER) return false;
         std::filesystem::path p{path};
         SetCurrentDirectory(p.parent_path().wstring().c_str());
-        
-        std::ifstream game("game.bin", std::ios::in | std::ios::binary);
+
+        std::ifstream    game("game.bin", std::ios::in | std::ios::binary);
         util::vector<u8> buffer(std::istreambuf_iterator(game), {});
         assert(buffer.size());
         const u8* at{buffer.data()};
 
         //Binary needs to be decoded into an integer.
-        const u32 su32{sizeof(u32)};
+        constexpr u32 su32{sizeof(u32)};
 
         const u32 num_entities{*at};
         at += su32;
@@ -101,7 +101,7 @@ namespace pk::content
         for (u32 entity_index{0}; entity_index < num_entities; ++entity_index)
         {
             game_entity::entity_info info{};
-            const u32 entity_type{*at};
+            const u32                entity_type{*at};
             at += su32;
             const u32 num_components{*at};
             at += su32;

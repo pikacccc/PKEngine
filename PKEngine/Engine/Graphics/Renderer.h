@@ -1,6 +1,6 @@
 #pragma once
-#include "..\Common\CommonHeader.h"
-#include "..\Platform\Window.h"
+#include "../Common/CommonHeader.h"
+#include "../Platform/Window.h"
 
 namespace pk::graphics
 {
@@ -11,6 +11,6 @@ namespace pk::graphics
     struct render_surface
     {
         platform::window window{};
-        surface surface{};
+        surface          surface{};
     };
 }

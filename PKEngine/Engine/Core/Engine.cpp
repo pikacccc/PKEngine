@@ -1,10 +1,10 @@
 ﻿#ifndef SHIPPING
 
-#include "..\Content\ContentLoader.h"
-#include "..\Components\Script.h"
-#include "..\Platform\PlatformTypes.h"
-#include "..\Platform\Platform.h"
-#include "..\Graphics\Renderer.h"
+#include "../Content/ContentLoader.h"
+#include "../Components/Script.h"
+#include "../Platform/PlatformTypes.h"
+#include "../Platform/Platform.h"
+#include "../Graphics/Renderer.h"
 #include <thread>
 
 using namespace pk;
@@ -17,21 +17,21 @@ namespace
     {
         switch (msg)
         {
-        case WM_DESTROY:
-            {
-                if (game_window.window.is_closed())
+            case WM_DESTROY:
                 {
-                    PostQuitMessage(0);
+                    if (game_window.window.is_closed())
+                    {
+                        PostQuitMessage(0);
+                        return 0;
+                    }
+                }
+                break;
+            case WM_SYSCHAR:
+                if (wpram == VK_RETURN && (HIWORD(lpram) & KF_ALTDOWN))
+                {
+                    game_window.window.set_fullscreen(!game_window.window.is_fullscreen());
                     return 0;
                 }
-            }
-            break;
-        case WM_SYSCHAR:
-            if (wpram == VK_RETURN && (HIWORD(lpram) & KF_ALTDOWN))
-            {
-                game_window.window.set_fullscreen(!game_window.window.is_fullscreen());
-                return 0;
-            }
         }
 
         return DefWindowProc(hwnd, msg, wpram, lpram);
@@ -40,7 +40,7 @@ namespace
 
 bool engine_initialize()
 {
-    bool res{pk::content::load_game()};
+    bool                       res{content::load_game()};
     platform::window_init_info info{
         &win_proc, nullptr, L"PK Game"
     };
@@ -52,14 +52,14 @@ bool engine_initialize()
 
 void engine_update()
 {
-    pk::script::update(10.f);
+    script::update(10.f);
     std::this_thread::sleep_for(std::chrono::milliseconds(10));
 }
 
 void engine_shutdown()
 {
     platform::remove_window(game_window.window.get_id());
-    pk::content::unload_game();
+    content::unload_game();
 }
 
 #endif

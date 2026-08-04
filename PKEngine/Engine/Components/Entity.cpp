@@ -7,9 +7,9 @@ namespace pk::game_entity
     namespace
     {
         util::vector<transform::component> transforms;
-        util::vector<script::component> scripts;
-        util::vector<id::generation_type> generations;
-        util::deque<entity_id> free_ids;
+        util::vector<script::component>    scripts;
+        util::vector<id::generation_type>  generations;
+        util::deque<entity_id>             free_ids;
     }
 
     entity create(const entity_info& info)
@@ -28,14 +28,14 @@ namespace pk::game_entity
         }
         else
         {
-            id = entity_id{(id::id_type)generations.size()};
+            id = entity_id{static_cast<id::id_type>(generations.size())};
             generations.push_back(0);
 
             transforms.emplace_back();
             scripts.emplace_back();
         }
 
-        const entity new_entity{id};
+        const entity      new_entity{id};
         const id::id_type index{id::index(id)};
 
         //Create Transform Component
@@ -60,7 +60,7 @@ namespace pk::game_entity
         if (scripts[index].is_valid())
         {
             script::remove(scripts[index]);
-            scripts[index]={};
+            scripts[index] = {};
         }
         transform::remove(transforms[index]);
         transforms[index] = {};

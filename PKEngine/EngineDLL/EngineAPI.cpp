@@ -1,10 +1,9 @@
 #include "common.h"
 #include "CommonHeader.h"
-#include "..\Engine\Components\Script.h"
-#include "..\Graphics\Renderer.h"
-#include "..\Platform\PlatformTypes.h"
-#include "..\Platform\Platform.h"
-
+#include "../Engine/Components/Script.h"
+#include "../Graphics/Renderer.h"
+#include "../Platform/PlatformTypes.h"
+#include "../Platform/Platform.h"
 
 #ifndef WIN32_MEAN_AND_LEAN
 #define WIN32_MEAN_AND_LEAN
@@ -20,7 +19,7 @@ using namespace pk;
 namespace
 {
     HMODULE game_code_dll{nullptr};
-    using _get_script_creator = pk::script::detail::script_creator(*)(size_t);
+    using _get_script_creator = script::detail::script_creator(*)(size_t);
     _get_script_creator get_script_creator{nullptr};
     using _get_script_names = LPSAFEARRAY(*)(void);
     _get_script_names get_script_names{nullptr};
@@ -36,7 +35,7 @@ LoadGameCodeDll(const char* dll_path)
     assert(game_code_dll);
 
     get_script_creator = reinterpret_cast<_get_script_creator>(GetProcAddress(game_code_dll, "get_script_creator"));
-    get_script_names = reinterpret_cast<_get_script_names>(GetProcAddress(game_code_dll, "get_script_names"));
+    get_script_names   = reinterpret_cast<_get_script_names>(GetProcAddress(game_code_dll, "get_script_names"));
 
     return game_code_dll
            && get_script_creator
@@ -56,11 +55,11 @@ UnloadGameCodeDll()
     return TRUE;
 }
 
-EDITOR_INTERFACE pk::script::detail::script_creator
+EDITOR_INTERFACE script::detail::script_creator
 GetScriptCreator(const char* name)
 {
     return (game_code_dll && get_script_creator)
-               ? get_script_creator(pk::script::detail::string_hash()(name))
+               ? get_script_creator(script::detail::string_hash()(name))
                : nullptr;
 }
 
@@ -75,7 +74,7 @@ CreateRenderSurface(HWND host, s32 width, s32 height)
 {
     assert(host);
     platform::window_init_info init_info{nullptr, host, nullptr, 0, 0, width, height};
-    graphics::render_surface surface{platform::create_window(&init_info), {}};
+    graphics::render_surface   surface{platform::create_window(&init_info), {}};
     assert(surface.window.is_valid());
     render_surfaces.emplace_back(surface);
     return static_cast<u32>(render_surfaces.size()) - 1;
