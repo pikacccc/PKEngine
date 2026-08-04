@@ -8,11 +8,11 @@ namespace pk::script
     class component final
     {
         public:
-            constexpr explicit component(script_id id) : _id{id}
+            constexpr explicit component(script_id id) : _id{ id }
             {
             }
 
-            constexpr component() : _id{id::invalid_id}
+            constexpr component() : _id{ id::invalid_id }
             {
             }
 

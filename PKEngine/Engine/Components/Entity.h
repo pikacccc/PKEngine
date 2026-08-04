@@ -13,8 +13,8 @@ namespace pk
     {
         struct entity_info
         {
-            transform::init_info* transform{nullptr};
-            script::init_info*    script{nullptr};
+            transform::init_info* transform{ nullptr };
+            script::init_info*    script{ nullptr };
         };
 
         entity create(const entity_info& info);

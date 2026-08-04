@@ -9,11 +9,11 @@ namespace pk::platform
     class window
     {
         public:
-            constexpr explicit window(window_id id) : _id{id}
+            constexpr explicit window(window_id id) : _id{ id }
             {
             }
 
-            constexpr window() : _id{id::invalid_id}
+            constexpr window() : _id{ id::invalid_id }
             {
             }
 
@@ -32,6 +32,6 @@ namespace pk::platform
             bool        is_closed() const;
 
         private:
-            window_id _id{id::invalid_id};
+            window_id _id{ id::invalid_id };
     };
 }

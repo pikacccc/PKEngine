@@ -13,11 +13,11 @@ namespace pk
         class entity
         {
             public:
-                constexpr entity() : _id{id::invalid_id}
+                constexpr entity() : _id{ id::invalid_id }
                 {
                 }
 
-                constexpr explicit entity(entity_id id) : _id{id}
+                constexpr explicit entity(entity_id id) : _id{ id }
                 {
                 }
 
@@ -48,7 +48,7 @@ namespace pk
                 };
 
             protected:
-                constexpr explicit entity_script(entity entity) : entity{entity}
+                constexpr explicit entity_script(entity entity) : entity{ entity }
                 {
                 }
         };

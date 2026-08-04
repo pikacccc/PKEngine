@@ -31,7 +31,7 @@ namespace pk::script
         bool exists(script_id id)
         {
             assert(id::is_valid(id));
-            const id::id_type index{id::index(id)};
+            const id::id_type index{ id::index(id) };
             assert(index<generations.size() && id_mapping[index]<entity_scripts.size());
             return generations[index] == id::generation(id)
                    && entity_scripts[id_mapping[index]] && entity_scripts[id_mapping[index]]->is_valid();
@@ -42,7 +42,7 @@ namespace pk::script
     {
         u8 register_script(size_t tag, script_creator func)
         {
-            bool res{registry().insert(script_registry::value_type{tag, func}).second};
+            bool res{ registry().insert(script_registry::value_type{ tag, func }).second };
             assert(res);
             return res;
         }
@@ -73,31 +73,31 @@ namespace pk::script
             id = free_ids.front();
             assert(!exists(id));
             free_ids.pop_front();
-            id = script_id{id::new_generation(id)};
+            id = script_id{ id::new_generation(id) };
             ++generations[id::index(id)];
         }
         else
         {
-            id = script_id{static_cast<id::id_type>(id_mapping.size())};
+            id = script_id{ static_cast<id::id_type>(id_mapping.size()) };
             id_mapping.emplace_back();
             generations.push_back(0);
         }
 
         assert(id::is_valid(id));
-        const id::id_type index{static_cast<id::id_type>(entity_scripts.size())};
+        const id::id_type index{ static_cast<id::id_type>(entity_scripts.size()) };
         entity_scripts.emplace_back(info.script_creator(entity));
         assert(entity_scripts.back()->get_id()==entity.get_id());
         id_mapping[id::index(id)] = index;
 
-        return component{id};
+        return component{ id };
     }
 
     void remove(const component c)
     {
         assert(c.is_valid() && exists(c.get_id()));
-        const script_id   id{c.get_id()};
-        const id::id_type script_ptr_index{id_mapping[id::index(id)]};
-        const script_id   last_id{entity_scripts.back()->script().get_id()};
+        const script_id   id{ c.get_id() };
+        const id::id_type script_ptr_index{ id_mapping[id::index(id)] };
+        const script_id   last_id{ entity_scripts.back()->script().get_id() };
         util::erase_unordered(entity_scripts, script_ptr_index);
         id_mapping[id::index(last_id)] = script_ptr_index;
         id_mapping[id::index(id)]      = id::invalid_id;
@@ -120,10 +120,10 @@ extern "C" __declspec(dllexport)
 LPSAFEARRAY
 get_script_names()
 {
-    const u32 size{static_cast<u32>(pk::script::script_name().size())};
+    const u32 size{ static_cast<u32>(pk::script::script_name().size()) };
     if (!size) return nullptr;
     CComSafeArray<BSTR> names(size);
-    for (u32 i{0}; i < size; ++i)
+    for (u32 i{ 0 }; i < size; ++i)
     {
         names.SetAt(i, A2BSTR_EX(pk::script::script_name()[i].c_str()), false);
     }

@@ -39,8 +39,8 @@ namespace pk::content
             memcpy(&transform_info.scale[0], data, sizeof(transform_info.scale));
             data += sizeof(transform_info.scale);
 
-            XMFLOAT3A rot{&rotation[0]};
-            XMVECTOR  quat{XMQuaternionRotationRollPitchYawFromVector(XMLoadFloat3A(&rot))};
+            XMFLOAT3A rot{ &rotation[0] };
+            XMVECTOR  quat{ XMQuaternionRotationRollPitchYawFromVector(XMLoadFloat3A(&rot)) };
             XMFLOAT4A rot_quat{};
             XMStoreFloat4A(&rot_quat, quat);
             memcpy(&transform_info.rotation[0], &rot_quat.x, sizeof(transform_info.rotation));
@@ -53,7 +53,7 @@ namespace pk::content
         bool read_script(const u8*& data, game_entity::entity_info& info)
         {
             assert(!info.script);
-            const u32 name_length{*data};
+            const u32 name_length{ *data };
             data += sizeof(u32);
             if (!name_length) return false;
             assert(name_length<256);
@@ -81,41 +81,41 @@ namespace pk::content
     bool load_game()
     {
         wchar_t   path[MAX_PATH];
-        const u32 length{GetModuleFileName(nullptr, &path[0],MAX_PATH)};
+        const u32 length{ GetModuleFileName(nullptr, &path[0],MAX_PATH) };
         if (!length || GetLastError() == ERROR_INSUFFICIENT_BUFFER) return false;
-        std::filesystem::path p{path};
+        std::filesystem::path p{ path };
         SetCurrentDirectory(p.parent_path().wstring().c_str());
 
         std::ifstream    game("game.bin", std::ios::in | std::ios::binary);
         util::vector<u8> buffer(std::istreambuf_iterator(game), {});
         assert(buffer.size());
-        const u8* at{buffer.data()};
+        const u8* at{ buffer.data() };
 
         //Binary needs to be decoded into an integer.
-        constexpr u32 su32{sizeof(u32)};
+        constexpr u32 su32{ sizeof(u32) };
 
-        const u32 num_entities{*at};
+        const u32 num_entities{ *at };
         at += su32;
         if (!num_entities) return false;
 
-        for (u32 entity_index{0}; entity_index < num_entities; ++entity_index)
+        for (u32 entity_index{ 0 }; entity_index < num_entities; ++entity_index)
         {
             game_entity::entity_info info{};
-            const u32                entity_type{*at};
+            const u32                entity_type{ *at };
             at += su32;
-            const u32 num_components{*at};
+            const u32 num_components{ *at };
             at += su32;
             if (!num_entities) return false;
 
-            for (u32 component_index{0}; component_index < num_components; ++component_index)
+            for (u32 component_index{ 0 }; component_index < num_components; ++component_index)
             {
-                const u32 component_type{*at};
+                const u32 component_type{ *at };
                 at += su32;
                 assert(component_type < component_type::count);
                 if (!component_readers[component_type](at, info)) return false;
             }
             assert(info.transform);
-            game_entity::entity entity{game_entity::create(info)};
+            game_entity::entity entity{ game_entity::create(info) };
             if (!entity.is_valid()) return false;
             entities.emplace_back(entity);
         }

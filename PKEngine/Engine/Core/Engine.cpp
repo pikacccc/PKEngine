@@ -18,14 +18,14 @@ namespace
         switch (msg)
         {
             case WM_DESTROY:
+            {
+                if (game_window.window.is_closed())
                 {
-                    if (game_window.window.is_closed())
-                    {
-                        PostQuitMessage(0);
-                        return 0;
-                    }
+                    PostQuitMessage(0);
+                    return 0;
                 }
-                break;
+            }
+            break;
             case WM_SYSCHAR:
                 if (wpram == VK_RETURN && (HIWORD(lpram) & KF_ALTDOWN))
                 {
@@ -40,7 +40,7 @@ namespace
 
 bool engine_initialize()
 {
-    bool                       res{content::load_game()};
+    bool                       res{ content::load_game() };
     platform::window_init_info info{
         &win_proc, nullptr, L"PK Game"
     };

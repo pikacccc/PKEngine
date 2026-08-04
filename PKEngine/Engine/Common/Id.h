@@ -7,14 +7,14 @@ namespace pk::id
 
     namespace detail
     {
-        constexpr u32     generation_bits{8};
-        constexpr u32     index_bits{sizeof(id_type) * 8 - generation_bits};
-        constexpr id_type index_mask{(id_type{1} << index_bits) - 1};
-        constexpr id_type generation_mask{(id_type{1} << generation_bits) - 1};
+        constexpr u32     generation_bits{ 8 };
+        constexpr u32     index_bits{ sizeof(id_type) * 8 - generation_bits };
+        constexpr id_type index_mask{ (id_type{ 1 } << index_bits) - 1 };
+        constexpr id_type generation_mask{ (id_type{ 1 } << generation_bits) - 1 };
     }
 
-    constexpr id_type invalid_id{static_cast<id_type>(-1)};
-    constexpr u32     min_deleted_elements{1024};
+    constexpr id_type invalid_id{ static_cast<id_type>(-1) };
+    constexpr u32     min_deleted_elements{ 1024 };
 
     using generation_type = std::conditional_t<detail::generation_bits <= 16, std::conditional_t<
                                                    detail::generation_bits <= 8, u8, u16>, u32>;
@@ -28,7 +28,7 @@ namespace pk::id
 
     constexpr id_type index(id_type id)
     {
-        id_type index{id & detail::index_mask};
+        id_type index{ id & detail::index_mask };
         assert(index != detail::index_mask);
         return index;
     }
@@ -40,7 +40,7 @@ namespace pk::id
 
     constexpr id_type new_generation(id_type id)
     {
-        const id_type generation{id::generation(id) + 1};
+        const id_type generation{ id::generation(id) + 1 };
         assert(generation < ((static_cast<u64>(1) << detail::generation_bits) - 1));
         return index(id) | (generation << detail::index_bits);
     }
@@ -50,7 +50,7 @@ namespace pk::id
     {
         struct id_base
         {
-            constexpr explicit id_base(id_type id) : _id{id}
+            constexpr explicit id_base(id_type id) : _id{ id }
             {
             }
 

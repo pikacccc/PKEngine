@@ -11,13 +11,13 @@ namespace pk::platform
     {
         struct window_info
         {
-            HWND  hwnd{nullptr};
-            RECT  client_area{0, 0, 1920, 1080};
+            HWND  hwnd{ nullptr };
+            RECT  client_area{ 0, 0, 1920, 1080 };
             RECT  fullscreen_area{};
-            POINT top_left{0, 0};
-            DWORD style{WS_VISIBLE};
-            bool  is_fullscreen{false};
-            bool  is_closed{false};
+            POINT top_left{ 0, 0 };
+            DWORD style{ WS_VISIBLE };
+            bool  is_fullscreen{ false };
+            bool  is_closed{ false };
         };
 
         util::vector<window_info> windows;
@@ -25,7 +25,7 @@ namespace pk::platform
 
         u32 add_to_windows(window_info info)
         {
-            u32 id{u32_invalid_id};
+            u32 id{ u32_invalid_id };
             if (available_slots.empty())
             {
                 id = static_cast<id::id_type>(windows.size());
@@ -56,13 +56,13 @@ namespace pk::platform
 
         window_info& get_from_handle(window_handle handle)
         {
-            const window_id id{static_cast<id::id_type>(GetWindowLongPtr(handle,GWLP_USERDATA))};
+            const window_id id{ static_cast<id::id_type>(GetWindowLongPtr(handle,GWLP_USERDATA)) };
             return get_from_id(id);
         }
 
         LRESULT CALLBACK internal_window_proc(HWND hwnd, UINT msg, WPARAM wpram, LPARAM lpram)
         {
-            window_info* info{nullptr};
+            window_info* info{ nullptr };
             switch (msg)
             {
                 case WM_DESTROY:
@@ -91,31 +91,31 @@ namespace pk::platform
                 assert(info->hwnd);
                 GetClientRect(info->hwnd, info->is_fullscreen ? &info->fullscreen_area : &info->client_area);
             }
-            LONG_PTR long_ptr{GetWindowLongPtr(hwnd, 0)};
+            LONG_PTR long_ptr{ GetWindowLongPtr(hwnd, 0) };
             return long_ptr ? ((window_proc)long_ptr)(hwnd, msg, wpram, lpram) : DefWindowProc(hwnd, msg, wpram, lpram);
         }
 
         void resize_window(const window_info& info, const RECT& rect)
         {
-            RECT window_rect{rect};
+            RECT window_rect{ rect };
             AdjustWindowRect(&window_rect, info.style,FALSE);
 
-            const s32 width{window_rect.right - window_rect.left};
-            const s32 height{window_rect.bottom - window_rect.top};
+            const s32 width{ window_rect.right - window_rect.left };
+            const s32 height{ window_rect.bottom - window_rect.top };
 
             MoveWindow(info.hwnd, info.top_left.x, info.top_left.y, width, height, true);
         }
 
         void resize_window(window_id id, u32 width, u32 height)
         {
-            window_info& info{get_from_id(id)};
+            window_info& info{ get_from_id(id) };
             if (info.style & WS_CHILD)
             {
                 GetClientRect(info.hwnd, &info.client_area);
             }
             else
             {
-                RECT& area{info.is_fullscreen ? info.fullscreen_area : info.client_area};
+                RECT& area{ info.is_fullscreen ? info.fullscreen_area : info.client_area };
                 area.bottom = area.top + height;
                 area.right  = area.left + width;
                 resize_window(info, area);
@@ -124,7 +124,7 @@ namespace pk::platform
 
         void set_window_fullscreen(window_id id, bool is_fullscreen)
         {
-            window_info& info{get_from_id(id)};
+            window_info& info{ get_from_id(id) };
             info.is_fullscreen = is_fullscreen;
             if (is_fullscreen)
             {
@@ -156,14 +156,14 @@ namespace pk::platform
 
         void set_window_caption(window_id id, const wchar_t* caption)
         {
-            window_info& info{get_from_id(id)};
+            window_info& info{ get_from_id(id) };
             SetWindowText(info.hwnd, caption);
         }
 
         math::u32v4 get_window_size(window_id id)
         {
-            window_info& info{get_from_id(id)};
-            RECT&        area{info.is_fullscreen ? info.fullscreen_area : info.client_area};
+            window_info& info{ get_from_id(id) };
+            RECT&        area{ info.is_fullscreen ? info.fullscreen_area : info.client_area };
             return {
                 static_cast<u32>(area.left), static_cast<u32>(area.top), static_cast<u32>(area.right),
                 static_cast<u32>(area.bottom)
@@ -178,8 +178,8 @@ namespace pk::platform
 
     window create_window(const window_init_info* const init_info)
     {
-        window_proc   callback{init_info ? init_info->callback : nullptr};
-        window_handle parent{init_info ? init_info->parent : nullptr};
+        window_proc   callback{ init_info ? init_info->callback : nullptr };
+        window_handle parent{ init_info ? init_info->parent : nullptr };
 
         //Setup a window class
         WNDCLASSEX wc;
@@ -210,16 +210,16 @@ namespace pk::platform
 
         info.style |= parent ? WS_CHILD : WS_OVERLAPPEDWINDOW;
 
-        RECT rect{info.client_area};
+        RECT rect{ info.client_area };
 
         // adjust the window size for correct device size 
         AdjustWindowRect(&rect, info.style, FALSE);
 
-        const wchar_t* caption{(init_info && init_info->caption) ? init_info->caption : L"PK Game"};
-        const s32      left{init_info ? init_info->left : info.top_left.x};
-        const s32      top{init_info ? init_info->top : info.top_left.y};
-        const s32      width{rect.right - rect.left};
-        const s32      height{rect.bottom - rect.top};
+        const wchar_t* caption{ (init_info && init_info->caption) ? init_info->caption : L"PK Game" };
+        const s32      left{ init_info ? init_info->left : info.top_left.x };
+        const s32      top{ init_info ? init_info->top : info.top_left.y };
+        const s32      width{ rect.right - rect.left };
+        const s32      height{ rect.bottom - rect.top };
 
         //Create an instance of the window class
         info.hwnd = CreateWindowEx(0, wc.lpszClassName, caption, info.style, left, top, width, height, parent, nullptr,
@@ -229,7 +229,7 @@ namespace pk::platform
         if (info.hwnd)
         {
             DEBUG_OP(SetLastError(0));
-            const window_id id{add_to_windows(info)};
+            const window_id id{ add_to_windows(info) };
             SetWindowLongPtr(info.hwnd, GWLP_USERDATA, id);
             if (callback)
                 SetWindowLongPtr(info.hwnd, 0, (LONG_PTR)callback);
@@ -237,14 +237,14 @@ namespace pk::platform
 
             ShowWindow(info.hwnd,SW_SHOWNORMAL);
             UpdateWindow(info.hwnd);
-            return window{id};
+            return window{ id };
         }
         return {};
     }
 
     void remove_window(window_id id)
     {
-        window_info& info{get_from_id(id)};
+        window_info& info{ get_from_id(id) };
         DestroyWindow(info.hwnd);
         remove_from_windows(id);
     }
@@ -292,13 +292,13 @@ namespace pk::platform
 
     u32 window::width() const
     {
-        math::u32v4 s{size()};
+        math::u32v4 s{ size() };
         return s.z - s.x;
     }
 
     u32 window::height() const
     {
-        math::u32v4 s{size()};
+        math::u32v4 s{ size() };
         return s.w - s.y;
     }
 

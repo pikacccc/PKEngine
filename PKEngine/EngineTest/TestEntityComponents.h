@@ -22,7 +22,7 @@ class engine_test : public test
         {
             do
             {
-                for (u32 i{0}; i < 10000; ++i)
+                for (u32 i{ 0 }; i < 10000; ++i)
                 {
                     create_random();
                     remove_random();
@@ -51,7 +51,7 @@ class engine_test : public test
             while (count > 0)
             {
                 ++_added;
-                game_entity::entity entity{game_entity::create(entity_info)};
+                game_entity::entity entity{ game_entity::create(entity_info) };
                 assert(entity.is_valid());
                 _entities.push_back(entity);
                 --count;
@@ -64,8 +64,8 @@ class engine_test : public test
             if (_entities.size() < 1000) return;
             while (count > 0)
             {
-                const u32                 index{static_cast<u32>(static_cast<u32>(rand()) % _entities.size())};
-                const game_entity::entity entity{_entities[index]};
+                const u32                 index{ static_cast<u32>(static_cast<u32>(rand()) % _entities.size()) };
+                const game_entity::entity entity{ _entities[index] };
                 assert(entity.is_valid());
                 if (entity.is_valid())
                 {
@@ -86,7 +86,7 @@ class engine_test : public test
 
         util::vector<game_entity::entity> _entities;
 
-        u32 _added{0};
-        u32 _removed{0};
-        u32 _num_entities{0};
+        u32 _added{ 0 };
+        u32 _removed{ 0 };
+        u32 _num_entities{ 0 };
 };
