@@ -28,15 +28,15 @@ namespace PKEngineEditor.Editors
         {
             Loaded -= OnTransformViewLoaded;
             if (!(DataContext is MSTransform vm)) return;
-            vm.PropertyChanged += (s, a) => { _propertyChanged = true; };
+            vm.PropertyChanged += (_, _) => { _propertyChanged = true; };
         }
 
-        private Action? GetAction(Func<Transform, (Transform, Vector3)> selector,
-            Action<(Transform transform, Vector3)> forEachAction)
+        private Action? GetAction(Func<Transform, (Transform, Vector3)>  selector,
+                                  Action<(Transform transform, Vector3)> forEachAction)
         {
             if (!(DataContext is MSTransform vm))
             {
-                _undoAction = null;
+                _undoAction      = null;
                 _propertyChanged = false;
                 return null;
             }
@@ -44,15 +44,15 @@ namespace PKEngineEditor.Editors
             var selection = vm.SelectedComponents.Select(selector).ToList();
 
             return () =>
-            {
-                selection.ForEach(forEachAction);
-                (GameEntityView.Instance.DataContext as MSEntity)?.GetComponent<MSTransform>().Refresh();
-            };
+                   {
+                       selection.ForEach(forEachAction);
+                       (GameEntityView.Instance!.DataContext as MSEntity)?.GetComponent<MSTransform>().Refresh();
+                   };
         }
 
         private Action? GetPositionAction() => GetAction((x) => (x, x.Position), x => x.transform.Position = x.Item2);
         private Action? GetRotationAction() => GetAction((x) => (x, x.Rotation), x => x.transform.Rotation = x.Item2);
-        private Action? GetScaleAction() => GetAction((x) => (x, x.Scale), x => x.transform.Scale = x.Item2);
+        private Action? GetScaleAction()    => GetAction((x) => (x, x.Scale),    x => x.transform.Scale = x.Item2);
 
         private void RecordActions(Action? redoAction, string name)
         {
@@ -60,7 +60,7 @@ namespace PKEngineEditor.Editors
             {
                 _propertyChanged = false;
                 Debug.Assert(_undoAction != null);
-                Debug.Assert(redoAction != null);
+                Debug.Assert(redoAction  != null);
                 Project.UndoRedoMgr.Add(new UndoRedoAction(_undoAction, redoAction, name));
             }
         }
@@ -68,7 +68,7 @@ namespace PKEngineEditor.Editors
         private void OnPosition_VectorBox_PreviewMouse_LBD(object sender, MouseButtonEventArgs e)
         {
             _propertyChanged = false;
-            _undoAction = GetPositionAction();
+            _undoAction      = GetPositionAction();
         }
 
         private void OnPosition_VectorBox_PreviewMouse_LBU(object sender, MouseButtonEventArgs? e)
@@ -87,7 +87,7 @@ namespace PKEngineEditor.Editors
         private void OnRotation_VectorBox_PreviewMouse_LBD(object sender, MouseButtonEventArgs e)
         {
             _propertyChanged = false;
-            _undoAction = GetRotationAction();
+            _undoAction      = GetRotationAction();
         }
 
         private void OnRotation_VectorBox_PreviewMouse_LBU(object sender, MouseButtonEventArgs? e)
@@ -106,7 +106,7 @@ namespace PKEngineEditor.Editors
         private void OnScale_VectorBox_PreviewMouse_LBD(object sender, MouseButtonEventArgs e)
         {
             _propertyChanged = false;
-            _undoAction = GetScaleAction();
+            _undoAction      = GetScaleAction();
         }
 
         private void OnScale_VectorBox_PreviewMouse_LBU(object sender, MouseButtonEventArgs? e)

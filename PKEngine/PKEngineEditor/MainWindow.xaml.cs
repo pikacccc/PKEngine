@@ -11,25 +11,26 @@ namespace PKEngineEditor
     /// </summary>
     public partial class MainWindow : Window
     {
-        public static string PkEnginePath { get; private set; }
+        public static string PkEnginePath { get; private set; } = null!;
+
         public MainWindow()
         {
             InitializeComponent();
-            Loaded += OnMainWindowLoaded;
-            Closing += OnMainWindowClosing;
+            Loaded  += OnMainWindowLoaded;
+            Closing += OnMainWindowClosing!;
         }
 
         private void OnMainWindowClosing(object sender, CancelEventArgs e)
         {
-            Closing -= OnMainWindowClosing;
-            Project.CurProject?.Unload();
+            Closing -= OnMainWindowClosing!;
+            Project.CurProject.Unload();
         }
 
         private void OnMainWindowLoaded(object sender, RoutedEventArgs e)
         {
             Loaded -= OnMainWindowLoaded;
             GetEnginePath();
-            OpenProjectBrowsereDialog();
+            OpenProjectBrowserDialog();
         }
 
         private void GetEnginePath()
@@ -41,7 +42,8 @@ namespace PKEngineEditor
                 if (dlg.ShowDialog() == true)
                 {
                     PkEnginePath = dlg.PkEnginePath;
-                    Environment.SetEnvironmentVariable("PK_ENGINE", dlg.PkEnginePath.ToUpper(), EnvironmentVariableTarget.User);
+                    Environment.SetEnvironmentVariable("PK_ENGINE", dlg.PkEnginePath.ToUpper(),
+                                                       EnvironmentVariableTarget.User);
                 }
                 else
                 {
@@ -54,7 +56,7 @@ namespace PKEngineEditor
             }
         }
 
-        private void OpenProjectBrowsereDialog()
+        private void OpenProjectBrowserDialog()
         {
             var browser = new ProjectBrowserDialog();
             if (browser.ShowDialog() == false || browser.DataContext == null)
@@ -63,7 +65,7 @@ namespace PKEngineEditor
             }
             else
             {
-                Project.CurProject?.Unload();
+                Project.CurProject.Unload();
                 DataContext = browser.DataContext;
             }
         }

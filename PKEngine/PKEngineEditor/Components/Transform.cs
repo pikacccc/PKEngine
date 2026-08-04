@@ -9,6 +9,7 @@ namespace PKEngineEditor.Components
     class Transform : Component
     {
         private Vector3 _position;
+
         [DataMember]
         public Vector3 Position
         {
@@ -24,6 +25,7 @@ namespace PKEngineEditor.Components
         }
 
         private Vector3 _rotation;
+
         [DataMember]
         public Vector3 Rotation
         {
@@ -39,6 +41,7 @@ namespace PKEngineEditor.Components
         }
 
         private Vector3 _scale;
+
         [DataMember]
         public Vector3 Scale
         {
@@ -79,6 +82,7 @@ namespace PKEngineEditor.Components
     sealed class MSTransform : MSComponent<Transform>
     {
         private float? _posX;
+
         public float? PosX
         {
             get => _posX;
@@ -93,6 +97,7 @@ namespace PKEngineEditor.Components
         }
 
         private float? _posY;
+
         public float? PosY
         {
             get => _posY;
@@ -107,6 +112,7 @@ namespace PKEngineEditor.Components
         }
 
         private float? _posZ;
+
         public float? PosZ
         {
             get => _posZ;
@@ -121,6 +127,7 @@ namespace PKEngineEditor.Components
         }
 
         private float? _rotX;
+
         public float? RotX
         {
             get => _rotX;
@@ -135,6 +142,7 @@ namespace PKEngineEditor.Components
         }
 
         private float? _rotY;
+
         public float? RotY
         {
             get => _rotY;
@@ -149,6 +157,7 @@ namespace PKEngineEditor.Components
         }
 
         private float? _rotZ;
+
         public float? RotZ
         {
             get => _rotZ;
@@ -163,6 +172,7 @@ namespace PKEngineEditor.Components
         }
 
         private float? _scaleX;
+
         public float? ScaleX
         {
             get => _scaleX;
@@ -177,6 +187,7 @@ namespace PKEngineEditor.Components
         }
 
         private float? _scaleY;
+
         public float? ScaleY
         {
             get => _scaleY;
@@ -191,6 +202,7 @@ namespace PKEngineEditor.Components
         }
 
         private float? _scaleZ;
+
         public float? ScaleZ
         {
             get => _scaleZ;
@@ -215,27 +227,33 @@ namespace PKEngineEditor.Components
             {
                 case nameof(PosX):
                     if (PosX.HasValue)
-                        SelectedComponents.ForEach(x => x.Position = new Vector3(PosX.Value, x.Position.Y, x.Position.Z));
+                        SelectedComponents.ForEach(x => x.Position =
+                                                            new Vector3(PosX.Value, x.Position.Y, x.Position.Z));
                     return true;
                 case nameof(PosY):
                     if (PosY.HasValue)
-                        SelectedComponents.ForEach(x => x.Position = new Vector3(x.Position.X, PosY.Value, x.Position.Z));
+                        SelectedComponents.ForEach(x => x.Position =
+                                                            new Vector3(x.Position.X, PosY.Value, x.Position.Z));
                     return true;
                 case nameof(PosZ):
                     if (PosZ.HasValue)
-                        SelectedComponents.ForEach(x => x.Position = new Vector3(x.Position.X, x.Position.Y, PosZ.Value));
+                        SelectedComponents.ForEach(x => x.Position =
+                                                            new Vector3(x.Position.X, x.Position.Y, PosZ.Value));
                     return true;
                 case nameof(RotX):
                     if (RotX.HasValue)
-                        SelectedComponents.ForEach(x => x.Rotation = new Vector3(RotX.Value, x.Rotation.Y, x.Rotation.Z));
+                        SelectedComponents.ForEach(x => x.Rotation =
+                                                            new Vector3(RotX.Value, x.Rotation.Y, x.Rotation.Z));
                     return true;
                 case nameof(RotY):
                     if (RotY.HasValue)
-                        SelectedComponents.ForEach(x => x.Rotation = new Vector3(x.Rotation.X, RotY.Value, x.Rotation.Z));
+                        SelectedComponents.ForEach(x => x.Rotation =
+                                                            new Vector3(x.Rotation.X, RotY.Value, x.Rotation.Z));
                     return true;
                 case nameof(RotZ):
                     if (RotZ.HasValue)
-                        SelectedComponents.ForEach(x => x.Rotation = new Vector3(x.Rotation.X, x.Rotation.Y, RotZ.Value));
+                        SelectedComponents.ForEach(x => x.Rotation =
+                                                            new Vector3(x.Rotation.X, x.Rotation.Y, RotZ.Value));
                     return true;
                 case nameof(ScaleX):
                     if (ScaleX.HasValue)
@@ -256,12 +274,12 @@ namespace PKEngineEditor.Components
 
         protected override bool UpdateMSComponent()
         {
-            PosX = MSEntity.GetMixedValue(SelectedComponents, (x) => x.Position.X);
-            PosY = MSEntity.GetMixedValue(SelectedComponents, (x) => x.Position.Y);
-            PosZ = MSEntity.GetMixedValue(SelectedComponents, (x) => x.Position.Z);
-            RotX = MSEntity.GetMixedValue(SelectedComponents, (x) => x.Rotation.X);
-            RotY = MSEntity.GetMixedValue(SelectedComponents, (x) => x.Rotation.Y);
-            RotZ = MSEntity.GetMixedValue(SelectedComponents, (x) => x.Rotation.Z);
+            PosX   = MSEntity.GetMixedValue(SelectedComponents, (x) => x.Position.X);
+            PosY   = MSEntity.GetMixedValue(SelectedComponents, (x) => x.Position.Y);
+            PosZ   = MSEntity.GetMixedValue(SelectedComponents, (x) => x.Position.Z);
+            RotX   = MSEntity.GetMixedValue(SelectedComponents, (x) => x.Rotation.X);
+            RotY   = MSEntity.GetMixedValue(SelectedComponents, (x) => x.Rotation.Y);
+            RotZ   = MSEntity.GetMixedValue(SelectedComponents, (x) => x.Rotation.Z);
             ScaleX = MSEntity.GetMixedValue(SelectedComponents, (x) => x.Scale.X);
             ScaleY = MSEntity.GetMixedValue(SelectedComponents, (x) => x.Scale.Y);
             ScaleZ = MSEntity.GetMixedValue(SelectedComponents, (x) => x.Scale.Z);

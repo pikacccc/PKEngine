@@ -9,34 +9,34 @@
         Style="{StaticResource PkDialogStyle}">
     <Window.Resources>
         <Style TargetType="{x:Type ToggleButton}">
-            <Setter Property="FontSize" Value="32"/>
-            <Setter Property="FontFamily" Value="Bahnschrift condensed"/>
-            <Setter Property="Background" Value="Transparent"/>
-            <Setter Property="BorderBrush" Value="Transparent"/>
-            <Setter Property="Foreground" Value="{StaticResource Editor.Disabled.FontBrush}"/>
-            <Setter Property="HorizontalContentAlignment" Value="Center"/>
-            <Setter Property="VerticalContentAlignment" Value="Center"/>
+            <Setter Property="FontSize" Value="32" />
+            <Setter Property="FontFamily" Value="Bahnschrift condensed" />
+            <Setter Property="Background" Value="Transparent" />
+            <Setter Property="BorderBrush" Value="Transparent" />
+            <Setter Property="Foreground" Value="{StaticResource Editor.Disabled.FontBrush}" />
+            <Setter Property="HorizontalContentAlignment" Value="Center" />
+            <Setter Property="VerticalContentAlignment" Value="Center" />
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="{x:Type ToggleButton}">
                         <TextBlock Text="{TemplateBinding Button.Content}" Style="{x:Null}">
                             <TextBlock.Effect>
-                                <DropShadowEffect BlurRadius="2" ShadowDepth="1" Opacity="0.6"/>
+                                <DropShadowEffect BlurRadius="2" ShadowDepth="1" Opacity="0.6" />
                             </TextBlock.Effect>
                         </TextBlock>
                         <ControlTemplate.Triggers>
                             <Trigger Property="IsEnabled" Value="False">
-                                <Setter Property="Background" Value="{StaticResource Editor.Window.GrayBrush4}"/>
+                                <Setter Property="Background" Value="{StaticResource Editor.Window.GrayBrush4}" />
                             </Trigger>
                             <Trigger Property="IsChecked" Value="True">
-                                <Setter Property="Foreground" Value="White"/>
+                                <Setter Property="Foreground" Value="White" />
                             </Trigger>
                             <MultiTrigger>
                                 <MultiTrigger.Conditions>
-                                    <Condition Property="IsMouseOver" Value="True"/>
-                                    <Condition Property="IsChecked" Value="False"/>
+                                    <Condition Property="IsMouseOver" Value="True" />
+                                    <Condition Property="IsChecked" Value="False" />
                                 </MultiTrigger.Conditions>
-                                <Setter Property="Foreground" Value="{StaticResource Editor.FontBrush}"/>
+                                <Setter Property="Foreground" Value="{StaticResource Editor.FontBrush}" />
                             </MultiTrigger>
                         </ControlTemplate.Triggers>
                     </ControlTemplate>
@@ -46,7 +46,7 @@
     </Window.Resources>
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition Height="auto"/>
+            <RowDefinition Height="auto" />
             <RowDefinition />
         </Grid.RowDefinitions>
         <Canvas x:Name="canvas">
@@ -54,21 +54,21 @@
                        Height="{Binding Path=ActualHeight,ElementName=canvas}"
                        x:Name="hightlightRect" Canvas.Left="200" Opacity="0.5">
                 <Rectangle.Effect>
-                    <BlurEffect Radius="1" KernelType="Gaussian"/>
+                    <BlurEffect Radius="1" KernelType="Gaussian" />
                 </Rectangle.Effect>
                 <Rectangle.Fill>
                     <RadialGradientBrush GradientOrigin="0.5,1" Center="0.5,1" RadiusY="1">
                         <RadialGradientBrush.GradientStops>
-                            <GradientStop Color="White" Offset="0"/>
-                            <GradientStop Color="Transparent" Offset="1"/>
+                            <GradientStop Color="White" Offset="0" />
+                            <GradientStop Color="Transparent" Offset="1" />
                         </RadialGradientBrush.GradientStops>
                     </RadialGradientBrush>
                 </Rectangle.Fill>
                 <Rectangle.OpacityMask>
                     <RadialGradientBrush GradientOrigin="0.5,1" Center="0.5,1" RadiusY="1">
                         <RadialGradientBrush.GradientStops>
-                            <GradientStop Color="White" Offset="0"/>
-                            <GradientStop Color="Transparent" Offset="1"/>
+                            <GradientStop Color="White" Offset="0" />
+                            <GradientStop Color="Transparent" Offset="1" />
                         </RadialGradientBrush.GradientStops>
                     </RadialGradientBrush>
                 </Rectangle.OpacityMask>
@@ -78,24 +78,28 @@
             <Rectangle.Fill>
                 <LinearGradientBrush>
                     <LinearGradientBrush.GradientStops>
-                        <GradientStop Color="Transparent" Offset="0"/>
-                        <GradientStop Color="{StaticResource Editor.Disabled.FontColor}" Offset="0.33"/>
-                        <GradientStop Color="{StaticResource Editor.Disabled.FontColor}"  Offset="0.33"/>
-                        <GradientStop Color="Transparent"  Offset="1"/>
+                        <GradientStop Color="Transparent" Offset="0" />
+                        <GradientStop Color="{StaticResource Editor.Disabled.FontColor}" Offset="0.33" />
+                        <GradientStop Color="{StaticResource Editor.Disabled.FontColor}" Offset="0.33" />
+                        <GradientStop Color="Transparent" Offset="1" />
                     </LinearGradientBrush.GradientStops>
                 </LinearGradientBrush>
             </Rectangle.Fill>
         </Rectangle>
-        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center"  Grid.Row="0">
-            <ToggleButton Content="OPEN PROJECT" x:Name="openProjectBtn" Margin="10,20,0,20" Click="OnToggleBtn_Click" IsChecked="True"></ToggleButton>
-            <ToggleButton Content="CREATE PROJECT" x:Name="createProjectBtn" Margin="40,20,0,20" Click="OnToggleBtn_Click"></ToggleButton>
+        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Grid.Row="0">
+            <ToggleButton Content="OPEN PROJECT" x:Name="openProjectBtn" Margin="10,20,0,20" Click="OnToggleBtn_Click"
+                          IsChecked="True">
+            </ToggleButton>
+            <ToggleButton Content="CREATE PROJECT" x:Name="createProjectBtn" Margin="40,20,0,20"
+                          Click="OnToggleBtn_Click">
+            </ToggleButton>
         </StackPanel>
         <StackPanel Orientation="Horizontal" Grid.Row="1" x:Name="browserContent">
             <StackPanel.Effect>
-                <DropShadowEffect Opacity="0.6" BlurRadius="15" ShadowDepth="2"/>
+                <DropShadowEffect Opacity="0.6" BlurRadius="15" ShadowDepth="2" />
             </StackPanel.Effect>
-            <local:OpenProject x:Name="openProjectView"/>
-            <local:NewProject x:Name="newProjectView" Margin="800,0,0,0"/>
+            <local:OpenProject x:Name="openProjectView" />
+            <local:NewProject x:Name="newProjectView" Margin="800,0,0,0" />
         </StackPanel>
     </Grid>
 </Window>

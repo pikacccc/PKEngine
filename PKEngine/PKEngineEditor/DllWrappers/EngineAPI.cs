@@ -12,7 +12,7 @@ namespace PKEngineEditor.EngineAPIStructs
     {
         public Vector3 Position;
         public Vector3 Rotation;
-        public Vector3 Scale = new Vector3(1, 1, 1);
+        public Vector3 Scale = new(1, 1, 1);
     }
 
     [StructLayout(LayoutKind.Sequential)]
@@ -24,14 +24,14 @@ namespace PKEngineEditor.EngineAPIStructs
     [StructLayout(LayoutKind.Sequential)]
     class GameEntityDescriptor
     {
-        public TransformComponent Transform = new();
-        public ScriptComponent Script = new();
+        public readonly TransformComponent Transform = new();
+        public readonly ScriptComponent    Script    = new();
     }
 }
 
 namespace PKEngineEditor.DllWrappers
 {
-    static class EngineAPI
+    internal static class EngineAPI
     {
         private const string EngineDll = "EngineDll.dll";
 
@@ -53,13 +53,13 @@ namespace PKEngineEditor.DllWrappers
 
         [DllImport(EngineDll)]
         public static extern void RemoveRenderSurface(int id);
-        
+
         [DllImport(EngineDll)]
         public static extern IntPtr GetRenderHandle(int id);
-        
+
         [DllImport(EngineDll)]
         public static extern void ResizeRenderSurface(int id);
-        
+
         internal static class EntityAPI
         {
             [DllImport(EngineDll)]
@@ -72,9 +72,9 @@ namespace PKEngineEditor.DllWrappers
                 // transform component
                 {
                     var c = entity.GetComponent<Transform>();
-                    desc.Transform.Position = c.Position;
+                    desc.Transform.Position = c!.Position;
                     desc.Transform.Rotation = c.Rotation;
-                    desc.Transform.Scale = c.Scale;
+                    desc.Transform.Scale    = c.Scale;
                 }
 
                 // script component
@@ -89,7 +89,7 @@ namespace PKEngineEditor.DllWrappers
                         else
                         {
                             Logger.Log(MessageType.Error,
-                                $"Unable to find script with name {c.Name}. Game entity will be created without script component!");
+                                       $"Unable to find script with name {c.Name}. Game entity will be created without script component!");
                         }
                     }
                 }

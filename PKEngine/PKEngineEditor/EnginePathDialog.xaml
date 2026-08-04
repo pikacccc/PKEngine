@@ -14,14 +14,16 @@
         </Border.Effect>
         <Grid Margin="32,0">
             <TextBlock VerticalAlignment="Top" HorizontalAlignment="Center"
-                       Foreground="{StaticResource Editor.RedBrush}" Margin="0,10,0,0" TextWrapping="Wrap" x:Name = "messageTextBlock"/>
+                       Foreground="{StaticResource Editor.RedBrush}" Margin="0,10,0,0" TextWrapping="Wrap"
+                       x:Name="messageTextBlock" />
             <DockPanel>
-                <TextBlock Text="Engine Path" Width="72" Style="{StaticResource LightTextBlockStyle}"/>
-                <TextBox x:Name="pathTextBox"/>
+                <TextBlock Text="Engine Path" Width="72" Style="{StaticResource LightTextBlockStyle}" />
+                <TextBox x:Name="pathTextBox" />
             </DockPanel>
-            <StackPanel Orientation="Horizontal" VerticalAlignment="Bottom" HorizontalAlignment="Right" Margin="0,0,0,20">
-                <Button Content="OK" Width="64" Margin="32,0" IsDefault="True" Click="OnOK_Button_Click"/>
-                <Button Content="Cancel" Width="64" IsCancel="True"/>
+            <StackPanel Orientation="Horizontal" VerticalAlignment="Bottom" HorizontalAlignment="Right"
+                        Margin="0,0,0,20">
+                <Button Content="OK" Width="64" Margin="32,0" IsDefault="True" Click="OnOK_Button_Click" />
+                <Button Content="Cancel" Width="64" IsCancel="True" />
             </StackPanel>
         </Grid>
     </Border>

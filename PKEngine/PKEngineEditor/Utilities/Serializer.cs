@@ -1,11 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
+﻿using System.Diagnostics;
 using System.IO;
-using System.Linq;
 using System.Runtime.Serialization;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace PKEngineEditor.Utilities
 {
@@ -15,8 +10,8 @@ namespace PKEngineEditor.Utilities
         {
             try
             {
-                using var fs = new FileStream(path, FileMode.Create);
-                var serializer = new DataContractSerializer(typeof(T));
+                using var fs         = new FileStream(path, FileMode.Create);
+                var       serializer = new DataContractSerializer(typeof(T));
                 serializer.WriteObject(fs, instance);
             }
             catch (Exception ex)
@@ -27,13 +22,13 @@ namespace PKEngineEditor.Utilities
             }
         }
 
-        public static T? FromFile<T>(string path)
+        public static T FromFile<T>(string path)
         {
             try
             {
-                using var fs = new FileStream(path, FileMode.Open);
-                var serializer = new DataContractSerializer(typeof(T));
-                T instance = (T)serializer.ReadObject(fs);
+                using var fs         = new FileStream(path, FileMode.Open);
+                var       serializer = new DataContractSerializer(typeof(T));
+                T         instance   = (T)serializer.ReadObject(fs)!;
                 return instance;
             }
             catch (Exception ex)

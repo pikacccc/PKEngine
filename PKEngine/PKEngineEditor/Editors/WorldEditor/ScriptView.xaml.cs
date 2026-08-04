@@ -1,11 +1,12 @@
 ﻿using System.Windows.Controls;
 
-namespace PKEngineEditor.Editors;
-
-public partial class ScriptView : UserControl
+namespace PKEngineEditor.Editors
 {
-    public ScriptView()
+    public partial class ScriptView : UserControl
     {
-        InitializeComponent();
+        public ScriptView()
+        {
+            InitializeComponent();
+        }
     }
 }

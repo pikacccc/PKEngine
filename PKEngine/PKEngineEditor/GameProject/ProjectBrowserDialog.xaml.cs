@@ -1,17 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
+﻿using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
 using System.Windows.Media.Animation;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
 
 namespace PKEngineEditor.GameProject
 {
@@ -20,7 +9,7 @@ namespace PKEngineEditor.GameProject
     /// </summary>
     public partial class ProjectBrowserDialog : Window
     {
-        private readonly CubicEase _easing = new CubicEase() { EasingMode = EasingMode.EaseInOut};
+        private readonly CubicEase _easing = new CubicEase() { EasingMode = EasingMode.EaseInOut };
 
         public ProjectBrowserDialog()
         {
@@ -33,7 +22,7 @@ namespace PKEngineEditor.GameProject
             Loaded -= OnProjectBrowserDialogLoaded;
             if (!OpenProjectViewModel.Projects.Any())
             {
-                openProjectBtn.IsEnabled = false;
+                openProjectBtn.IsEnabled  = false;
                 openProjectBtn.Visibility = Visibility.Hidden;
                 OnToggleBtn_Click(createProjectBtn, new RoutedEventArgs());
             }
@@ -48,8 +37,9 @@ namespace PKEngineEditor.GameProject
                     createProjectBtn.IsChecked = false;
                     AnimateToOpenProject();
                     openProjectView.IsEnabled = true;
-                    newProjectView.IsEnabled = false;
+                    newProjectView.IsEnabled  = false;
                 }
+
                 openProjectBtn.IsChecked = true;
             }
             else
@@ -59,8 +49,9 @@ namespace PKEngineEditor.GameProject
                     openProjectBtn.IsChecked = false;
                     AnimateToCreateProject();
                     openProjectView.IsEnabled = false;
-                    newProjectView.IsEnabled = true;
+                    newProjectView.IsEnabled  = true;
                 }
+
                 createProjectBtn.IsChecked = true;
             }
         }
@@ -69,12 +60,15 @@ namespace PKEngineEditor.GameProject
         {
             var hightlightAnimation = new DoubleAnimation(200, 400, new Duration(TimeSpan.FromSeconds(0.2)));
             hightlightAnimation.EasingFunction = _easing;
-            hightlightAnimation.Completed += (s, e) =>
-            {
-                var animation = new ThicknessAnimation(new Thickness(0), new Thickness(-1600, 0, 0, 0), new Duration(TimeSpan.FromSeconds(0.5)));
-                animation.EasingFunction = _easing;
-                browserContent.BeginAnimation(MarginProperty, animation);
-            };
+            hightlightAnimation.Completed += (_, _) =>
+                                             {
+                                                 var animation =
+                                                     new ThicknessAnimation(new Thickness(0),
+                                                                            new Thickness(-1600, 0, 0, 0),
+                                                                            new Duration(TimeSpan.FromSeconds(0.5)));
+                                                 animation.EasingFunction = _easing;
+                                                 browserContent.BeginAnimation(MarginProperty, animation);
+                                             };
             hightlightRect.BeginAnimation(Canvas.LeftProperty, hightlightAnimation);
         }
 
@@ -82,12 +76,15 @@ namespace PKEngineEditor.GameProject
         {
             var hightlightAnimation = new DoubleAnimation(400, 200, new Duration(TimeSpan.FromSeconds(0.2)));
             hightlightAnimation.EasingFunction = _easing;
-            hightlightAnimation.Completed += (s, e) =>
-            {
-                var animation = new ThicknessAnimation(new Thickness(-1600, 0, 0, 0), new Thickness(0), new Duration(TimeSpan.FromSeconds(0.5)));
-                animation.EasingFunction = _easing;
-                browserContent.BeginAnimation(MarginProperty, animation);
-            };
+            hightlightAnimation.Completed += (_, _) =>
+                                             {
+                                                 var animation =
+                                                     new ThicknessAnimation(new Thickness(-1600, 0, 0, 0),
+                                                                            new Thickness(0),
+                                                                            new Duration(TimeSpan.FromSeconds(0.5)));
+                                                 animation.EasingFunction = _easing;
+                                                 browserContent.BeginAnimation(MarginProperty, animation);
+                                             };
             hightlightRect.BeginAnimation(Canvas.LeftProperty, hightlightAnimation);
         }
     }

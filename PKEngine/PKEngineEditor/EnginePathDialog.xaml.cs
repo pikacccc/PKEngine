@@ -5,12 +5,12 @@ namespace PKEngineEditor;
 
 public partial class EnginePathDialog : Window
 {
-    public string PkEnginePath { get; private set; }
-    
+    public string PkEnginePath { get; private set; } = null!;
+
     public EnginePathDialog()
     {
         InitializeComponent();
-        Owner =  Application.Current.MainWindow;
+        Owner = Application.Current.MainWindow;
     }
 
     private void OnOK_Button_Click(object sender, RoutedEventArgs e)
@@ -21,7 +21,7 @@ public partial class EnginePathDialog : Window
         {
             messageTextBlock.Text = "Invalid path.";
         }
-        else if(path.IndexOfAny(Path.GetInvalidPathChars())!=-1)
+        else if (path.IndexOfAny(Path.GetInvalidPathChars()) != -1)
         {
             messageTextBlock.Text = "Invalid Character(s) used in path.";
         }

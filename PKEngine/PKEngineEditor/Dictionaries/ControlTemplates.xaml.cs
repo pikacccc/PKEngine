@@ -1,14 +1,15 @@
 ﻿using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
+
 namespace PKEngineEditor.Dictionaries
 {
     public partial class ControlTemplates : ResourceDictionary
     {
-        private void OnTextBox_KeyDown(object sender, System.Windows.Input.KeyEventArgs e)
+        private void OnTextBox_KeyDown(object sender, KeyEventArgs e)
         {
             var textBox = sender as TextBox;
-            var exp = textBox.GetBindingExpression(TextBox.TextProperty);
+            var exp     = textBox!.GetBindingExpression(TextBox.TextProperty);
             if (exp == null) return;
 
             if (e.Key == Key.Enter)
@@ -21,6 +22,7 @@ namespace PKEngineEditor.Dictionaries
                 {
                     exp.UpdateSource();
                 }
+
                 Keyboard.ClearFocus();
                 e.Handled = true;
             }
@@ -34,7 +36,7 @@ namespace PKEngineEditor.Dictionaries
         private void OnTextBoxRename_KeyDown(object sender, KeyEventArgs e)
         {
             var textBox = sender as TextBox;
-            if(textBox == null) return;
+            if (textBox == null) return;
             var exp = textBox.GetBindingExpression(TextBox.TextProperty);
             if (exp == null) return;
 
@@ -48,8 +50,9 @@ namespace PKEngineEditor.Dictionaries
                 {
                     exp.UpdateSource();
                 }
+
                 textBox.Visibility = Visibility.Collapsed;
-                e.Handled = true;
+                e.Handled          = true;
             }
             else if (e.Key == Key.Escape)
             {
@@ -62,7 +65,7 @@ namespace PKEngineEditor.Dictionaries
         {
             var textBox = sender as TextBox;
             if (textBox == null) return;
-            if(!textBox.IsVisible) return;
+            if (!textBox.IsVisible) return;
             var exp = textBox.GetBindingExpression(TextBox.TextProperty);
             if (exp == null) return;
 
@@ -80,7 +83,8 @@ namespace PKEngineEditor.Dictionaries
         private void OnMaximizeRestore_Btn_Click(object sender, RoutedEventArgs e)
         {
             var window = (Window)((FrameworkElement)sender).TemplatedParent;
-            window.WindowState = (window.WindowState == WindowState.Normal) ? WindowState.Maximized : WindowState.Normal;
+            window.WindowState =
+                (window.WindowState == WindowState.Normal) ? WindowState.Maximized : WindowState.Normal;
         }
 
         private void OnMinimize_Btn_Click(object sender, RoutedEventArgs e)

@@ -1,17 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
+﻿using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 
 namespace PKEngineEditor.GameProject
 {
@@ -25,9 +14,11 @@ namespace PKEngineEditor.GameProject
             InitializeComponent();
 
 
-            Loaded += (s, e) =>
+            Loaded += (_, _) =>
             {
-                var item = projectListBox.ItemContainerGenerator.ContainerFromIndex(projectListBox.SelectedIndex) as ListBoxItem;
+                var item =
+                    projectListBox.ItemContainerGenerator.ContainerFromIndex(projectListBox.SelectedIndex) as
+                        ListBoxItem;
                 item?.Focus();
             };
         }
@@ -39,15 +30,16 @@ namespace PKEngineEditor.GameProject
 
         private void OpenSelectedProject()
         {
-            var project = OpenProjectViewModel.Open(projectListBox.SelectedItem as ProjectData);
+            var  project   = OpenProjectViewModel.Open((projectListBox.SelectedItem as ProjectData)!);
             bool dialogRes = false;
-            var wind = Window.GetWindow(this);
+            var  wind      = Window.GetWindow(this);
             if (project != null)
             {
-                dialogRes = true;
+                dialogRes        = true;
                 wind.DataContext = project;
             }
-            wind.DialogResult = dialogRes;
+
+            wind!.DialogResult = dialogRes;
             wind.Close();
         }
 

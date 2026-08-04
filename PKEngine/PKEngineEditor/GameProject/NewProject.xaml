@@ -1,8 +1,8 @@
 ﻿<UserControl x:Class="PKEngineEditor.GameProject.NewProject"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
-             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:local="clr-namespace:PKEngineEditor.GameProject"
              mc:Ignorable="d" Width="800"
              d:DataContext="{d:DesignInstance Type=local:NewProjectViewModel, IsDesignTimeCreatable=True}"
@@ -10,10 +10,12 @@
     <UserControl.DataContext>
         <local:NewProjectViewModel></local:NewProjectViewModel>
     </UserControl.DataContext>
-    <Border CornerRadius="3" Background="{DynamicResource Editor.Window.GrayBrush3}" Width="700" HorizontalAlignment="Center" Margin="0,30">
+    <Border CornerRadius="3" Background="{DynamicResource Editor.Window.GrayBrush3}" Width="700"
+            HorizontalAlignment="Center" Margin="0,30">
         <StackPanel>
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,20,0,0">
-                <ListBox Width="195" Height="250" ItemsSource="{Binding ReadOnlyProjectTemplates}" x:Name="templateListBox" SelectedIndex="0" d:ItemsSource="{d:SampleData ItemCount=5}">
+                <ListBox Width="195" Height="250" ItemsSource="{Binding ReadOnlyProjectTemplates}"
+                         x:Name="templateListBox" SelectedIndex="0" d:ItemsSource="{d:SampleData ItemCount=5}">
                     <ListBox.ItemTemplate>
                         <DataTemplate>
                             <StackPanel Orientation="Horizontal">
@@ -43,11 +45,15 @@
             </StackPanel>
 
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,30,0,0">
-                <Button Content="Create" Width="96" IsDefault="True" IsEnabled="{Binding IsValid}" Click="OnCreateProjectBtn_Click"></Button>
+                <Button Content="Create" Width="96" IsDefault="True" IsEnabled="{Binding IsValid}"
+                        Click="OnCreateProjectBtn_Click">
+                </Button>
                 <Button Content="Exit" Width="96" Margin="30,0,0,0" IsCancel="True"></Button>
             </StackPanel>
 
-            <TextBlock Text="{Binding ErrorMsg}" TextAlignment="Center" Margin="0,10,0,0" Foreground="{StaticResource Editor.RedBrush}"></TextBlock>
+            <TextBlock Text="{Binding ErrorMsg}" TextAlignment="Center" Margin="0,10,0,0"
+                       Foreground="{StaticResource Editor.RedBrush}">
+            </TextBlock>
         </StackPanel>
     </Border>
 </UserControl>

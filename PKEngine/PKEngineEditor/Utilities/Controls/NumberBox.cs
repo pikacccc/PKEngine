@@ -5,7 +5,7 @@ using System.Windows.Input;
 namespace PKEngineEditor.Utilities.Controls
 {
     [TemplatePart(Name = "PART_textBlock", Type = typeof(TextBlock))]
-    [TemplatePart(Name = "PART_textBox", Type = typeof(TextBox))]
+    [TemplatePart(Name = "PART_textBox",   Type = typeof(TextBox))]
     public class NumberBox : Control
     {
         public double Multiplier
@@ -15,7 +15,7 @@ namespace PKEngineEditor.Utilities.Controls
         }
 
         public static readonly DependencyProperty MultiplierProperty = DependencyProperty.Register(
-            nameof(Multiplier), typeof(double), typeof(NumberBox), new PropertyMetadata(1.0));
+         nameof(Multiplier), typeof(double), typeof(NumberBox), new PropertyMetadata(1.0));
 
         public string Value
         {
@@ -24,13 +24,14 @@ namespace PKEngineEditor.Utilities.Controls
         }
 
         public static readonly DependencyProperty ValueProperty = DependencyProperty.Register(
-            nameof(Value), typeof(string), typeof(NumberBox), new FrameworkPropertyMetadata(null, FrameworkPropertyMetadataOptions.BindsTwoWayByDefault));
+         nameof(Value), typeof(string), typeof(NumberBox),
+         new FrameworkPropertyMetadata(null, FrameworkPropertyMetadataOptions.BindsTwoWayByDefault));
 
         private double _originalValue = 0;
-        private bool _captured = false;
-        private bool _valueChanged = false;
-        private double _mouseXStart = 0;
-        private double _multiplier = 0.01;
+        private bool   _captured      = false;
+        private bool   _valueChanged  = false;
+        private double _mouseXStart   = 0;
+        private double _multiplier    = 0.01;
 
         public override void OnApplyTemplate()
         {
@@ -39,8 +40,8 @@ namespace PKEngineEditor.Utilities.Controls
             if (GetTemplateChild("PART_textBlock") is TextBlock textBlock)
             {
                 textBlock.MouseLeftButtonDown += OnTextBlock_Mouse_LBD;
-                textBlock.MouseLeftButtonUp += OnTextBlock_Mouse_LBU;
-                textBlock.MouseMove += OnTextBlock_Mouse_Move;
+                textBlock.MouseLeftButtonUp   += OnTextBlock_Mouse_LBU;
+                textBlock.MouseMove           += OnTextBlock_Mouse_Move;
             }
         }
 
@@ -49,14 +50,14 @@ namespace PKEngineEditor.Utilities.Controls
             if (_captured)
             {
                 var mouseX = e.GetPosition(this).X;
-                var delta = mouseX - _mouseXStart;
+                var delta  = mouseX - _mouseXStart;
                 if (Math.Abs(delta) > SystemParameters.MinimumHorizontalDragDistance)
                 {
-                    if(Keyboard.Modifiers.HasFlag(ModifierKeys.Control)) _multiplier = 0.001;
-                    else if(Keyboard.Modifiers.HasFlag(ModifierKeys.Shift)) _multiplier = 0.1;
-                    else _multiplier = 0.01;    
+                    if (Keyboard.Modifiers.HasFlag(ModifierKeys.Control)) _multiplier    = 0.001;
+                    else if (Keyboard.Modifiers.HasFlag(ModifierKeys.Shift)) _multiplier = 0.1;
+                    else _multiplier                                                     = 0.01;
                     var newValue = _originalValue + delta * _multiplier * Multiplier;
-                    Value = newValue.ToString("0.####");
+                    Value         = newValue.ToString("0.####");
                     _valueChanged = true;
                 }
             }
@@ -64,12 +65,12 @@ namespace PKEngineEditor.Utilities.Controls
 
         private void OnTextBlock_Mouse_LBU(object sender, MouseButtonEventArgs e)
         {
-            if(_captured)
+            if (_captured)
             {
                 Mouse.Capture(null);
                 _captured = false;
                 e.Handled = true;
-                if(!_valueChanged && GetTemplateChild("PART_textBox") is TextBox textBox)
+                if (!_valueChanged && GetTemplateChild("PART_textBox") is TextBox textBox)
                 {
                     textBox.Visibility = Visibility.Visible;
                     textBox.Focus();
@@ -83,16 +84,17 @@ namespace PKEngineEditor.Utilities.Controls
             double.TryParse(Value, out _originalValue);
 
             Mouse.Capture(sender as UIElement);
-            _captured = true;
+            _captured     = true;
             _valueChanged = false;
-            e.Handled = true;
-            _mouseXStart = e.GetPosition(this).X;
+            e.Handled     = true;
+            _mouseXStart  = e.GetPosition(this).X;
             Focus();
         }
 
         static NumberBox()
         {
-            DefaultStyleKeyProperty.OverrideMetadata(typeof(NumberBox), new FrameworkPropertyMetadata(typeof(NumberBox)));
+            DefaultStyleKeyProperty.OverrideMetadata(typeof(NumberBox),
+                                                     new FrameworkPropertyMetadata(typeof(NumberBox)));
         }
     }
 }

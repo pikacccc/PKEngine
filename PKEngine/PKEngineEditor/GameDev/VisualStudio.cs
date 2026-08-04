@@ -14,8 +14,8 @@ namespace PKEngineEditor.GameDev
         private static DTE2? _vsInstance;
 
         private static readonly string ProgId = "VisualStudio.DTE.17.0";
-        public static bool BuildSucceeded { get; private set; }
-        public static bool BuildDone { get; private set; }
+        public static           bool   BuildSucceeded { get; private set; }
+        public static           bool   BuildDone      { get; private set; }
 
         [DllImport("ole32.dll")]
         private static extern int CreateBindCtx(int reserved, out IBindCtx ppbc);
@@ -25,9 +25,9 @@ namespace PKEngineEditor.GameDev
 
         public static void OpenVisualStudio(string solutionPath)
         {
-            IRunningObjectTable? rot = null;
-            IEnumMoniker? monikerTable = null;
-            IBindCtx? bindCtx = null;
+            IRunningObjectTable? rot          = null;
+            IEnumMoniker?        monikerTable = null;
+            IBindCtx?            bindCtx      = null;
 
             try
             {
@@ -47,16 +47,15 @@ namespace PKEngineEditor.GameDev
                     IMoniker[] curMoniker = new IMoniker[1];
                     while (monikerTable.Next(1, curMoniker, IntPtr.Zero) == 0)
                     {
-                        string name = string.Empty;
-                        curMoniker[0]?.GetDisplayName(bindCtx, null, out name);
+                        curMoniker[0].GetDisplayName(bindCtx, null, out var name);
                         if (name.Contains(ProgId))
                         {
                             hRes = rot.GetObject(curMoniker[0], out object obj);
                             if (hRes < 0 || obj == null)
                                 throw new COMException(
-                                    $"Running object table`s GetObject() returned HRESULT: {hRes:x8}");
-                            DTE2? dte = obj as DTE2;
-                            var solutionName = dte?.Solution.FullName;
+                                                       $"Running object table`s GetObject() returned HRESULT: {hRes:x8}");
+                            DTE2? dte          = obj as DTE2;
+                            var   solutionName = dte?.Solution.FullName;
                             if (solutionName == solutionPath)
                             {
                                 _vsInstance = dte;
@@ -68,7 +67,7 @@ namespace PKEngineEditor.GameDev
                     if (_vsInstance == null)
                     {
                         Type? visualStudioType = Type.GetTypeFromProgID(ProgId, true);
-                        _vsInstance = Activator.CreateInstance(visualStudioType) as EnvDTE80.DTE2;
+                        _vsInstance = Activator.CreateInstance(visualStudioType!) as DTE2;
                     }
                 }
             }
@@ -80,8 +79,8 @@ namespace PKEngineEditor.GameDev
             finally
             {
                 if (monikerTable != null) Marshal.ReleaseComObject(monikerTable);
-                if (rot != null) Marshal.ReleaseComObject(rot);
-                if (bindCtx != null) Marshal.ReleaseComObject(bindCtx);
+                if (rot          != null) Marshal.ReleaseComObject(rot);
+                if (bindCtx      != null) Marshal.ReleaseComObject(bindCtx);
             }
         }
 
@@ -140,14 +139,14 @@ namespace PKEngineEditor.GameDev
 
         public static bool IsDebugging()
         {
-            bool res = false;
+            bool res       = false;
             bool trueAgain = true;
             for (int i = 0; i < 3 && trueAgain; ++i)
             {
                 try
                 {
                     res = _vsInstance != null && (_vsInstance.Debugger.CurrentProgram != null ||
-                                                  _vsInstance.Debugger.CurrentMode == EnvDTE.dbgDebugMode.dbgRunMode);
+                                                  _vsInstance.Debugger.CurrentMode == dbgDebugMode.dbgRunMode);
                     trueAgain = false;
                 }
                 catch (Exception ex)
@@ -180,14 +179,15 @@ namespace PKEngineEditor.GameDev
 
                     if (_vsInstance != null)
                     {
-                        _vsInstance.MainWindow.Visible = showWindow;
+                        _vsInstance.MainWindow.Visible                        =  showWindow;
                         _vsInstance.Events.BuildEvents.OnBuildProjConfigBegin += BuildEventsOnOnBuildProjConfigBegin;
-                        _vsInstance.Events.BuildEvents.OnBuildProjConfigDone += BuildEventsOnOnBuildProjConfigDone;
+                        _vsInstance.Events.BuildEvents.OnBuildProjConfigDone  += BuildEventsOnOnBuildProjConfigDone;
 
                         try
                         {
                             foreach (var pdbFile in Directory.GetFiles(
-                                         Path.Combine($"{project.Path}", $@"x64\{configName}"), "*.pdb"))
+                                                                       Path.Combine($"{project.Path}",
+                                                                            $@"x64\{configName}"), "*.pdb"))
                             {
                                 File.Delete(pdbFile);
                             }
@@ -223,23 +223,23 @@ namespace PKEngineEditor.GameDev
                 _vsInstance.ExecuteCommand("Debug.StopDebugging");
             }
         }
-        
+
         private static void BuildEventsOnOnBuildProjConfigDone(string project, string projectConfig, string platform,
-            string solutionConfig, bool success)
+                                                               string solutionConfig, bool success)
         {
             if (_vsInstance != null)
                 _vsInstance.Events.BuildEvents.OnBuildProjConfigDone -= BuildEventsOnOnBuildProjConfigDone;
             if (BuildDone) return;
 
             if (success) Logger.Log(MessageType.Info, $"Building {projectConfig} configuration succeeded");
-            else Logger.Log(MessageType.Error, $"Building {projectConfig} configuration failed");
+            else Logger.Log(MessageType.Error,        $"Building {projectConfig} configuration failed");
 
-            BuildDone = true;
+            BuildDone      = true;
             BuildSucceeded = success;
         }
 
         private static void BuildEventsOnOnBuildProjConfigBegin(string project, string projectConfig, string platform,
-            string solutionConfig)
+                                                                string solutionConfig)
         {
             if (_vsInstance != null)
                 _vsInstance.Events.BuildEvents.OnBuildProjConfigBegin -= BuildEventsOnOnBuildProjConfigBegin;

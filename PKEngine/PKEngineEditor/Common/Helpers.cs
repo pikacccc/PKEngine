@@ -7,7 +7,7 @@ namespace PKEngineEditor
     {
         public static T FindVisualParent<T>(this DependencyObject depObject) where T : DependencyObject
         {
-            if (!(depObject is Visual)) return null;
+            if (!(depObject is Visual)) return null!;
 
             var parent = VisualTreeHelper.GetParent(depObject);
             while (parent != null)
@@ -20,7 +20,7 @@ namespace PKEngineEditor
                 parent = VisualTreeHelper.GetParent(parent);
             }
 
-            return null;
+            return null!;
         }
     }
 }

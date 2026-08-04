@@ -27,8 +27,8 @@ namespace PKEngineEditor.Utilities
 
     public class DelayEventTimerArgs : EventArgs
     {
-        public bool RepeatEvent { get; set; }
-        public Object Data { get; set; }
+        public bool   RepeatEvent { get; set; }
+        public Object Data        { get; set; }
 
         public DelayEventTimerArgs(Object data)
         {
@@ -38,16 +38,16 @@ namespace PKEngineEditor.Utilities
 
     public class DelayEventTimer
     {
-        private readonly DispatcherTimer _timer;
-        private readonly TimeSpan _delay;
-        private DateTime _lastEventTime = DateTime.Now;
-        private object _data;
-        public event EventHandler<DelayEventTimerArgs> Triggers;
+        private readonly DispatcherTimer               _timer;
+        private readonly TimeSpan                      _delay;
+        private          DateTime                      _lastEventTime = DateTime.Now;
+        private          object                        _data          = null!;
+        public event EventHandler<DelayEventTimerArgs> Triggers       = null!;
 
-        public void Trigger(object data = null)
+        public void Trigger(object data = null!)
         {
-            _data = data;
-            _lastEventTime = DateTime.Now;
+            _data            = data;
+            _lastEventTime   = DateTime.Now;
             _timer.IsEnabled = true;
         }
 
@@ -68,9 +68,9 @@ namespace PKEngineEditor.Utilities
 
         private void OnTimerTick(object? sender, EventArgs e)
         {
-            if(DateTime.Now - _lastEventTime < _delay) return;
+            if (DateTime.Now - _lastEventTime < _delay) return;
             var eventArgs = new DelayEventTimerArgs(_data);
-            Triggers?.Invoke(this, eventArgs);
+            Triggers.Invoke(this, eventArgs);
             _timer.IsEnabled = eventArgs.RepeatEvent;
         }
     }

@@ -8,9 +8,9 @@ namespace PKEngineEditor.Utilities
 {
     public class RenderSurfaceHost : HwndHost
     {
-        private readonly int _width = 800;
-        private readonly int _height = 600;
-        private IntPtr _renderWindowHandle = IntPtr.Zero;
+        private readonly int    _width              = 800;
+        private readonly int    _height             = 600;
+        private          IntPtr _renderWindowHandle = IntPtr.Zero;
 
         private DelayEventTimer _resizeTimer;
 
@@ -23,9 +23,9 @@ namespace PKEngineEditor.Utilities
 
         public RenderSurfaceHost(int width, int height)
         {
-            _width = width;
-            _height = height;
-            _resizeTimer = new DelayEventTimer(TimeSpan.FromMilliseconds(250));
+            _width                =  width;
+            _height               =  height;
+            _resizeTimer          =  new DelayEventTimer(TimeSpan.FromMilliseconds(250));
             _resizeTimer.Triggers += Resize;
         }
 
@@ -51,7 +51,7 @@ namespace PKEngineEditor.Utilities
         {
             EngineAPI.RemoveRenderSurface(SurfaceId);
             _renderWindowHandle = IntPtr.Zero;
-            SurfaceId = ID.INVALID_ID;
+            SurfaceId           = ID.INVALID_ID;
         }
     }
 }

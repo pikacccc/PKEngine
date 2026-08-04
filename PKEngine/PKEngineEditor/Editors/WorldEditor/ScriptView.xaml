@@ -7,16 +7,16 @@
              mc:Ignorable="d"
              d:DesignHeight="450" d:DesignWidth="800">
     <UserControl.Resources>
-        <Style TargetType="{x:Type TextBlock}" BasedOn="{StaticResource LightTextBlockStyle}"/>
+        <Style TargetType="{x:Type TextBlock}" BasedOn="{StaticResource LightTextBlockStyle}" />
     </UserControl.Resources>
     <local:ComponentView Header="Script">
         <Grid>
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="78"/>
-                <ColumnDefinition/>
+                <ColumnDefinition Width="78" />
+                <ColumnDefinition />
             </Grid.ColumnDefinitions>
-            <TextBlock Grid.Column="0" Text="Name"/>
-            <TextBlock Grid.Column="1" Text="{Binding Name}"/>
+            <TextBlock Grid.Column="0" Text="Name" />
+            <TextBlock Grid.Column="1" Text="{Binding Name}" />
         </Grid>
     </local:ComponentView>
 </UserControl>

@@ -7,7 +7,8 @@ namespace PKEngineEditor.Components
     [DataContract]
     class Script : Component
     {
-        private string _name;
+        private string _name = null!;
+
         [DataMember]
         public string Name
         {
@@ -21,12 +22,13 @@ namespace PKEngineEditor.Components
                 }
             }
         }
-        
+
         public Script(GameEntity owner) : base(owner)
         {
         }
 
         public override IMSComponent GetMSComponent(MSEntity msEntity) => new MSScript(msEntity);
+
         public override void WriteBinary(BinaryWriter bw)
         {
             var nameBytes = Encoding.UTF8.GetBytes(Name);
@@ -37,7 +39,8 @@ namespace PKEngineEditor.Components
 
     sealed class MSScript : MSComponent<Script>
     {
-        private string _name;
+        private string _name = null!;
+
         public string Name
         {
             get => _name;
@@ -50,7 +53,7 @@ namespace PKEngineEditor.Components
                 }
             }
         }
-        
+
         public MSScript(MSEntity msEntity) : base(msEntity)
         {
             Refresh();
@@ -60,17 +63,17 @@ namespace PKEngineEditor.Components
         {
             if (PropertyName == nameof(Name))
             {
-                SelectedComponents.ForEach(c=>c.Name = _name);
+                SelectedComponents.ForEach(c => c.Name = _name);
                 return true;
             }
+
             return false;
         }
 
         protected override bool UpdateMSComponent()
         {
-            Name = MSEntity.GetMixedValue(SelectedComponents, new Func<Script, string>(x => x.Name));
+            Name = MSEntity.GetMixedValue(SelectedComponents, x => x.Name)!;
             return true;
         }
     }
 }
-

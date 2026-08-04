@@ -5,19 +5,21 @@ using System.Runtime.Serialization;
 
 namespace PKEngineEditor.Components
 {
-    public interface IMSComponent { }
+    public interface IMSComponent
+    {
+    }
 
     [DataContract]
     public abstract class Component : ViewModelBase
     {
-        [DataMember]
-        public GameEntity Owner { get;private set; }
-        
+        [DataMember] public GameEntity Owner { get; private set; }
+
         public abstract IMSComponent GetMSComponent(MSEntity msEntity);
-        
+
         public abstract void WriteBinary(BinaryWriter bw);
-        
-        public Component(GameEntity owner) {
+
+        public Component(GameEntity owner)
+        {
             Debug.Assert(owner != null);
             Owner = owner;
         }
@@ -38,11 +40,15 @@ namespace PKEngineEditor.Components
             UpdateMSComponent();
             _enableUpdate = true;
         }
+
         public MSComponent(MSEntity msEntity)
         {
-            Debug.Assert(msEntity?.SelectedEntities?.Any()==true);
-            SelectedComponents = msEntity.SelectedEntities.Select(e=>e.GetComponent<T>()).ToList();
-            PropertyChanged += (s,e)=> { if (_enableUpdate) UpdateComponents(e.PropertyName); };
+            Debug.Assert(msEntity?.SelectedEntities?.Any() == true);
+            SelectedComponents = msEntity.SelectedEntities.Select(e => e.GetComponent<T>()).ToList()!;
+            PropertyChanged += (_, e) =>
+            {
+                if (_enableUpdate) UpdateComponents(e.PropertyName!);
+            };
         }
     }
 }

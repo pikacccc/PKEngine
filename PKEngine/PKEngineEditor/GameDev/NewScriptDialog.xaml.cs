@@ -1,6 +1,4 @@
-﻿
-
-using System.Diagnostics;
+﻿using System.Diagnostics;
 using System.IO;
 using System.Windows;
 using System.Windows.Controls;
@@ -16,7 +14,7 @@ public partial class NewScriptDialog : Window
     public NewScriptDialog()
     {
         InitializeComponent();
-        Owner = Application.Current.MainWindow;
+        Owner           = Application.Current.MainWindow;
         scriptPath.Text = @"GameCode\";
     }
 
@@ -63,10 +61,10 @@ namespace {1} {{
 
     private bool Validate()
     {
-        bool isValid = false;
-        var name = scriptName.Text.Trim();
-        var path = scriptPath.Text.Trim();
-        string errMsg = string.Empty;
+        bool   isValid = false;
+        var    name    = scriptName.Text.Trim();
+        var    path    = scriptPath.Text.Trim();
+        string errMsg  = string.Empty;
         if (string.IsNullOrEmpty(name))
         {
             errMsg = "Type in a script name.";
@@ -84,12 +82,12 @@ namespace {1} {{
             errMsg = "Invalid character(s) used in script path.";
         }
         else if (!Path.GetFullPath(Path.Combine(Project.CurProject.Path, path))
-                     .Contains(Path.Combine(Project.CurProject.Path, @"GameCode\")))
+                      .Contains(Path.Combine(Project.CurProject.Path,    @"GameCode\")))
         {
             errMsg = "Script must be added to (a sub-folder of) GameCode.";
         }
         else if (File.Exists(Path.GetFullPath(Path.Combine(Path.Combine(Project.CurProject.Path, path),
-                     $"{name}.cpp"))) ||
+                                                           $"{name}.cpp"))) ||
                  File.Exists(Path.GetFullPath(Path.Combine(Path.Combine(Project.CurProject.Path, path), $"{name}.h"))))
         {
             errMsg = $"Script {name}  is already exists in this folder.";
@@ -117,7 +115,7 @@ namespace {1} {{
         if (!Directory.Exists(path)) Directory.CreateDirectory(path);
 
         var cpp = Path.GetFullPath(Path.Combine(path, $"{name}.cpp"));
-        var h = Path.GetFullPath(Path.Combine(path, $"{name}.h"));
+        var h   = Path.GetFullPath(Path.Combine(path, $"{name}.h"));
 
         using (var sw = File.CreateText(cpp))
         {
@@ -130,10 +128,10 @@ namespace {1} {{
         }
 
         var files = new[] { cpp, h };
-        
-        for(int i=0;i<3;++i)
+
+        for (int i = 0; i < 3; ++i)
         {
-            if (!VisualStudio.AddFilesToSolution(solution, projectName, files)) System.Threading.Thread.Sleep(1000);
+            if (!VisualStudio.AddFilesToSolution(solution, projectName, files)) Thread.Sleep(1000);
             else break;
         }
     }
@@ -141,17 +139,17 @@ namespace {1} {{
     private async void OnCreate_Button_Click(object sender, RoutedEventArgs e)
     {
         if (!Validate()) return;
-        IsEnabled = false;
-        busyAnimation.Opacity = 0;
+        IsEnabled                = false;
+        busyAnimation.Opacity    = 0;
         busyAnimation.Visibility = Visibility.Visible;
 
         var fadeIn = new DoubleAnimation(0, 1, new Duration(TimeSpan.FromMilliseconds(500)));
         busyAnimation.BeginAnimation(OpacityProperty, fadeIn);
         try
         {
-            var name = scriptName.Text.Trim();
-            var path = Path.GetFullPath(Path.Combine(Project.CurProject.Path, scriptPath.Text.Trim()));
-            var solution = Project.CurProject.Solution;
+            var name        = scriptName.Text.Trim();
+            var path        = Path.GetFullPath(Path.Combine(Project.CurProject.Path, scriptPath.Text.Trim()));
+            var solution    = Project.CurProject.Solution;
             var projectName = Project.CurProject.Name;
             await Task.Run(() => { CreateScript(name, path, solution, projectName); });
         }
@@ -163,12 +161,12 @@ namespace {1} {{
         finally
         {
             var fadeOut = new DoubleAnimation(0, 1, new Duration(TimeSpan.FromMilliseconds(200)));
-            fadeOut.Completed += (s, e) =>
-            {
-                busyAnimation.Opacity = 0;
-                busyAnimation.Visibility = Visibility.Hidden;
-                Close();
-            };
+            fadeOut.Completed += (_, _) =>
+                                 {
+                                     busyAnimation.Opacity    = 0;
+                                     busyAnimation.Visibility = Visibility.Hidden;
+                                     Close();
+                                 };
             busyAnimation.BeginAnimation(OpacityProperty, fadeOut);
         }
     }

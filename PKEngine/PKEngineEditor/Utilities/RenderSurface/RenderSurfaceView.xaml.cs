@@ -9,16 +9,16 @@ namespace PKEngineEditor.Utilities
     {
         private enum Win32Msg
         {
-            WM_SIZING = 0x0214,
+            WM_SIZING        = 0x0214,
             WM_ENTERSIZEMOVE = 0x0231,
-            WM_EXITSIZEMOVE = 0x0232,
-            WM_SIZE = 0x0005,
+            WM_EXITSIZEMOVE  = 0x0232,
+            WM_SIZE          = 0x0005,
         }
 
-        private RenderSurfaceHost _host;
+        private RenderSurfaceHost _host = null!;
 
         private bool _canResize = true;
-        private bool _moved = false;
+        private bool _moved     = false;
 
         public RenderSurfaceView()
         {
@@ -31,19 +31,16 @@ namespace PKEngineEditor.Utilities
         {
             Loaded -= OnRenderSurfaceViewLoaded;
 
-            _host = new RenderSurfaceHost((int)ActualWidth, (int)ActualHeight);
+            _host             =  new RenderSurfaceHost((int)ActualWidth, (int)ActualHeight);
             _host.MessageHook += new HwndSourceHook(HostMsgFilter);
-            Content = _host;
+            Content           =  _host;
 
             var window = this.FindVisualParent<Window>();
             Debug.Assert(window != null);
-            
+
             var helper = new WindowInteropHelper(window);
 
-            if (helper.Handle != null)
-            {
-                HwndSource.FromHwnd(helper.Handle)?.AddHook(HwndMessageHook);
-            }
+            HwndSource.FromHwnd(helper.Handle)?.AddHook(HwndMessageHook);
         }
 
         private IntPtr HwndMessageHook(IntPtr hwnd, int msg, IntPtr wParam, IntPtr lParam, ref bool handled)
@@ -52,7 +49,7 @@ namespace PKEngineEditor.Utilities
             {
                 case Win32Msg.WM_SIZING:
                     _canResize = false;
-                    _moved = false;
+                    _moved     = false;
                     break;
                 case Win32Msg.WM_ENTERSIZEMOVE:
                     _moved = true;
@@ -76,9 +73,9 @@ namespace PKEngineEditor.Utilities
         {
             switch ((Win32Msg)msg)
             {
-                case Win32Msg.WM_SIZING: throw new Exception();
+                case Win32Msg.WM_SIZING:        throw new Exception();
                 case Win32Msg.WM_ENTERSIZEMOVE: throw new Exception();
-                case Win32Msg.WM_EXITSIZEMOVE: throw new Exception();
+                case Win32Msg.WM_EXITSIZEMOVE:  throw new Exception();
                 case Win32Msg.WM_SIZE:
                     if (_canResize)
                         _host.Resize();
@@ -90,7 +87,7 @@ namespace PKEngineEditor.Utilities
             return IntPtr.Zero;
         }
 
-        #region IDisposable Support
+    #region IDisposable Support
 
         private bool _disposeValue;
 
@@ -113,6 +110,6 @@ namespace PKEngineEditor.Utilities
             GC.SuppressFinalize(this);
         }
 
-        #endregion
+    #endregion
     }
 }

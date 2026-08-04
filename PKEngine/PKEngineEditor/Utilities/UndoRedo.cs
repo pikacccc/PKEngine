@@ -6,8 +6,8 @@ namespace PKEngineEditor.Utilities
     public interface IUndoRedo
     {
         string Name { get; }
-        void Undo();
-        void Redo();
+        void   Undo();
+        void   Redo();
     }
 
     public class UndoRedoAction : IUndoRedo
@@ -31,15 +31,16 @@ namespace PKEngineEditor.Utilities
             Debug.Assert(undoAction != null && redoAction != null);
             _undoAction = undoAction;
             _redoAction = redoAction;
-            Name = name;
+            Name        = name;
         }
 
         public UndoRedoAction(string property, object instance, object undoValue, object redoValue, string name) :
             this(
-                () => instance.GetType().GetProperty(property).SetValue(instance, undoValue),
-                () => instance.GetType().GetProperty(property).SetValue(instance, redoValue),
-                name)
-        { }
+                 () => instance.GetType().GetProperty(property)!.SetValue(instance, undoValue),
+                 () => instance.GetType().GetProperty(property)!.SetValue(instance, redoValue),
+                 name)
+        {
+        }
     }
 
     public class UndoRedoManager

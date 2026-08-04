@@ -19,7 +19,7 @@ namespace PKEngineEditor.Utilities.Controls
         }
 
         public static readonly DependencyProperty VectorTypeProperty = DependencyProperty.Register(
-            nameof(VectorType), typeof(VectorType), typeof(VectorBox), new PropertyMetadata(VectorType.Vector3));
+         nameof(VectorType), typeof(VectorType), typeof(VectorBox), new PropertyMetadata(VectorType.Vector3));
 
         public Orientation Orientation
         {
@@ -28,7 +28,7 @@ namespace PKEngineEditor.Utilities.Controls
         }
 
         public static readonly DependencyProperty OrientationProperty = DependencyProperty.Register(
-            nameof(Orientation), typeof(Orientation), typeof(VectorBox), new PropertyMetadata(Orientation.Horizontal));
+         nameof(Orientation), typeof(Orientation), typeof(VectorBox), new PropertyMetadata(Orientation.Horizontal));
 
         public double Multiplier
         {
@@ -37,7 +37,7 @@ namespace PKEngineEditor.Utilities.Controls
         }
 
         public static readonly DependencyProperty MultiplierProperty = DependencyProperty.Register(
-            nameof(Multiplier), typeof(double), typeof(VectorBox), new PropertyMetadata(1.0));
+         nameof(Multiplier), typeof(double), typeof(VectorBox), new PropertyMetadata(1.0));
 
         public string X
         {
@@ -46,7 +46,8 @@ namespace PKEngineEditor.Utilities.Controls
         }
 
         public static readonly DependencyProperty XProperty = DependencyProperty.Register(
-            nameof(X), typeof(string), typeof(VectorBox), new FrameworkPropertyMetadata(null, FrameworkPropertyMetadataOptions.BindsTwoWayByDefault));
+         nameof(X), typeof(string), typeof(VectorBox),
+         new FrameworkPropertyMetadata(null, FrameworkPropertyMetadataOptions.BindsTwoWayByDefault));
 
         public string Y
         {
@@ -55,7 +56,8 @@ namespace PKEngineEditor.Utilities.Controls
         }
 
         public static readonly DependencyProperty YProperty = DependencyProperty.Register(
-            nameof(Y), typeof(string), typeof(VectorBox), new FrameworkPropertyMetadata(null, FrameworkPropertyMetadataOptions.BindsTwoWayByDefault));
+         nameof(Y), typeof(string), typeof(VectorBox),
+         new FrameworkPropertyMetadata(null, FrameworkPropertyMetadataOptions.BindsTwoWayByDefault));
 
         public string Z
         {
@@ -64,7 +66,8 @@ namespace PKEngineEditor.Utilities.Controls
         }
 
         public static readonly DependencyProperty ZProperty = DependencyProperty.Register(
-            nameof(Z), typeof(string), typeof(VectorBox), new FrameworkPropertyMetadata(null, FrameworkPropertyMetadataOptions.BindsTwoWayByDefault));
+         nameof(Z), typeof(string), typeof(VectorBox),
+         new FrameworkPropertyMetadata(null, FrameworkPropertyMetadataOptions.BindsTwoWayByDefault));
 
         public string W
         {
@@ -73,12 +76,14 @@ namespace PKEngineEditor.Utilities.Controls
         }
 
         public static readonly DependencyProperty WProperty = DependencyProperty.Register(
-            nameof(W), typeof(string), typeof(VectorBox), new FrameworkPropertyMetadata(null, FrameworkPropertyMetadataOptions.BindsTwoWayByDefault));
+         nameof(W), typeof(string), typeof(VectorBox),
+         new FrameworkPropertyMetadata(null, FrameworkPropertyMetadataOptions.BindsTwoWayByDefault));
 
 
         static VectorBox()
         {
-            DefaultStyleKeyProperty.OverrideMetadata(typeof(VectorBox), new FrameworkPropertyMetadata(typeof(VectorBox)));
+            DefaultStyleKeyProperty.OverrideMetadata(typeof(VectorBox),
+                                                     new FrameworkPropertyMetadata(typeof(VectorBox)));
         }
     }
 }

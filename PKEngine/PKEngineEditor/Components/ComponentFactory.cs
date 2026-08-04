@@ -12,7 +12,7 @@ namespace PKEngineEditor.Components
     {
         private static readonly Func<GameEntity, object, Component>[] Functions =
         [
-            (entity, data) => new Transform(entity),
+            (entity, _) => new Transform(entity),
             (entity, data) => new Script(entity) { Name = (string)data }
         ];
 

@@ -14,12 +14,12 @@ namespace PKEngineEditor.Editors
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            return value is bool b && b == true;
+            return value is bool b && b;
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            return value is bool b && b == true;
+            return value is bool b && b;
         }
     }
 
@@ -28,76 +28,78 @@ namespace PKEngineEditor.Editors
     /// </summary>
     public partial class GameEntityView : UserControl
     {
-        private Action _undoAction;
-        private string _protertyName;
+        private Action? _undoAction;
+        private string? _propertyName;
 
-        public static GameEntityView Instance { get; private set; }
+        public static GameEntityView? Instance { get; private set; }
 
         public GameEntityView()
         {
             InitializeComponent();
             DataContext = null;
-            Instance = this;
+            Instance    = this;
 
-            DataContextChanged += (_, __) =>
+            DataContextChanged += (_, _) =>
             {
                 if (DataContext != null)
                 {
-                    (DataContext as MSEntity).PropertyChanged += (s, e) => _protertyName = e.PropertyName;
+                    (DataContext as MSEntity)!.PropertyChanged += (_, e) => _propertyName = e.PropertyName;
                 }
             };
         }
 
         private Action GetRenameAction()
         {
-            var vm = DataContext as MSEntity;
-            var selection = vm.SelectedEntities.Select(entity => (entity, entity.Name)).ToList();
-            return new Action(() =>
+            var vm        = DataContext as MSEntity;
+            var selection = vm?.SelectedEntities.Select(entity => (entity, entity.Name)).ToList();
+            return () =>
             {
-                selection.ForEach(item => item.entity.Name = item.Name);
-                (DataContext as MSEntity).Refresh();
-            });
+                selection?.ForEach(item => item.entity.Name = item.Name);
+                (DataContext as MSEntity)?.Refresh();
+            };
         }
 
-        private Action GetISEnabledAction()
+        private Action GetIsEnabledAction()
         {
-            var vm = DataContext as MSEntity;
-            var selection = vm.SelectedEntities.Select(entity => (entity, entity.IsEnabled)).ToList();
-            return new Action(() =>
+            var vm        = DataContext as MSEntity;
+            var selection = vm?.SelectedEntities.Select(entity => (entity, entity.IsEnabled)).ToList();
+            return () =>
             {
-                selection.ForEach(item => item.entity.IsEnabled = item.IsEnabled);
-                (DataContext as MSEntity).Refresh();
-            });
+                selection?.ForEach(item => item.entity.IsEnabled = item.IsEnabled);
+                (DataContext as MSEntity)?.Refresh();
+            };
         }
 
-        private void OnName_TextBox_GotKeyboardFocus(object sender,
-            System.Windows.Input.KeyboardFocusChangedEventArgs e)
+        private void OnName_TextBox_GotKeyboardFocus(object                        sender,
+                                                     KeyboardFocusChangedEventArgs e)
         {
-            _protertyName = string.Empty;
-            _undoAction = GetRenameAction();
+            _propertyName = string.Empty;
+            _undoAction   = GetRenameAction();
         }
 
-        private void OnName_TextBox_LostKeyboardFocus(object sender,
-            System.Windows.Input.KeyboardFocusChangedEventArgs e)
+        private void OnName_TextBox_LostKeyboardFocus(object                        sender,
+                                                      KeyboardFocusChangedEventArgs e)
         {
-            if (_protertyName == nameof(MSEntity.Name) && _undoAction != null)
+            if (_propertyName == nameof(MSEntity.Name) && _undoAction != null)
             {
                 var redoAction = GetRenameAction();
                 Project.UndoRedoMgr.Add(new UndoRedoAction(_undoAction, redoAction, "Rename game entity"));
-                _protertyName = null;
+                _propertyName = null!;
             }
 
-            _undoAction = null;
+            _undoAction = null!;
         }
 
-        private void OnIsEnabled_CheckBox_Click(object sender, System.Windows.RoutedEventArgs e)
+        private void OnIsEnabled_CheckBox_Click(object sender, RoutedEventArgs e)
         {
-            var vm = DataContext as MSEntity;
-            var undoAction = GetISEnabledAction();
-            vm.IsEnabled = (sender as CheckBox).IsChecked == true;
-            var redoAction = GetISEnabledAction();
+            var vm         = DataContext as MSEntity;
+            var undoAction = GetIsEnabledAction();
+            vm!.IsEnabled = ((sender as CheckBox)!).IsChecked == true;
+            var redoAction = GetIsEnabledAction();
             Project.UndoRedoMgr.Add(new UndoRedoAction(undoAction, redoAction,
-                vm.IsEnabled == true ? "Enable game entity" : "Disable game Entity"));
+                                                       vm.IsEnabled == true
+                                                           ? "Enable game entity"
+                                                           : "Disable game Entity"));
         }
 
         private void OnAddScriptComponent(object sender, RoutedEventArgs e)
@@ -108,12 +110,12 @@ namespace PKEngineEditor.Editors
         private void AddComponent(ComponentType componentType, object? data)
         {
             var creationFunction = ComponentFactory.GetCreationFunction(componentType);
-            var changedEntities = new List<(GameEntity entity, Component component)>();
-            var vm = DataContext as MSEntity;
+            var changedEntities  = new List<(GameEntity entity, Component component)>();
+            var vm               = DataContext as MSEntity;
             if (vm == null) throw new ArgumentNullException(nameof(vm));
             foreach (var entity in vm.SelectedEntities)
             {
-                var component = creationFunction(entity, data);
+                var component = creationFunction(entity, data!);
                 if (entity.AddComponent(component))
                 {
                     changedEntities.Add((entity, component));
@@ -124,27 +126,29 @@ namespace PKEngineEditor.Editors
             {
                 vm.Refresh();
                 Project.UndoRedoMgr.Add(new UndoRedoAction(() =>
-                    {
-                        changedEntities.ForEach(x => x.entity.RemoveComponent(x.component));
-                        (DataContext as MSEntity).Refresh();
-                    }, () =>
-                    {
-                        changedEntities.ForEach(x => x.entity.AddComponent(x.component));
-                        (DataContext as MSEntity).Refresh();
-                    },
-                    $"Add {componentType} component"));
+                                                           {
+                                                               changedEntities.ForEach(x =>
+                                                                        x.entity.RemoveComponent(x.component));
+                                                               (DataContext as MSEntity)?.Refresh();
+                                                           }, () =>
+                                                           {
+                                                               changedEntities.ForEach(x =>
+                                                                        x.entity.AddComponent(x.component));
+                                                               (DataContext as MSEntity)?.Refresh();
+                                                           },
+                                                           $"Add {componentType} component"));
             }
         }
 
         private void OnAddComponent_Button_PreviewMouse_LBD(object sender, MouseButtonEventArgs e)
         {
             var menu = FindResource("AddComponentMenu") as ContextMenu;
-            var btn = sender as ToggleButton;
-            btn.IsChecked = true;
-            menu.Placement = PlacementMode.Bottom;
+            var btn  = sender as ToggleButton;
+            btn!.IsChecked       = true;
+            menu!.Placement      = PlacementMode.Bottom;
             menu.PlacementTarget = btn;
-            menu.MinWidth = btn.ActualWidth;
-            menu.IsOpen = true;
+            menu.MinWidth        = btn.ActualWidth;
+            menu.IsOpen          = true;
         }
     }
 }

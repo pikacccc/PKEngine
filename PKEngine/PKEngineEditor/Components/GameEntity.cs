@@ -70,7 +70,7 @@ namespace PKEngineEditor.Components
             }
         }
 
-        private string _name;
+        private string _name = null!;
 
         [DataMember]
         public string Name
@@ -91,10 +91,10 @@ namespace PKEngineEditor.Components
         [DataMember(Name = nameof(Components))]
         private readonly ObservableCollection<Component> _components = new ObservableCollection<Component>();
 
-        public ReadOnlyObservableCollection<Component> Components { get; private set; }
+        public ReadOnlyObservableCollection<Component> Components { get; private set; } = null!;
 
-        public Component GetComponent(Type type) => Components.FirstOrDefault(c => c.GetType() == type);
-        public T? GetComponent<T>() where T : Component => GetComponent(typeof(T)) as T;
+        public Component GetComponent(Type type)               => Components.FirstOrDefault(c => c.GetType() == type)!;
+        public T?        GetComponent<T>() where T : Component => GetComponent(typeof(T)) as T;
 
         public bool AddComponent(Component component)
         {
@@ -108,7 +108,7 @@ namespace PKEngineEditor.Components
             }
 
             Logger.Log(MessageType.Warning,
-                $"Entity {Name} already has a component of type {component.GetType().Name}");
+                       $"Entity {Name} already has a component of type {component.GetType().Name}");
             return false;
         }
 
@@ -165,7 +165,7 @@ namespace PKEngineEditor.Components
             }
         }
 
-        private string _name;
+        private string _name = null!;
 
         public string Name
         {
@@ -181,10 +181,10 @@ namespace PKEngineEditor.Components
         }
 
         private readonly ObservableCollection<IMSComponent> _components = new ObservableCollection<IMSComponent>();
-        public ReadOnlyObservableCollection<IMSComponent> Components { get; }
+        public           ReadOnlyObservableCollection<IMSComponent> Components { get; }
 
-        public IMSComponent GetComponent(Type type) => Components.FirstOrDefault(c => c.GetType() == type);
-        public T GetComponent<T>() where T : IMSComponent => (T)GetComponent(typeof(T));
+        public IMSComponent GetComponent(Type type) => Components.FirstOrDefault(c => c.GetType() == type)!;
+        public T            GetComponent<T>() where T : IMSComponent => (T)GetComponent(typeof(T));
 
         private void MakeComponentList()
         {
@@ -207,11 +207,11 @@ namespace PKEngineEditor.Components
         public MSEntity(List<GameEntity> entities)
         {
             Debug.Assert(entities?.Any() == true);
-            Components = new ReadOnlyObservableCollection<IMSComponent>(_components);
+            Components       = new ReadOnlyObservableCollection<IMSComponent>(_components);
             SelectedEntities = entities;
-            PropertyChanged += (s, e) =>
+            PropertyChanged += (_, e) =>
             {
-                if (_enableUpdates) UpdateGameEntities(e.PropertyName);
+                if (_enableUpdates) UpdateGameEntities(e.PropertyName!);
             };
         }
 
@@ -231,8 +231,8 @@ namespace PKEngineEditor.Components
 
         protected virtual bool UpdateMSGameEntity()
         {
-            IsEnabled = GetMixedValue(SelectedEntities, new Func<GameEntity, bool>(x => x.IsEnabled));
-            Name = GetMixedValue(SelectedEntities, new Func<GameEntity, string>(x => x.Name));
+            IsEnabled = GetMixedValue(SelectedEntities, x => x.IsEnabled);
+            Name      = GetMixedValue(SelectedEntities, x => x.Name)!;
             return true;
         }
 
@@ -247,19 +247,19 @@ namespace PKEngineEditor.Components
         public static float? GetMixedValue<T>(List<T> objs, Func<T, float> getProperty)
         {
             var value = getProperty(objs.First());
-            return objs.Skip(1).Any(x => !getProperty(x).IsTheSameAs(value)) ? (float?)null : value;
+            return objs.Skip(1).Any(x => !getProperty(x).IsTheSameAs(value)) ? null : value;
         }
 
         public static bool? GetMixedValue<T>(List<T> objs, Func<T, bool> getProperty)
         {
             var value = getProperty(objs.First());
-            return objs.Skip(1).Any(x => getProperty(x) != value) ? (bool?)null : value;
+            return objs.Skip(1).Any(x => getProperty(x) != value) ? null : value;
         }
 
         public static string? GetMixedValue<T>(List<T> objs, Func<T, string> getProperty)
         {
             var value = getProperty(objs.First());
-            return objs.Skip(1).Any(x => getProperty(x) != value) ? (string?)null : value;
+            return objs.Skip(1).Any(x => getProperty(x) != value) ? null : value;
         }
     }
 

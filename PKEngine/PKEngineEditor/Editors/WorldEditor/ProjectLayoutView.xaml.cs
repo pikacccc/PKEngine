@@ -19,32 +19,40 @@ namespace PKEngineEditor.Editors
         private void OnAddGameEntity_Btn_Click(object sender, RoutedEventArgs e)
         {
             var btn = sender as Button;
-            var vm = btn.DataContext as Scene;
-            vm.AddGameEntityCommand.Execute(new GameEntity(vm) { Name = "GameEntity" });
+            var vm  = btn?.DataContext as Scene;
+            vm?.AddGameEntityCommand.Execute(new GameEntity(vm) { Name = "GameEntity" });
         }
 
         private void OnGameEntities_ListBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            GameEntityView.Instance.DataContext = null;
+            GameEntityView.Instance!.DataContext = null;
             var listBox = sender as ListBox;
+            if (listBox == null) return;
             var newSelection = listBox.SelectedItems.Cast<GameEntity>().ToList();
-            var previousSelection = newSelection.Except(e.AddedItems.Cast<GameEntity>()).Concat(e.RemovedItems.Cast<GameEntity>()).ToList();
+            var previousSelection = newSelection.Except(e.AddedItems.Cast<GameEntity>())
+                                                .Concat(e.RemovedItems.Cast<GameEntity>()).ToList();
 
             Project.UndoRedoMgr.Add(new UndoRedoAction(
-                () =>
-                {
-                    listBox.UnselectAll();
-                    previousSelection.ForEach(x => (listBox.ItemContainerGenerator.ContainerFromItem(x) as ListBoxItem).IsSelected = true);
-                },
-                () =>
-                {
-                    listBox.UnselectAll();
-                    newSelection.ForEach(x => (listBox.ItemContainerGenerator.ContainerFromItem(x) as ListBoxItem).IsSelected = true);
-                },
-                "Selection Changed"
-                ));
+                                                       () =>
+                                                       {
+                                                           listBox.UnselectAll();
+                                                           previousSelection.ForEach(x =>
+                                                                    ((listBox.ItemContainerGenerator
+                                                                             .ContainerFromItem(x) as ListBoxItem)!)
+                                                                    .IsSelected = true);
+                                                       },
+                                                       () =>
+                                                       {
+                                                           listBox.UnselectAll();
+                                                           newSelection.ForEach(x => ((listBox.ItemContainerGenerator
+                                                                                                            .ContainerFromItem(x)
+                                                                                                        as ListBoxItem)!)
+                                                                                    .IsSelected = true);
+                                                       },
+                                                       "Selection Changed"
+                                                      ));
 
-            MSGameEntity msGameEntity = null;
+            MSGameEntity? msGameEntity = null;
             if (newSelection.Any())
             {
                 msGameEntity = new MSGameEntity(newSelection);
