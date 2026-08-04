@@ -2,7 +2,7 @@
 
 #include "ToolsCommon.h"
 
-namespace pk::Tools
+namespace pk::tools
 {
     enum primitive_mesh_type : u32
     {

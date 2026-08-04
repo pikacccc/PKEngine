@@ -61,8 +61,8 @@ namespace pk::id
         };
     }
 
-    #define DEFINE_TYPED_ID(name)										\
-		struct name final : id::detail::id_base					\
+    #define DEFINE_TYPED_ID(name)									\
+		struct name final : id::detail::id_base					    \
 		{															\
 		constexpr explicit name(id::id_type id) : id_base{ id } {}	\
 		constexpr name() : id_base{ 0 } {}							\

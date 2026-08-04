@@ -12,9 +12,10 @@
 #endif
 
 // common headers
+#include "PrimitiveType.h"
 #include "../Utilities/Utilities.h"
 #include "../Utilities/MathTypes.h"
-#include "PrimitiveType.h"
+#include "../Utilities/Math.h"
 #include "Id.h"
 
 #ifdef _DEBUG
