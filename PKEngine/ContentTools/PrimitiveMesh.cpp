@@ -143,7 +143,7 @@ namespace pk::tools
     }
 
     EDITOR_INTERFACE void
-    CreateMeshPrimitive(scene_data* data, primitive_init_info* info)
+    CreatePrimitiveMesh(scene_data* data, primitive_init_info* info)
     {
         assert(data && info);
         assert(info->type < primitive_mesh_type::count);
