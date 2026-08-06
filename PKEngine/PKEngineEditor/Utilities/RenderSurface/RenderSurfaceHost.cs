@@ -8,18 +8,17 @@ namespace PKEngineEditor.Utilities
 {
     public class RenderSurfaceHost : HwndHost
     {
-        private readonly int    _width              = 800;
-        private readonly int    _height             = 600;
-        private          IntPtr _renderWindowHandle = IntPtr.Zero;
+        private readonly int             VK_LBUTTON          = 0x01;
+        private readonly int             _width              = 800;
+        private readonly int             _height             = 600;
+        private          IntPtr          _renderWindowHandle = IntPtr.Zero;
+        private          DelayEventTimer _resizeTimer;
 
-        private DelayEventTimer _resizeTimer;
+
+        [DllImport("user32.dll")]
+        private static extern short GetAsyncKeyState(int vKey);
 
         public int SurfaceId { get; private set; } = ID.INVALID_ID;
-
-        public void Resize()
-        {
-            _resizeTimer.Trigger();
-        }
 
         public RenderSurfaceHost(int width, int height)
         {
@@ -27,11 +26,12 @@ namespace PKEngineEditor.Utilities
             _height               =  height;
             _resizeTimer          =  new DelayEventTimer(TimeSpan.FromMilliseconds(250));
             _resizeTimer.Triggers += Resize;
+            SizeChanged           += (_, _) => _resizeTimer.Trigger();
         }
 
         private void Resize(object? sender, DelayEventTimerArgs e)
         {
-            e.RepeatEvent = Mouse.LeftButton == MouseButtonState.Pressed;
+            e.RepeatEvent = GetAsyncKeyState(VK_LBUTTON) < 0;
             if (!e.RepeatEvent)
             {
                 EngineAPI.ResizeRenderSurface(SurfaceId);

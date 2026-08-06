@@ -18,11 +18,11 @@ using namespace pk;
 
 namespace
 {
-    HMODULE game_code_dll{ nullptr };
+    HMODULE game_code_dll { nullptr };
     using _get_script_creator = script::detail::script_creator(*)(size_t);
-    _get_script_creator get_script_creator{ nullptr };
+    _get_script_creator get_script_creator { nullptr };
     using _get_script_names = LPSAFEARRAY(*)(void);
-    _get_script_names get_script_names{ nullptr };
+    _get_script_names get_script_names { nullptr };
 
     util::vector<graphics::render_surface> render_surfaces;
 }
@@ -49,7 +49,7 @@ UnloadGameCodeDll()
 {
     if (!game_code_dll) return FALSE;
     assert(game_code_dll);
-    int res{ FreeLibrary(game_code_dll) };
+    int res { FreeLibrary(game_code_dll) };
     assert(res);
     game_code_dll = nullptr;
     return TRUE;
@@ -73,8 +73,8 @@ EDITOR_INTERFACE u32
 CreateRenderSurface(HWND host, s32 width, s32 height)
 {
     assert(host);
-    platform::window_init_info init_info{ nullptr, host, nullptr, 0, 0, width, height };
-    graphics::render_surface   surface{ platform::create_window(&init_info), {} };
+    platform::window_init_info init_info { nullptr, host, nullptr, 0, 0, width, height };
+    graphics::render_surface   surface { platform::create_window(&init_info), {} };
     assert(surface.window.is_valid());
     render_surfaces.emplace_back(surface);
     return static_cast<u32>(render_surfaces.size()) - 1;

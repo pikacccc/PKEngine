@@ -23,7 +23,7 @@ namespace PKEngineEditor
         private void OnMainWindowClosing(object sender, CancelEventArgs e)
         {
             Closing -= OnMainWindowClosing!;
-            Project.CurProject.Unload();
+            Project.CurProject?.Unload();
         }
 
         private void OnMainWindowLoaded(object sender, RoutedEventArgs e)
@@ -65,7 +65,6 @@ namespace PKEngineEditor
             }
             else
             {
-                Project.CurProject.Unload();
                 DataContext = browser.DataContext;
             }
         }

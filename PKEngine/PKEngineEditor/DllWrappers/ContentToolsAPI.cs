@@ -58,7 +58,7 @@ namespace PKEngineEditor.DllWrappers
         [DllImport(ToolsDll)]
         private static extern void CreatePrimitiveMesh([In, Out] SceneData data, PrimitiveInitInfo info);
 
-        public static void CreatePrimitiveMesh(Geometry geometry, PrimitiveInitInfo info)
+        public static void CreatePrimitiveMesh(PrimitiveInitInfo info, out Geometry geometry)
         {
             Debug.Assert(geometry != null, "Geometry cannot be null");
             using var sceneData = new SceneData();
@@ -68,9 +68,10 @@ namespace PKEngineEditor.DllWrappers
                 Debug.Assert(sceneData.Data != IntPtr.Zero && sceneData.DataSize > 0);
                 var data = new byte[sceneData.DataSize];
                 Marshal.Copy(sceneData.Data, data, 0, sceneData.DataSize);
+                geometry = new Geometry();
                 geometry.FromRawData(ref data);
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 Logger.Log(MessageType.Error, $"failed to create {info.Type} primitive mesh.");
                 throw;

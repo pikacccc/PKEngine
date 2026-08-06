@@ -1,5 +1,6 @@
 ﻿using System.Windows;
 using System.Windows.Controls;
+using PKEngineEditor.Content;
 using PKEngineEditor.GameDev;
 
 namespace PKEngineEditor.Editors
@@ -25,6 +26,12 @@ namespace PKEngineEditor.Editors
         private void OnNewScript_Button_Click(object sender, RoutedEventArgs e)
         {
             new NewScriptDialog().ShowDialog();
+        }
+
+        private void OnCreatePrimitiveMesh_Button_Click(object sender, RoutedEventArgs e)
+        {
+            var dlg = new PrimitiveMeshDialog();
+            dlg.ShowDialog();
         }
     }
 }
