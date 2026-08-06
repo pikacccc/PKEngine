@@ -1,4 +1,5 @@
-﻿using System.Windows;
+﻿using System.Printing;
+using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Input;
@@ -22,9 +23,9 @@ namespace PKEngineEditor.Editors
         {
             if (!(DataContext is MeshRenderer vm)) return;
 
-            if (vm.Meshes.Any() && viewport.Children.Count == 2)
+            if (vm.Meshes.Any() && viewport.Children.Count > 2)
             {
-                viewport.Children.RemoveAt(1);
+                viewport.Children.RemoveAt(2);
             }
 
             var meshIndex  = 0;
@@ -85,36 +86,58 @@ namespace PKEngineEditor.Editors
             {
                 var vm      = DataContext as MeshRenderer;
                 var cp      = vm!.CameraPosition;
-                var yOffset = d.Y * 0.001 * Math.Sqrt(cp.X * cp.X + cp.Z * cp.Z);
+                var yOffset = d.Y * 0.001 * (Math.Sqrt(cp.X * cp.X + cp.Z * cp.Z) + 1);
 
                 vm.CameraTarget = new Point3D(vm.CameraTarget.X, vm.CameraTarget.Y + yOffset, vm.CameraTarget.Z);
             }
+
+            _clickPosition = pos;
         }
 
-        private void MoveCamera(double dX, double dY, int i)
+        private void MoveCamera(double dX, double dY, int dZ)
         {
-            throw new NotImplementedException();
+            var vm = DataContext as MeshRenderer;
+            var v  = new Vector3D(vm!.CameraPosition.X, vm.CameraPosition.Y, vm.CameraPosition.Z);
+
+            var r     = v.Length;
+            var theta = Math.Acos(v.Y / r);
+            var phi   = Math.Atan2(-v.Z, v.X);
+
+            theta -= dY * 0.01;
+            phi   -= dX * 0.01;
+            r     *= 1.0 - 0.1 * dZ;
+
+            theta = Math.Clamp(theta, 0.0001f, Math.PI - 0.0001f);
+
+            v.X = r  * Math.Sin(theta) * Math.Cos(phi);
+            v.Y = r  * Math.Cos(theta);
+            v.Z = -r * Math.Sin(theta) * Math.Sin(phi);
+
+            vm!.CameraPosition = new Point3D(v.X, v.Y, v.Z);
         }
 
-        private void OnGrid_Mouse_RBD(object sender, MouseButtonEventArgs e)
+        private void OnGrid_Mouse_LBU(object sender, MouseButtonEventArgs e)
         {
             _capturedLeft = false;
             if (!_capturedRight) Mouse.Capture(null);
         }
 
-        private void OnGrid_Mouse_LBU(object sender, MouseButtonEventArgs e)
-        {
-            throw new NotImplementedException();
-        }
-
         private void OnGrid_MouseWheel(object sender, MouseWheelEventArgs e)
         {
-            throw new NotImplementedException();
+            MoveCamera(0, 0, Math.Sign(e.Delta));
+        }
+
+        private void OnGrid_Mouse_RBD(object sender, MouseButtonEventArgs e)
+        {
+            _clickPosition = e.GetPosition(this);
+            _capturedRight = true;
+            Mouse.Capture(sender as UIElement);
         }
 
         private void OnGrid_Mouse_RBU(object sender, MouseButtonEventArgs e)
         {
-            throw new NotImplementedException();
+            _capturedRight = false;
+            if (!_capturedLeft) Mouse.Capture(null);
         }
     }
 }

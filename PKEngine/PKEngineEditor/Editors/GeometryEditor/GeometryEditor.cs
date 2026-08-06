@@ -103,8 +103,8 @@ namespace PKEngineEditor.Editors
         }
 
         public Point3D OffsetCameraPosition => new(CameraPosition.X + CameraTarget.X,
-                                                   CameraPosition.Y + CameraTarget.Y,
-                                                   CameraPosition.Z + CameraTarget.Z);
+            CameraPosition.Y                                        + CameraTarget.Y,
+            CameraPosition.Z                                        + CameraTarget.Z);
 
         private Color _keyLight = (Color)ColorConverter.ConvertFromString("#ffaeaeae");
 
@@ -204,8 +204,10 @@ namespace PKEngineEditor.Editors
                         //read normals
                         var normalX = reader.ReadUInt16() * intervals - 1.0f;
                         var normalY = reader.ReadUInt16() * intervals - 1.0f;
-                        var normalZ = Math.Sqrt(Math.Clamp(1.0f - (normalY * normalY + normalX * normalX), 0.0f, 1.0f)) * ((signs & 0x2) - 1f);
-                        var normal  = new Vector3D(normalX, normalY, normalZ);
+                        var normalZ =
+                            Math.Sqrt(Math.Clamp(1.0f - (normalY * normalY + normalX * normalX), 0.0f, 1.0f)) *
+                            ((signs & 0x2) - 1f);
+                        var normal = new Vector3D(normalX, normalY, normalZ);
                         normal.Normalize();
                         vertexData.Normals.Add(normal);
                         avgNormal += normal;
@@ -266,8 +268,8 @@ namespace PKEngineEditor.Editors
                 }
 
                 CameraTarget = new Point3D(minX + width  * 0.5,
-                                           minY + height * 0.5,
-                                           minZ + depth  * 0.5);
+                    minY                        + height * 0.5,
+                    minZ                        + depth  * 0.5);
             }
         }
     }

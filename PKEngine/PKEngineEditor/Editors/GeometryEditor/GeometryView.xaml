@@ -28,6 +28,61 @@
                         </Model3DGroup>
                     </ModelVisual3D.Content>
                 </ModelVisual3D>
+
+                <!-- Axis Gizmo -->
+                <ModelVisual3D>
+                    <ModelVisual3D.Content>
+                        <Model3DGroup>
+                            <!-- X Axis (Red) -->
+                            <GeometryModel3D>
+                                <GeometryModel3D.Transform>
+                                    <TranslateTransform3D OffsetX="1" OffsetY="0" OffsetZ="0" />
+                                </GeometryModel3D.Transform>
+                                <GeometryModel3D.Geometry>
+                                    <MeshGeometry3D Positions="0,-0.02,-0.02  2,-0.02,-0.02  2,0.02,-0.02  0,0.02,-0.02
+                                                              0,-0.02,0.02   2,-0.02,0.02   2,0.02,0.02   0,0.02,0.02"
+                                                    TriangleIndices="0 1 2 0 2 3  4 6 5 4 7 6  0 4 5 0 5 1
+                                                                     1 5 6 1 6 2  2 6 7 2 7 3  0 3 7 0 7 4" />
+                                </GeometryModel3D.Geometry>
+                                <GeometryModel3D.Material>
+                                    <DiffuseMaterial Brush="Red" />
+                                </GeometryModel3D.Material>
+                            </GeometryModel3D>
+
+                            <!-- Y Axis (Green) -->
+                            <GeometryModel3D>
+                                <GeometryModel3D.Transform>
+                                    <TranslateTransform3D OffsetX="0" OffsetY="1" OffsetZ="0" />
+                                </GeometryModel3D.Transform>
+                                <GeometryModel3D.Geometry>
+                                    <MeshGeometry3D Positions="-0.02,0,-0.02  -0.02,2,-0.02  0.02,2,-0.02  0.02,0,-0.02
+                                                              -0.02,0,0.02   -0.02,2,0.02   0.02,2,0.02   0.02,0,0.02"
+                                                    TriangleIndices="0 1 2 0 2 3  4 6 5 4 7 6  0 4 5 0 5 1
+                                                                     1 5 6 1 6 2  2 6 7 2 7 3  0 3 7 0 7 4" />
+                                </GeometryModel3D.Geometry>
+                                <GeometryModel3D.Material>
+                                    <DiffuseMaterial Brush="Green" />
+                                </GeometryModel3D.Material>
+                            </GeometryModel3D>
+
+                            <!-- Z Axis (Blue) -->
+                            <GeometryModel3D>
+                                <GeometryModel3D.Transform>
+                                    <TranslateTransform3D OffsetX="0" OffsetY="0" OffsetZ="1" />
+                                </GeometryModel3D.Transform>
+                                <GeometryModel3D.Geometry>
+                                    <MeshGeometry3D Positions="-0.02,-0.02,0  -0.02,-0.02,2  -0.02,0.02,2  -0.02,0.02,0
+                                                               0.02,-0.02,0   0.02,-0.02,2   0.02,0.02,2   0.02,0.02,0"
+                                                    TriangleIndices="0 1 2 0 2 3  4 6 5 4 7 6  0 4 5 0 5 1
+                                                                     1 5 6 1 6 2  2 6 7 2 7 3  0 3 7 0 7 4" />
+                                </GeometryModel3D.Geometry>
+                                <GeometryModel3D.Material>
+                                    <DiffuseMaterial Brush="Blue" />
+                                </GeometryModel3D.Material>
+                            </GeometryModel3D>
+                        </Model3DGroup>
+                    </ModelVisual3D.Content>
+                </ModelVisual3D>
             </Viewport3D.Children>
         </Viewport3D>
     </Grid>

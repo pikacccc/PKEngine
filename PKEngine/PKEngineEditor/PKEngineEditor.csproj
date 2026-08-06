@@ -85,4 +85,15 @@
     </None>
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Resources\PrimitiveMeshView\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Remove="Resources\PrimitiveMeshView\PlaneTexture.png" />
+    <Resource Include="Resources\PrimitiveMeshView\PlaneTexture.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Resource>
+  </ItemGroup>
+
 </Project>

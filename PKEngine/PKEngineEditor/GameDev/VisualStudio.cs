@@ -86,10 +86,10 @@ namespace PKEngineEditor.GameDev
 
         public static void CloseVisualStudio()
         {
-            if (_vsInstance?.Solution.IsOpen == true)
+            if (_vsInstance?.Solution?.IsOpen == true)
             {
-                _vsInstance.ExecuteCommand("File.SaveAll");
-                _vsInstance.Solution.Close(true);
+                _vsInstance?.ExecuteCommand("File.SaveAll");
+                _vsInstance?.Solution?.Close(true);
             }
 
             _vsInstance?.Quit();
