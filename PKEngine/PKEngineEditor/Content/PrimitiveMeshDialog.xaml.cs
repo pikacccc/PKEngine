@@ -1,4 +1,4 @@
-﻿using System.IO;
+using System.IO;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
@@ -48,7 +48,13 @@ public partial class PrimitiveMeshDialog : Window
 
             var brush = new ImageBrush(imageSource);
 
-            // brush.Transform     = new ScaleTransform(1, -1, 0.5, 0.5);
+            brush.Transform     = new ScaleTransform(1, -1, 0.5, 0.5);
+            // RotateTransform aRotateTransform = new RotateTransform();
+            // aRotateTransform.CenterX = 0.5;
+            // aRotateTransform.CenterY = 0.5;
+            // aRotateTransform.Angle   = 90;
+            // brush.RelativeTransform  = aRotateTransform;
+
             brush.ViewportUnits = BrushMappingMode.Absolute;
             brush.Freeze();
 

@@ -68,9 +68,9 @@ namespace pk::tools
                                              position.y * info.size.y,
                                              position.z * info.size.z);
 
-                    math::v2 uv { u_range.x, v_range.x };
+                    math::v2 uv { u_range.x, v_range.y };
                     uv.x += i * u_step;
-                    uv.y += j * v_step;
+                    uv.y -= j * v_step;
                     // uv.x += (i % 2);
                     // uv.y += (j % 2);
                     uvs.emplace_back(uv);
