@@ -9,7 +9,7 @@ namespace pk::tools
         {
             math::v3 position;
             u8       reserved[3];
-            u8       t_sign;
+            u8       t_sign; //0: normal z sign. 1: tangent z sign
             u16      normal[2];
             u16      tangent[2];
             math::v2 uv;

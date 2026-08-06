@@ -2,6 +2,7 @@
 using System.Windows.Controls;
 using PKEngineEditor.ContentToolsAPIStructs;
 using PKEngineEditor.DllWrappers;
+using PKEngineEditor.Editors;
 using PKEngineEditor.Utilities.Controls;
 
 namespace PKEngineEditor.Content;
@@ -58,5 +59,6 @@ public partial class PrimitiveMeshDialog : Window
         }
 
         ContentToolsAPI.CreatePrimitiveMesh(info, out var geometry);
+        (DataContext as GeometryEditor)!.SetAsset(geometry);
     }
 }

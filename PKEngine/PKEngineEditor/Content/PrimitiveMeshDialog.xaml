@@ -6,11 +6,16 @@
         xmlns:local="clr-namespace:PKEngineEditor.Content"
         xmlns:sys="clr-namespace:System;assembly=mscorlib"
         xmlns:util="clr-namespace:PKEngineEditor.Utilities.Controls"
+        xmlns:editors="clr-namespace:PKEngineEditor.Editors"
         mc:Ignorable="d" ResizeMode="NoResize"
         WindowStartupLocation="CenterScreen"
         UseLayoutRounding="True"
         Title="PrimitiveMeshDialog" Height="600" Width="800"
-        Style="{StaticResource PkDialogStyle}">
+        Style="{StaticResource PkDialogStyle}"
+        d:DataContext="{d:DesignInstance Type=editors:GeometryEditor}">
+    <Window.DataContext>
+        <editors:GeometryEditor/>
+    </Window.DataContext>
     <Window.Resources>
         <ObjectDataProvider x:Key="dataFromEnum" MethodName="GetValues" ObjectType="{x:Type sys:Enum}">
             <ObjectDataProvider.MethodParameters>
@@ -87,12 +92,12 @@
                             <DockPanel Margin="5,5,5,0">
                                 <TextBlock Text="Width" Width="40" DockPanel.Dock="Left" VerticalAlignment="Center"
                                            Foreground="{StaticResource Editor.FontBrush}" />
-                                <util:ScalarBox x:Name="widthScalarBoxPlane" Value="1" ValueChanged="OnScalarBox_ValueChanged"/>
+                                <util:ScalarBox x:Name="widthScalarBoxPlane" Value="1" ValueChanged="OnScalarBox_ValueChanged" />
                             </DockPanel>
                             <DockPanel Margin="5,5,5,0">
                                 <TextBlock Text="Length" Width="40" DockPanel.Dock="Left" VerticalAlignment="Center"
                                            Foreground="{StaticResource Editor.FontBrush}" />
-                                <util:ScalarBox x:Name="lengthScalarBoxPlane" Value="1" ValueChanged="OnScalarBox_ValueChanged"/>
+                                <util:ScalarBox x:Name="lengthScalarBoxPlane" Value="1" ValueChanged="OnScalarBox_ValueChanged" />
                             </DockPanel>
                         </StackPanel>
                     </Border>

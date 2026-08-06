@@ -17,7 +17,7 @@ namespace PKEngineEditor.Content
     public abstract class Asset : ViewModelBase
     {
         public AssetType Type { get; private set; }
-
+        
         public Asset(AssetType type)
         {
             Debug.Assert(type != AssetType.Unknown, "Asset type cannot be Unknown");
