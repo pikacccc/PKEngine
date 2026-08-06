@@ -15,7 +15,8 @@ namespace PKEngineEditor.Utilities.Controls
         }
 
         public static readonly DependencyProperty MultiplierProperty = DependencyProperty.Register(
-         nameof(Multiplier), typeof(double), typeof(NumberBox), new PropertyMetadata(1.0));
+                                                                                                   nameof(Multiplier), typeof(double), typeof(NumberBox),
+                                                                                                   new PropertyMetadata(1.0));
 
         public string Value
         {
@@ -24,9 +25,10 @@ namespace PKEngineEditor.Utilities.Controls
         }
 
         public static readonly DependencyProperty ValueProperty = DependencyProperty.Register(
-         nameof(Value), typeof(string), typeof(NumberBox),
-         new FrameworkPropertyMetadata(null, FrameworkPropertyMetadataOptions.BindsTwoWayByDefault,
-                                       new PropertyChangedCallback(OnValueChanged)));
+                                                                                              nameof(Value), typeof(string), typeof(NumberBox),
+                                                                                              new FrameworkPropertyMetadata(null,
+                                                                                               FrameworkPropertyMetadataOptions.BindsTwoWayByDefault,
+                                                                                               new PropertyChangedCallback(OnValueChanged)));
 
         private static void OnValueChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
@@ -73,7 +75,7 @@ namespace PKEngineEditor.Utilities.Controls
                     else if (Keyboard.Modifiers.HasFlag(ModifierKeys.Shift)) _multiplier = 0.1;
                     else _multiplier                                                     = 0.01;
                     var newValue = _originalValue + delta * _multiplier * Multiplier;
-                    Value         = newValue.ToString("0.####");
+                    Value         = newValue.ToString("G5");
                     _valueChanged = true;
                 }
             }

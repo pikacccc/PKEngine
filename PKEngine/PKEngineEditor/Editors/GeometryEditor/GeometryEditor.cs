@@ -79,6 +79,7 @@ namespace PKEngineEditor.Editors
                 if (value != _cameraPosition)
                 {
                     _cameraPosition = value;
+                    CameraDirection = new Vector3D(-value.X, -value.Y, -value.Z);
                     OnPropertyChanged(nameof(OffsetCameraPosition));
                     OnPropertyChanged(nameof(CameraPosition));
                 }
@@ -135,7 +136,7 @@ namespace PKEngineEditor.Editors
             }
         }
 
-        private Color _groundLight = (Color)ColorConverter.ConvertFromString("#ff3f2f1es");
+        private Color _groundLight = (Color)ColorConverter.ConvertFromString("#ff3f2f1e");
 
         public Color GroundLight
         {
@@ -221,14 +222,14 @@ namespace PKEngineEditor.Editors
                 {
                     if (mesh.IndexSize == sizeof(short))
                     {
-                        for (int i = 0; i < mesh.IndexSize; i++)
+                        for (int i = 0; i < mesh.IndexCount; i++)
                         {
                             vertexData.Indices.Add(reader.ReadUInt16());
                         }
                     }
                     else
                     {
-                        for (int i = 0; i < mesh.IndexSize; i++)
+                        for (int i = 0; i < mesh.IndexCount; i++)
                         {
                             vertexData.Indices.Add(reader.ReadInt32());
                         }
@@ -290,7 +291,7 @@ namespace PKEngineEditor.Editors
             }
         }
 
-        private MeshRenderer _meshRenderer;
+        private MeshRenderer _meshRenderer = null!;
 
         public MeshRenderer MeshRenderer
         {
@@ -304,6 +305,7 @@ namespace PKEngineEditor.Editors
                 }
             }
         }
+
         public void SetAsset(Content.Asset asset)
         {
             Debug.Assert(asset is Content.Geometry);

@@ -15,7 +15,7 @@ namespace pk::math
     constexpr u32 pack_unit_float(f32 f)
     {
         static_assert(bits <= sizeof(f32) * 8);
-        assert(f>0.0f&& f<=1.0f);
+        assert(f>=0.0f && f<=1.0f);
         constexpr f32 intervals { (f32)((1ui32 << bits) - 1) };
         return static_cast<u32>(intervals * f + 0.5f);
     }

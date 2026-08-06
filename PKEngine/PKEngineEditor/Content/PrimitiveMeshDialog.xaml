@@ -14,7 +14,7 @@
         Style="{StaticResource PkDialogStyle}"
         d:DataContext="{d:DesignInstance Type=editors:GeometryEditor}">
     <Window.DataContext>
-        <editors:GeometryEditor/>
+        <editors:GeometryEditor />
     </Window.DataContext>
     <Window.Resources>
         <ObjectDataProvider x:Key="dataFromEnum" MethodName="GetValues" ObjectType="{x:Type sys:Enum}">
@@ -41,10 +41,10 @@
                 <ColumnDefinition />
             </Grid.ColumnDefinitions>
 
-            <StackPanel Background="{StaticResource Editor.Window.GrayBrush3}">
+            <StackPanel Grid.Column="0" Background="{StaticResource Editor.Window.GrayBrush3}">
                 <StackPanel.Style>
                     <Style TargetType="{x:Type StackPanel}">
-                        <Setter Property="Visibility" Value="Collapsed" />
+                        <!-- <Setter Property="Visibility" Value="Collapsed" /> -->
                         <Style.Triggers>
                             <DataTrigger Binding="{Binding Path=SelectedItem, ElementName=primTypeComboBox}"
                                          Value="{x:Static local:PrimitiveMeshType.Plane}">
@@ -107,6 +107,13 @@
                            Foreground="{StaticResource Editor.FontBrush}" />
                 </Grid>
                 <Button Content="Save" Width="96" Margin="5,0"></Button>
+            </StackPanel>
+
+            <editors:GeometryView Grid.Column="1" DataContext="{Binding MeshRenderer}" />
+            <StackPanel Grid.Column="1" Margin="5" Orientation="Horizontal" VerticalAlignment="Top" HorizontalAlignment="Left" IsHitTestVisible="False">
+                <TextBlock Text="{Binding MeshRenderer.CameraPosition.X,StringFormat=G5}" />
+                <TextBlock Text="{Binding MeshRenderer.CameraPosition.Y,StringFormat=G5}" Margin="10,0" />
+                <TextBlock Text="{Binding MeshRenderer.CameraPosition.Z,StringFormat=G5}" />
             </StackPanel>
         </Grid>
     </DockPanel>

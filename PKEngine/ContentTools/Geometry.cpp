@@ -10,7 +10,7 @@ namespace pk::tools
         void recalculate_normals(mesh& mesh)
         {
             const u32 num_indices { static_cast<u32>(mesh.raw_indices.size()) };
-            mesh.normals.reserve(num_indices);
+            mesh.normals.resize(num_indices);
             for (u32 i { 0 }; i < num_indices; ++i)
             {
                 const u32 i0 { (u32)mesh.raw_indices[i] };
@@ -41,7 +41,7 @@ namespace pk::tools
 
             assert(num_indices && num_vertices);
 
-            mesh.indices.reserve(num_indices);
+            mesh.indices.resize(num_indices);
 
             util::vector<util::vector<u32>> idx_ref(num_vertices);
             for (u32 i { 0 }; i < num_indices; ++i)

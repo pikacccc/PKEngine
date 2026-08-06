@@ -8,6 +8,24 @@
              mc:Ignorable="d"
              d:DesignHeight="300" d:DesignWidth="300">
     <Grid>
-        
+        <Viewport3D x:Name="viewport" IsHitTestVisible="False">
+            <Viewport3D.Camera>
+                <PerspectiveCamera FarPlaneDistance="10000" NearPlaneDistance="0.001" FieldOfView="45" Position="{Binding OffsetCameraPosition}"
+                                   UpDirection="0,1,0" LookDirection="{Binding CameraDirection}" />
+            </Viewport3D.Camera>
+
+            <Viewport3D.Children>
+                <ModelVisual3D>
+                    <ModelVisual3D.Content>
+                        <Model3DGroup>
+                            <DirectionalLight Color="{Binding KeyLight}" Direction="{Binding CameraDirection}" />
+                            <DirectionalLight Color="{Binding SkyLight}" Direction="0,-1,0" />
+                            <DirectionalLight Color="{Binding GroundLight}" Direction="0,1,0" />
+                            <AmbientLight Color="{Binding AmbientLight}" />
+                        </Model3DGroup>
+                    </ModelVisual3D.Content>
+                </ModelVisual3D>
+            </Viewport3D.Children>
+        </Viewport3D>
     </Grid>
 </UserControl>

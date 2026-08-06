@@ -59,7 +59,7 @@ namespace pk::tools
                 for (int i { 0 }; i <= horizontal_count; ++i)
                 {
                     math::v3   position { offset };
-                    f32* const as_array { &offset.x };
+                    f32* const as_array { &position.x };
 
                     as_array[horizontal_index] += i * horizontal_step;
                     as_array[vertical_index] += j * vertical_step;

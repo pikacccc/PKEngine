@@ -246,6 +246,7 @@ namespace PKEngineEditor.Content
 
                 var lodGroup = new LODGroup() { Name = lodGroupName };
                 lods.ForEach(l => lodGroup.LODs.Add(l));
+                _lodGroups.Add(lodGroup);
             }
         }
     }
