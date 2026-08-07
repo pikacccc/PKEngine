@@ -14,7 +14,7 @@
         <!-- Main Viewport -->
         <Viewport3D x:Name="viewport" IsHitTestVisible="False">
             <Viewport3D.Camera>
-                <PerspectiveCamera FarPlaneDistance="10000" NearPlaneDistance="0.001" FieldOfView="45" Position="{Binding CameraPosition}"
+                <PerspectiveCamera FarPlaneDistance="10000" NearPlaneDistance="0.001" FieldOfView="45" Position="{Binding OffsetCameraPosition}"
                                    UpDirection="0,1,0" LookDirection="{Binding CameraDirection}" />
             </Viewport3D.Camera>
 

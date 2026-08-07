@@ -36,9 +36,9 @@ namespace pk::tools
         };
 
         mesh create_plane(const primitive_init_info& info,
-                          u32 horizontal_index = axis::x, u32 vertical_index = axis::z,
-                          bool flip_winding = false,
-                          math::v3 offset = math::v3 { -0.5f, 0, -0.5f },
+                          u32 horizontal_index = axis::x, u32 vertical_index = axis::y,
+                          bool flip_winding = true,
+                          math::v3 offset = math::v3 { -0.5f, -0.5f, -0.5f },
                           math::v2 u_range = math::v2 { 0.0f, 1.0f }, math::v2 v_range = math::v2 { 0.0f, 1.0f })
         {
             assert(horizontal_index < 3 && vertical_index < 3);
@@ -68,9 +68,9 @@ namespace pk::tools
                                              position.y * info.size.y,
                                              position.z * info.size.z);
 
-                    math::v2 uv { u_range.x, v_range.y };
+                    math::v2 uv { u_range.x, v_range.x };
                     uv.x += i * u_step;
-                    uv.y -= j * v_step;
+                    uv.y += j * v_step;
                     // uv.x += (i % 2);
                     // uv.y += (j % 2);
                     uvs.emplace_back(uv);

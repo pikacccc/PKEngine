@@ -54,6 +54,9 @@ namespace PKEngineEditor.Editors
                 matGroup.Children.Add(specular);
 
                 var model = new GeometryModel3D(mesh3D, matGroup);
+                // {
+                //     BackMaterial = matGroup
+                // };
                 modelGroup.Children.Add(model);
 
                 var binding = new Binding(nameof(mesh.Diffuse)) { Source = mesh };
